@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ShortFlow AI — Studio Scripts & Storyboards Viraux</title>
+  <title>ShortFlow AI — Studio Vidéo & Scripts Automatiques</title>
   <meta name="theme-color" content="#090d16" />
   <link rel="manifest" href="./manifest.json" />
   <script src="https://cdn.tailwindcss.com"></script>
@@ -32,12 +32,12 @@
       </div>
       <div>
         <h1 class="text-sm font-bold tracking-wide text-white leading-none">SHORTFLOW <span class="text-pink-400">AI</span></h1>
-        <span class="text-[10px] text-pink-300 font-mono">STUDIO TIKTOK & SHORTS</span>
+        <span class="text-[10px] text-pink-300 font-mono">STUDIO VIDÉO AUTONOME</span>
       </div>
     </div>
     <div class="flex items-center gap-1.5">
       <button onclick="toggleModal('history-modal')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-slate-200">
-        📚 Scripts
+        📚 Projets
       </button>
       <button onclick="toggleModal('api-modal')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-medium text-pink-400">
         🔑
@@ -47,7 +47,7 @@
 
   <!-- Status Bar -->
   <div id="status-bar" class="mb-3 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] font-mono text-pink-300 text-center">
-    Prêt • Gemini 3.6 Flash Actif
+    Prêt • Générateur Vidéo & Scripts Actif
   </div>
 
   <!-- Input Studio -->
@@ -68,51 +68,59 @@
         </select>
       </div>
       <div>
-        <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Ton & Énergie</label>
+        <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Ambiance Visuelle</label>
         <select id="tone-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none">
-          <option value="dynamic">🚀 Dynamique & Direct</option>
-          <option value="story">🎥 Cinématique / Suspense</option>
-          <option value="expert">🧠 Éducatif / Autorité</option>
+          <option value="cyber">🌆 Cyberpunk Néon</option>
+          <option value="fire">🔥 Lave & Énergie</option>
+          <option value="matrix">💻 Matrix Vert</option>
         </select>
       </div>
     </div>
 
-    <button onclick="generateShortScript()" class="w-full py-3 rounded-xl bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white font-bold text-xs shadow-lg shadow-pink-600/30 transition active:scale-95">
-      ✨ Générer Script + Hooks + Storyboard
+    <button onclick="generateVideoProject()" class="w-full py-3 rounded-xl bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white font-bold text-xs shadow-lg shadow-pink-600/30 transition active:scale-95">
+      🚀 Générer le Script & Rendu Vidéo
     </button>
   </div>
 
-  <!-- Results Container -->
+  <!-- Video Preview & Results Container -->
   <div id="results-container" class="hidden space-y-3 flex-1">
     
-    <!-- Hooks Card -->
-    <div class="glass-panel rounded-2xl p-3.5">
-      <h2 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2">🪝 3 Hooks Anti-Scroll (0-3s)</h2>
-      <ul id="hooks-list" class="space-y-2 text-xs text-slate-200"></ul>
-    </div>
-
-    <!-- Script Card -->
-    <div class="glass-panel rounded-2xl p-3.5">
-      <div class="flex justify-between items-center mb-2">
-        <h2 class="text-xs font-bold text-pink-400 uppercase tracking-wider">🎙️ Script Voix-Off & Rythme</h2>
-        <button onclick="copyFullOutput()" class="text-[11px] font-mono text-sky-400 hover:underline">📋 Copier tout</button>
+    <!-- Video Player Preview Canvas -->
+    <div class="glass-panel rounded-2xl p-3 relative overflow-hidden flex flex-col items-center">
+      <div class="w-full flex justify-between items-center mb-2">
+        <h2 class="text-xs font-bold text-pink-400 uppercase tracking-wider">🎥 Aperçu Vidéo (Vertical 9:16)</h2>
+        <span id="rec-status" class="text-[10px] font-mono text-slate-400">Prêt</span>
       </div>
-      <div id="script-content" class="space-y-2.5 text-xs text-slate-200 leading-relaxed"></div>
+      
+      <!-- Canvas Screen -->
+      <div class="relative w-full max-w-[240px] aspect-[9/16] bg-black rounded-xl overflow-hidden border border-pink-500/40 shadow-2xl flex items-center justify-center">
+        <canvas id="video-canvas" width="540" height="960" class="w-full h-full object-cover"></canvas>
+      </div>
+
+      <!-- Player Controls -->
+      <div class="flex gap-2 mt-3 w-full">
+        <button onclick="playVideoPreview()" class="flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold text-white">
+          ▶️ Lire Aperçu
+        </button>
+        <button onclick="recordAndDownloadVideo()" class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 text-xs font-bold text-white shadow-lg shadow-emerald-600/30">
+          📥 Exporter Vidéo (.WEBM)
+        </button>
+      </div>
     </div>
 
-    <!-- Storyboard Card -->
+    <!-- Script & Hooks Card -->
     <div class="glass-panel rounded-2xl p-3.5">
-      <h2 class="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-2">🎥 Découpage Visuel & B-Rolls</h2>
-      <div id="storyboard-content" class="space-y-2 text-xs text-slate-300"></div>
+      <h2 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2">🪝 Hooks & Script Générés</h2>
+      <div id="script-summary" class="space-y-2 text-xs text-slate-200"></div>
     </div>
 
     <!-- Action Footer -->
     <div class="grid grid-cols-2 gap-2 pt-1">
-      <button onclick="saveScriptToHistory()" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold text-pink-400">
-        💾 Sauvegarder
+      <button onclick="saveProjectToHistory()" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold text-pink-400">
+        💾 Sauvegarder Projet
       </button>
-      <button onclick="downloadMarkdown()" class="py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white shadow-md">
-        ⬇ Exporter (.MD)
+      <button onclick="downloadMarkdown()" class="py-2.5 rounded-xl bg-slate-700 hover:bg-slate-600 text-xs font-bold text-slate-200">
+        📄 Exporter Texte
       </button>
     </div>
   </div>
@@ -121,7 +129,7 @@
   <div id="history-modal" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-4">
     <div class="glass-panel rounded-2xl p-5 w-full max-w-md max-h-[80vh] flex flex-col">
       <div class="flex justify-between items-center mb-3">
-        <h2 class="text-sm font-bold text-white">📚 Mes Scripts Sauvegardés</h2>
+        <h2 class="text-sm font-bold text-white">📚 Projets Sauvegardés</h2>
         <button onclick="toggleModal('history-modal')" class="text-slate-400 text-xs">✕</button>
       </div>
       <div id="history-list" class="flex-1 overflow-y-auto space-y-2 text-xs"></div>
@@ -132,7 +140,7 @@
   <div id="api-modal" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-4">
     <div class="glass-panel rounded-2xl p-5 w-full max-w-sm">
       <h2 class="text-base font-bold text-white mb-1">Clé API Gemini</h2>
-      <p class="text-xs text-slate-400 mb-3">Entrez votre clé Google AI Studio pour activer le studio de création.</p>
+      <p class="text-xs text-slate-400 mb-3">Entrez votre clé Google AI Studio.</p>
       <input type="password" id="gemini-key-input" placeholder="AIzaSy..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white mb-3 focus:outline-none focus:border-pink-500" />
       <div class="flex justify-end gap-2">
         <button onclick="toggleModal('api-modal')" class="px-3 py-2 rounded-lg bg-slate-800 text-xs text-slate-300">Fermer</button>
@@ -148,7 +156,9 @@
       });
     }
 
-    let lastGeneratedData = null;
+    let currentProject = null;
+    let isPlaying = false;
+    let animFrame = null;
 
     function toggleModal(id) {
       const m = document.getElementById(id);
@@ -166,10 +176,10 @@
       }
     }
 
-    async function generateShortScript() {
+    async function generateVideoProject() {
       const topic = document.getElementById('topic-input').value.trim();
       const duration = document.getElementById('duration-select').value;
-      const tone = document.getElementById('tone-select').value;
+      const theme = document.getElementById('tone-select').value;
 
       if (!topic) {
         alert("Décris d'abord ton idée de vidéo !");
@@ -182,26 +192,20 @@
         return;
       }
 
-      document.getElementById('status-bar').innerText = "⏳ Écriture du script viral et du storyboard...";
+      document.getElementById('status-bar').innerText = "⏳ Génération du script et structuration visuelle...";
 
-      const prompt = `Tu es un réalisateur et scénariste viral spécialisé sur TikTok, Reels et YouTube Shorts.
+      const prompt = `Tu es un créateur de contenu vidéo viral.
 Sujet : "${topic}"
-Durée cible : ${duration}
-Ton : ${tone}
+Durée : ${duration}
 
-Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette structure exacte :
+Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette structure :
 {
-  "hooks": ["Hook 1 ultra accrocheur", "Hook 2 basé sur la curiosité", "Hook 3 choc/contre-intuitif"],
-  "script": [
-    {"time": "0-3s", "text": "Texte exact à dire face caméra..."},
-    {"time": "3-15s", "text": "Développement rapide et valeur..."},
-    {"time": "15-35s", "text": "Preuve / Démonstration / Climax..."},
-    {"time": "35-45s", "text": "Appel à l'action (CTA) percutant..."}
-  ],
-  "storyboard": [
-    {"scene": "Scène 1 (0-3s)", "visual": "Description du plan caméra, mouvement et texte à l'écran"},
-    {"scene": "Scène 2 (3-15s)", "visual": "Description du B-Roll ou démonstration écran"},
-    {"scene": "Scène 3 (15-45s)", "visual": "Plan final dynamique"}
+  "hook": "Accroche choc pour les 3 premières secondes",
+  "scenes": [
+    {"time": "0-3s", "title": "HOOK", "text": "Texte court et percutant de la scène 1"},
+    {"time": "3-15s", "title": "VALEUR", "text": "Explication rapide et dynamique de la scène 2"},
+    {"time": "15-35s", "title": "CLIMAX", "text": "Démonstration ou moment fort de la scène 3"},
+    {"time": "35-45s", "title": "CTA", "text": "Appel à l'abonnement final"}
   ]
 }`;
 
@@ -219,78 +223,165 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette s
         const cleanJson = rawText.replace(/```json|```/g, '').trim();
         const parsed = JSON.parse(cleanJson);
 
-        lastGeneratedData = { topic, duration, date: new Date().toLocaleDateString(), ...parsed };
-        displayResults(lastGeneratedData);
-        document.getElementById('status-bar').innerText = "✅ Script & Storyboard générés avec succès !";
+        currentProject = { topic, duration, theme, date: new Date().toLocaleDateString(), ...parsed };
+        displayResults(currentProject);
+        document.getElementById('status-bar').innerText = "✅ Studio Vidéo prêt à être exporté !";
       } catch (e) {
         console.error(e);
         document.getElementById('status-bar').innerText = "❌ Erreur : " + e.message;
       }
     }
 
-    function displayResults(data) {
+    function displayResults(proj) {
       document.getElementById('results-container').classList.remove('hidden');
-
-      const hooksEl = document.getElementById('hooks-list');
-      hooksEl.innerHTML = data.hooks.map((h, i) => `
-        <li class="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800">
-          <span class="text-amber-400 font-bold">#${i + 1} :</span> "${h}"
-        </li>
-      `).join('');
-
-      const scriptEl = document.getElementById('script-content');
-      scriptEl.innerHTML = data.script.map(s => `
-        <div class="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800">
-          <span class="inline-block px-1.5 py-0.5 rounded bg-pink-500/20 text-pink-400 font-mono text-[10px] font-bold mb-1">${s.time}</span>
-          <p class="text-slate-200">${s.text}</p>
+      document.getElementById('script-summary').innerHTML = `
+        <div class="p-2 bg-slate-900 rounded-xl border border-slate-800 mb-2">
+          <span class="text-amber-400 font-bold">🪝 Hook :</span> "${proj.hook}"
+        </div>
+      ` + proj.scenes.map(s => `
+        <div class="p-2 bg-slate-900 rounded-xl border border-slate-800">
+          <span class="px-1.5 py-0.5 rounded bg-pink-500/20 text-pink-400 font-mono text-[10px] font-bold">${s.time} [${s.title}]</span>
+          <p class="text-slate-200 mt-1">${s.text}</p>
         </div>
       `).join('');
 
-      const sbEl = document.getElementById('storyboard-content');
-      sbEl.innerHTML = data.storyboard.map(b => `
-        <div class="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800">
-          <div class="text-emerald-400 font-bold text-[11px] mb-0.5">${b.scene}</div>
-          <div class="text-slate-300">${b.visual}</div>
-        </div>
-      `).join('');
+      drawCanvasScene(0, proj);
     }
 
-    function formatAsText(data) {
-      let out = `🎬 SHORTFLOW AI — ${data.topic.toUpperCase()} (${data.duration})\n\n`;
-      out += `🪝 HOOKS :\n` + data.hooks.map((h, i) => `${i + 1}. ${h}`).join('\n') + `\n\n`;
-      out += `🎙️ SCRIPT :\n` + data.script.map(s => `[${s.time}] ${s.text}`).join('\n\n') + `\n\n`;
-      out += `🎥 STORYBOARD :\n` + data.storyboard.map(b => `- ${b.scene} : ${b.visual}`).join('\n');
-      return out;
+    // --- CANVAS VIDEO RENDERER ENGINE ---
+    const canvas = document.getElementById('video-canvas');
+    const ctx = canvas.getContext('2d');
+
+    function drawCanvasScene(progress, proj) {
+      if (!proj || !proj.scenes) return;
+
+      // Background theme
+      let grad = ctx.createLinearGradient(0, 0, 540, 960);
+      if (proj.theme === 'cyber') {
+        grad.addColorStop(0, '#0f172a'); grad.addColorStop(1, '#831843');
+      } else if (proj.theme === 'fire') {
+        grad.addColorStop(0, '#450a0a'); grad.addColorStop(1, '#7c2d12');
+      } else {
+        grad.addColorStop(0, '#022c22'); grad.addColorStop(1, '#064e3b');
+      }
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 540, 960);
+
+      // Determine active scene based on progress (0 to 1)
+      const sceneIndex = Math.min(Math.floor(progress * proj.scenes.length), proj.scenes.length - 1);
+      const scene = proj.scenes[sceneIndex];
+
+      // Draw Header Tag
+      ctx.fillStyle = 'rgba(236, 72, 153, 0.8)';
+      ctx.roundRect(40, 80, 160, 50, 12);
+      ctx.fill();
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 22px sans-serif';
+      ctx.fillText(scene.time + ' • ' + scene.title, 60, 112);
+
+      // Draw Topic Title Header
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '18px sans-serif';
+      ctx.fillText(proj.topic.toUpperCase().substring(0, 35) + '...', 40, 170);
+
+      // Draw Main Kinetic Text (Wrapped)
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 36px sans-serif';
+      wrapText(ctx, scene.text, 40, 350, 460, 50);
+
+      // Footer branding
+      ctx.fillStyle = '#ec4899';
+      ctx.font = 'bold 20px monospace';
+      ctx.fillText('⚡ SHORTFLOW AI', 40, 900);
     }
 
-    function copyFullOutput() {
-      if (!lastGeneratedData) return;
-      navigator.clipboard.writeText(formatAsText(lastGeneratedData));
-      alert("Script complet copié dans le presse-papier !");
+    function wrapText(context, text, x, y, maxWidth, lineHeight) {
+      const words = text.split(' ');
+      let line = '';
+      for(let n = 0; n < words.length; n++) {
+        let testLine = line + words[n] + ' ';
+        let metrics = context.measureText(testLine);
+        let testWidth = metrics.width;
+        if (testWidth > maxWidth && n > 0) {
+          context.fillText(line, x, y);
+          line = words[n] + ' ';
+          y += lineHeight;
+        } else {
+          line = testLine;
+        }
+      }
+      context.fillText(line, x, y);
     }
 
-    function downloadMarkdown() {
-      if (!lastGeneratedData) return;
-      const blob = new Blob([formatAsText(lastGeneratedData)], { type: 'text/markdown' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = `shortflow_script_${Date.now()}.md`;
-      link.click();
+    function playVideoPreview() {
+      if (!currentProject) return;
+      let startTime = performance.now();
+      let durationMs = 6000; // 6 seconds preview loop
+
+      if (animFrame) cancelAnimationFrame(animFrame);
+
+      function animate(now) {
+        let elapsed = now - startTime;
+        let progress = (elapsed % durationMs) / durationMs;
+        drawCanvasScene(progress, currentProject);
+        animFrame = requestAnimationFrame(animate);
+      }
+      animFrame = requestAnimationFrame(animate);
     }
 
-    function saveScriptToHistory() {
-      if (!lastGeneratedData) return;
-      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_HISTORY') || '[]');
-      hist.unshift(lastGeneratedData);
-      localStorage.setItem('SHORTFLOW_HISTORY', JSON.stringify(hist));
-      alert("Script sauvegardé dans ta bibliothèque !");
+    // --- MEDIA RECORDER EXPORT ENGINE ---
+    async function recordAndDownloadVideo() {
+      if (!currentProject) return;
+      if (!window.MediaRecorder) {
+        alert("L'enregistrement vidéo natif n'est pas supporté par ce navigateur mobile.");
+        return;
+      }
+
+      document.getElementById('rec-status').innerText = "🔴 Enregistrement vidéo en cours...";
+      
+      const stream = canvas.captureStream(30); // 30 FPS
+      let recorder;
+      try {
+        recorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9' });
+      } catch (e) {
+        recorder = new MediaRecorder(stream);
+      }
+
+      let chunks = [];
+      recorder.ondataavailable = e => chunks.push(e.data);
+      recorder.onstop = () => {
+        const blob = new Blob(chunks, { type: 'video/webm' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `shortflow_video_${Date.now()}.webm`;
+        a.click();
+        document.getElementById('rec-status').innerText = "✅ Vidéo téléchargée avec succès !";
+      };
+
+      recorder.start();
+      playVideoPreview();
+
+      // Record for 6 seconds matching the preview loop
+      setTimeout(() => {
+        recorder.stop();
+        if (animFrame) cancelAnimationFrame(animFrame);
+      }, 6000);
+    }
+
+    function saveProjectToHistory() {
+      if (!currentProject) return;
+      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_VIDEOS') || '[]');
+      hist.unshift(currentProject);
+      localStorage.setItem('SHORTFLOW_VIDEOS', JSON.stringify(hist));
+      alert("Projet sauvegardé !");
     }
 
     function renderHistory() {
       const list = document.getElementById('history-list');
-      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_HISTORY') || '[]');
+      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_VIDEOS') || '[]');
       if (hist.length === 0) {
-        list.innerHTML = `<div class="text-slate-500 text-center py-4">Aucun script sauvegardé.</div>`;
+        list.innerHTML = `<div class="text-slate-500 text-center py-4">Aucun projet.</div>`;
         return;
       }
       list.innerHTML = hist.map((item, idx) => `
@@ -299,19 +390,30 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette s
             <div class="text-white font-bold truncate">${item.topic}</div>
             <div class="text-[10px] text-slate-400">${item.duration} • ${item.date}</div>
           </div>
-          <button onclick="loadHistoryItem(${idx})" class="px-2.5 py-1 rounded bg-pink-600 text-white font-bold text-[10px] shrink-0">Ouvrir</button>
+          <button onclick="loadProj(${idx})" class="px-2.5 py-1 rounded bg-pink-600 text-white font-bold text-[10px] shrink-0">Ouvrir</button>
         </div>
       `).join('');
     }
 
-    function loadHistoryItem(idx) {
-      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_HISTORY') || '[]');
+    function loadProj(idx) {
+      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_VIDEOS') || '[]');
       if (hist[idx]) {
-        lastGeneratedData = hist[idx];
+        currentProject = hist[idx];
         document.getElementById('topic-input').value = hist[idx].topic;
-        displayResults(hist[idx]);
+        displayResults(currentProject);
         toggleModal('history-modal');
       }
+    }
+
+    function downloadMarkdown() {
+      if (!currentProject) return;
+      let out = `🎬 ${currentProject.topic}\nHook: ${currentProject.hook}\n\n`;
+      currentProject.scenes.forEach(s => out += `[${s.time}] ${s.title}: ${s.text}\n`);
+      const blob = new Blob([out], { type: 'text/markdown' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `script_${Date.now()}.md`;
+      a.click();
     }
   </script>
 </body>
