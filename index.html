@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ShortFlow AI — Studio Vidéo IA Autonome</title>
+  <title>ShortFlow AI — Moteur de Rendu Vidéo Autonome</title>
   <meta name="theme-color" content="#090d16" />
   <link rel="manifest" href="./manifest.json" />
   <script src="https://cdn.tailwindcss.com"></script>
@@ -32,7 +32,7 @@
       </div>
       <div>
         <h1 class="text-sm font-bold tracking-wide text-white leading-none">SHORTFLOW <span class="text-pink-400">AI</span></h1>
-        <span class="text-[10px] text-pink-300 font-mono">ORCHESTRATEUR VIDÉO IA</span>
+        <span class="text-[10px] text-pink-300 font-mono">MOTEUR VIDÉO AUTONOME</span>
       </div>
     </div>
     <div class="flex items-center gap-1.5">
@@ -47,14 +47,14 @@
 
   <!-- Status Bar -->
   <div id="status-bar" class="mb-3 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] font-mono text-pink-300 text-center">
-    Prêt • Pipeline Vidéo IA Actif
+    Prêt • Moteur de Génération Prêt
   </div>
 
   <!-- Input Studio -->
   <div class="glass-panel rounded-2xl p-3.5 shadow-xl mb-3 space-y-3">
     <div>
-      <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">🎬 Prompt Scénaristique & Visuel IA</label>
-      <textarea id="topic-input" rows="3" placeholder="Ex: Cristiano Ronaldo tire un coup franc surpuissant qui se transforme en boule de feu..." 
+      <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">🎬 Sujet ou Idée de Vidéo</label>
+      <textarea id="topic-input" rows="2" placeholder="Ex: Cristiano Ronaldo tire un coup franc qui se transforme en boule de feu..." 
         class="w-full bg-slate-900/90 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-pink-500 resize-none"></textarea>
     </div>
 
@@ -68,37 +68,47 @@
         </select>
       </div>
       <div>
-        <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Moteur Vidéo IA</label>
-        <select id="engine-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none">
-          <option value="cinematic">✨ Cinématique HD (Stable)</option>
-          <option value="hyper">🚀 Hyper-Réaliste (Kling/Runway)</option>
-          <option value="anime">🎨 Style Animation 3D</option>
+        <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Ambiance Visuelle</label>
+        <select id="theme-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none">
+          <option value="cyber">🌆 Cyberpunk Néon</option>
+          <option value="fire">🔥 Stade en Feu (Sports)</option>
+          <option value="matrix">💻 Matrix Tech</option>
         </select>
       </div>
     </div>
 
-    <button onclick="generateVideoPipeline()" class="w-full py-3 rounded-xl bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white font-bold text-xs shadow-lg shadow-pink-600/30 transition active:scale-95">
-      🔮 Lancer le Pipeline de Génération IA
+    <button onclick="generateAndRenderVideo()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-pink-600 via-rose-600 to-amber-600 hover:from-pink-500 hover:to-amber-500 text-white font-bold text-xs shadow-lg shadow-pink-600/30 transition active:scale-95">
+      🚀 Générer & Exporter la Vidéo Finale
     </button>
   </div>
 
-  <!-- Results Container -->
+  <!-- Video Studio Workspace -->
   <div id="results-container" class="hidden space-y-3 flex-1">
     
-    <!-- Video Clips Prompts & Render Cards -->
-    <div class="glass-panel rounded-2xl p-3.5">
-      <h2 class="text-xs font-bold text-pink-400 uppercase tracking-wider mb-2">🎞️ Scènes & Prompts Vidéo IA Prêts</h2>
-      <div id="scenes-container" class="space-y-3 text-xs text-slate-200"></div>
+    <!-- Video Preview Canvas Card -->
+    <div class="glass-panel rounded-2xl p-3 relative overflow-hidden flex flex-col items-center">
+      <div class="w-full flex justify-between items-center mb-2">
+        <h2 class="text-xs font-bold text-pink-400 uppercase tracking-wider">🎥 Rendu Vidéo Actif (9:16)</h2>
+        <span id="render-progress" class="text-[10px] font-mono text-amber-400">Prêt</span>
+      </div>
+      
+      <!-- Canvas Screen -->
+      <div class="relative w-full max-w-[220px] aspect-[9/16] bg-black rounded-xl overflow-hidden border border-pink-500/40 shadow-2xl flex items-center justify-center">
+        <canvas id="video-canvas" width="540" height="960" class="w-full h-full object-cover"></canvas>
+      </div>
+
+      <!-- Auto Render Action Button -->
+      <div class="flex gap-2 mt-3 w-full">
+        <button onclick="startFullRenderingProcess()" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 text-xs font-bold text-white shadow-lg shadow-emerald-600/30">
+          🎬 Lancer le Rendu & Télécharger (.WEBM)
+        </button>
+      </div>
     </div>
 
-    <!-- Action Footer -->
-    <div class="grid grid-cols-2 gap-2 pt-1">
-      <button onclick="saveProjectToHistory()" class="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold text-pink-400">
-        💾 Sauvegarder Pipeline
-      </button>
-      <button onclick="exportFullPromptPackage()" class="py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white shadow-md">
-        ⬇ Exporter le Pack (.JSON)
-      </button>
+    <!-- Script Details -->
+    <div class="glass-panel rounded-2xl p-3.5">
+      <h2 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2">📜 Séquences du Script</h2>
+      <div id="script-scenes-view" class="space-y-2 text-xs text-slate-200"></div>
     </div>
   </div>
 
@@ -106,7 +116,7 @@
   <div id="history-modal" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-4">
     <div class="glass-panel rounded-2xl p-5 w-full max-w-md max-h-[80vh] flex flex-col">
       <div class="flex justify-between items-center mb-3">
-        <h2 class="text-sm font-bold text-white">📚 Pipelines Sauvegardés</h2>
+        <h2 class="text-sm font-bold text-white">📚 Projets Vidéo</h2>
         <button onclick="toggleModal('history-modal')" class="text-slate-400 text-xs">✕</button>
       </div>
       <div id="history-list" class="flex-1 overflow-y-auto space-y-2 text-xs"></div>
@@ -134,6 +144,8 @@
     }
 
     let currentProject = null;
+    const canvas = document.getElementById('video-canvas');
+    const ctx = canvas.getContext('2d');
 
     function toggleModal(id) {
       const m = document.getElementById(id);
@@ -151,13 +163,13 @@
       }
     }
 
-    async function generateVideoPipeline() {
+    async function generateAndRenderVideo() {
       const topic = document.getElementById('topic-input').value.trim();
       const duration = document.getElementById('duration-select').value;
-      const engine = document.getElementById('engine-select').value;
+      const theme = document.getElementById('theme-select').value;
 
       if (!topic) {
-        alert("Entre ton prompt vidéo !");
+        alert("Entre ton idée de vidéo !");
         return;
       }
 
@@ -167,41 +179,20 @@
         return;
       }
 
-      document.getElementById('status-bar').innerText = "🔮 Orchestration des scènes et prompts vidéo par l'IA...";
+      document.getElementById('status-bar').innerText = "⏳ Génération du scénario vidéo par l'IA...";
 
-      const prompt = `Tu es un réalisateur expert en IA générative vidéo (Runway, Kling, Sora).
-Sujet principal : "${topic}"
+      const prompt = `Tu es le réalisateur d'un studio vidéo viral.
+Sujet : "${topic}"
 Durée : ${duration}
-Style Moteur : ${engine}
 
 Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette structure :
 {
-  "hook": "Phrase d'accroche virale",
+  "hook": "Accroche percutante",
   "scenes": [
-    {
-      "time": "0-3s",
-      "script": "Voix off pour cette séquence",
-      "video_prompt_en": "Cinematic 8k prompt in English optimized for video generation AI describing exact motion, lighting and camera angle",
-      "b_roll": "Description visuelle du plan"
-    },
-    {
-      "time": "3-15s",
-      "script": "Voix off pour la suite",
-      "video_prompt_en": "Detailed cinematic video generation prompt in English with dynamic camera movement",
-      "b_roll": "Description du plan secondaire"
-    },
-    {
-      "time": "15-45s",
-      "script": "Voix off du climax",
-      "video_prompt_en": "High energy cinematic video prompt in English showing peak action and visual effects",
-      "b_roll": "Description de l'action principale"
-    },
-    {
-      "time": "45-60s",
-      "script": "Voix off de fin et appel à l'action",
-      "video_prompt_en": "Professional outro cinematic video prompt in English",
-      "b_roll": "Plan final marquant"
-    }
+    {"time": "0-3s", "title": "HOOK", "text": "Texte court et accrocheur de la scène 1"},
+    {"time": "3-15s", "title": "ACTION", "text": "Développement rapide de l'action"},
+    {"time": "15-40s", "title": "CLIMAX", "text": "Le moment le plus fort et spectaculaire"},
+    {"time": "40-45s", "title": "CTA", "text": "Appel à l'abonnement final"}
   ]
 }`;
 
@@ -219,50 +210,146 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette s
         const cleanJson = rawText.replace(/```json|```/g, '').trim();
         const parsed = JSON.parse(cleanJson);
 
-        currentProject = { topic, duration, engine, date: new Date().toLocaleDateString(), ...parsed };
-        displayPipelineResults(currentProject);
-        document.getElementById('status-bar').innerText = "✅ Pipeline vidéo IA orchestré avec succès !";
+        currentProject = { topic, duration, theme, date: new Date().toLocaleDateString(), ...parsed };
+        
+        document.getElementById('results-container').classList.remove('hidden');
+        document.getElementById('script-scenes-view').innerHTML = currentProject.scenes.map(s => `
+          <div class="p-2 bg-slate-900 rounded-xl border border-slate-800">
+            <span class="text-pink-400 font-bold">[${s.time}]</span> <span class="text-slate-200">${s.text}</span>
+          </div>
+        `).join('');
+
+        drawStaticCanvasFrame(0);
+        document.getElementById('status-bar').innerText = "✅ Scénario prêt pour le rendu vidéo !";
       } catch (e) {
         console.error(e);
         document.getElementById('status-bar').innerText = "❌ Erreur : " + e.message;
       }
     }
 
-    function displayPipelineResults(proj) {
-      document.getElementById('results-container').classList.remove('hidden');
-      const container = document.getElementById('scenes-container');
-      
-      container.innerHTML = `
-        <div class="p-2.5 bg-slate-900 rounded-xl border border-slate-800">
-          <span class="text-amber-400 font-bold">🪝 Hook Principal :</span> "${proj.hook}"
-        </div>
-      ` + proj.scenes.map((s, idx) => `
-        <div class="p-2.5 bg-slate-900 rounded-xl border border-slate-800 space-y-2">
-          <div class="flex justify-between items-center">
-            <span class="px-1.5 py-0.5 rounded bg-pink-500/20 text-pink-400 font-mono text-[10px] font-bold">Scène ${idx + 1} (${s.time})</span>
-            <button onclick="navigator.clipboard.writeText('${s.video_prompt_en.replace(/'/g, "\\'")}'); alert('Prompt vidéo copié !');" class="text-[10px] text-sky-400 underline font-mono">📋 Copier Prompt IA</button>
-          </div>
-          <div><strong class="text-slate-300">Voix-Off :</strong> <span class="text-slate-200">${s.script}</span></div>
-          <div class="p-2 bg-black/50 rounded-lg border border-slate-800 font-mono text-[10px] text-emerald-400">
-            <strong>Prompt Vidéo (Anglais) :</strong> ${s.video_prompt_en}
-          </div>
-        </div>
-      `).join('');
+    function drawStaticCanvasFrame(sceneIdx) {
+      if (!currentProject) return;
+      const scene = currentProject.scenes[sceneIdx] || currentProject.scenes[0];
+
+      // Background theme gradient
+      let grad = ctx.createLinearGradient(0, 0, 540, 960);
+      if (currentProject.theme === 'cyber') {
+        grad.addColorStop(0, '#020617'); grad.addColorStop(1, '#831843');
+      } else if (currentProject.theme === 'fire') {
+        grad.addColorStop(0, '#450a0a'); grad.addColorStop(1, '#9a3412');
+      } else {
+        grad.addColorStop(0, '#022c22'); grad.addColorStop(1, '#065f46');
+      }
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 540, 960);
+
+      // Badge time
+      ctx.fillStyle = 'rgba(236, 72, 153, 0.9)';
+      ctx.roundRect(40, 100, 180, 50, 12);
+      ctx.fill();
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 22px sans-serif';
+      ctx.fillText(scene.time + ' • ' + scene.title, 60, 133);
+
+      // Topic header
+      ctx.fillStyle = '#cbd5e1';
+      ctx.font = '18px sans-serif';
+      ctx.fillText(currentProject.topic.toUpperCase().substring(0, 30) + '...', 40, 200);
+
+      // Main Text
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 38px sans-serif';
+      wrapText(ctx, scene.text, 40, 400, 460, 52);
+
+      // Footer branding
+      ctx.fillStyle = '#f43f5e';
+      ctx.font = 'bold 22px monospace';
+      ctx.fillText('⚡ SHORTFLOW AI STUDIO', 40, 900);
     }
 
-    function saveProjectToHistory() {
+    function wrapText(context, text, x, y, maxWidth, lineHeight) {
+      const words = text.split(' ');
+      let line = '';
+      for(let n = 0; n < words.length; n++) {
+        let testLine = line + words[n] + ' ';
+        let metrics = context.measureText(testLine);
+        if (metrics.width > maxWidth && n > 0) {
+          context.fillText(line, x, y);
+          line = words[n] + ' ';
+          y += lineHeight;
+        } else {
+          line = testLine;
+        }
+      }
+      context.fillText(line, x, y);
+    }
+
+    // --- AUTOMATED VIDEO RECORDING & SPEECH ENGINE ---
+    async function startFullRenderingProcess() {
       if (!currentProject) return;
-      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_PIPELINES') || '[]');
-      hist.unshift(currentProject);
-      localStorage.setItem('SHORTFLOW_PIPELINES', JSON.stringify(hist));
-      alert("Pipeline sauvegardé !");
+      if (!window.MediaRecorder) {
+        alert("Enregistrement vidéo non supporté sur ce navigateur.");
+        return;
+      }
+
+      const statusEl = document.getElementById('render-progress');
+      statusEl.innerText = "🔴 Rendu & Enregistrement en cours...";
+
+      const stream = canvas.captureStream(30);
+      let recorder;
+      try {
+        recorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9' });
+      } catch(e) {
+        recorder = new MediaRecorder(stream);
+      }
+
+      let chunks = [];
+      recorder.ondataavailable = e => chunks.push(e.data);
+      recorder.onstop = () => {
+        const blob = new Blob(chunks, { type: 'video/webm' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `shortflow_final_${Date.now()}.webm`;
+        a.click();
+        statusEl.innerText = "✅ Vidéo générée & téléchargée !";
+      };
+
+      recorder.start();
+
+      // Play through scenes sequentially
+      let currentScene = 0;
+      const totalScenes = currentProject.scenes.length;
+      const sceneDuration = 3000; // 3 seconds per scene for render demo
+
+      // Optional: Text-to-Speech audio reading
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const fullText = currentProject.scenes.map(s => s.text).join('. ');
+        const utterance = new SpeechSynthesisUtterance(fullText);
+        utterance.lang = 'fr-FR';
+        utterance.rate = 1.1;
+        window.speechSynthesis.speak(utterance);
+      }
+
+      const interval = setInterval(() => {
+        currentScene++;
+        if (currentScene < totalScenes) {
+          drawStaticCanvasFrame(currentScene);
+        } else {
+          clearInterval(interval);
+          setTimeout(() => {
+            recorder.stop();
+          }, sceneDuration);
+        }
+      }, sceneDuration);
     }
 
     function renderHistory() {
       const list = document.getElementById('history-list');
-      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_PIPELINES') || '[]');
+      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_VIDEOS') || '[]');
       if (hist.length === 0) {
-        list.innerHTML = `<div class="text-slate-500 text-center py-4">Aucun pipeline.</div>`;
+        list.innerHTML = `<div class="text-slate-500 text-center py-4">Aucun projet.</div>`;
         return;
       }
       list.innerHTML = hist.map((item, idx) => `
@@ -271,28 +358,20 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette s
             <div class="text-white font-bold truncate">${item.topic}</div>
             <div class="text-[10px] text-slate-400">${item.duration} • ${item.date}</div>
           </div>
-          <button onclick="loadPipeline(${idx})" class="px-2.5 py-1 rounded bg-pink-600 text-white font-bold text-[10px] shrink-0">Ouvrir</button>
+          <button onclick="loadProj(${idx})" class="px-2.5 py-1 rounded bg-pink-600 text-white font-bold text-[10px] shrink-0">Ouvrir</button>
         </div>
       `).join('');
     }
 
-    function loadPipeline(idx) {
-      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_PIPELINES') || '[]');
+    function loadProj(idx) {
+      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_VIDEOS') || '[]');
       if (hist[idx]) {
         currentProject = hist[idx];
         document.getElementById('topic-input').value = hist[idx].topic;
-        displayPipelineResults(currentProject);
+        document.getElementById('results-container').classList.remove('hidden');
+        drawStaticCanvasFrame(0);
         toggleModal('history-modal');
       }
-    }
-
-    function exportFullPromptPackage() {
-      if (!currentProject) return;
-      const blob = new Blob([JSON.stringify(currentProject, null, 2)], { type: 'application/json' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `shortflow_ai_pipeline_${Date.now()}.json`;
-      a.click();
     }
   </script>
 </body>
