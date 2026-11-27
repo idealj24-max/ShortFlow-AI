@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ShortFlow AI — Studio Hybride Visuel</title>
+  <title>ShortFlow AI — Studio Hybride Universel</title>
   <meta name="theme-color" content="#090d16" />
   <link rel="manifest" href="./manifest.json" />
   <script src="https://cdn.tailwindcss.com"></script>
@@ -32,7 +32,7 @@
       </div>
       <div>
         <h1 class="text-sm font-bold tracking-wide text-white leading-none">SHORTFLOW <span class="text-pink-400">AI</span></h1>
-        <span class="text-[10px] text-pink-300 font-mono">STUDIO HYBRIDE VISUEL</span>
+        <span class="text-[10px] text-pink-300 font-mono">STUDIO UNIVERSEL</span>
       </div>
     </div>
     <div class="flex items-center gap-1.5">
@@ -47,14 +47,14 @@
 
   <!-- Status Bar -->
   <div id="status-bar" class="mb-3 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] font-mono text-pink-300 text-center">
-    Prêt • Moteur Visuel Hybride Actif
+    Prêt • Moteur Universel Actif
   </div>
 
   <!-- Input Studio -->
   <div class="glass-panel rounded-2xl p-3.5 shadow-xl mb-3 space-y-3">
     <div>
-      <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">🎬 Sujet ou Idée de Vidéo</label>
-      <textarea id="topic-input" rows="2" placeholder="Ex: Cristiano Ronaldo tire un coup franc qui se transforme en boule de feu..." 
+      <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">🎬 Sujet, Texte ou Idée de Vidéo (Libre)</label>
+      <textarea id="topic-input" rows="3" placeholder="Ex: L'histoire de la conquête spatiale et du lancement de Spoutnik 1..." 
         class="w-full bg-slate-900/90 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-pink-500 resize-none"></textarea>
     </div>
 
@@ -68,17 +68,18 @@
         </select>
       </div>
       <div>
-        <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Style Visuel IA</label>
+        <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Ambiance Visuelle</label>
         <select id="style-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none">
-          <option value="cinematic hyper-realistic 8k">✨ Photoréaliste Cinématique</option>
-          <option value="cyberpunk neon glowing style">🌆 Cyberpunk Néon</option>
-          <option value="epic fantasy movie style">🔥 Épique / Fantastique</option>
+          <option value="cinematic hyper-realistic 8k, professional cinematography">✨ Photoréaliste Cinématique</option>
+          <option value="cyberpunk neon glowing style, futuristic">🌆 Cyberpunk Néon</option>
+          <option value="documentary historical style, dramatic lighting">📜 Documentaire Historique</option>
+          <option value="epic cinematic action, high contrast">🔥 Action Épique</option>
         </select>
       </div>
     </div>
 
-    <button onclick="generateVisualProject()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-pink-600 via-rose-600 to-amber-600 hover:from-pink-500 hover:to-amber-500 text-white font-bold text-xs shadow-lg shadow-pink-600/30 transition active:scale-95">
-      🔮 Générer le Scénario & Charger les Images IA
+    <button onclick="generateUniversalProject()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-pink-600 via-rose-600 to-amber-600 hover:from-pink-500 hover:to-amber-500 text-white font-bold text-xs shadow-lg shadow-pink-600/30 transition active:scale-95">
+      🔮 Générer le Scénario & les Visuels IA
     </button>
   </div>
 
@@ -88,7 +89,7 @@
     <!-- Video Preview Canvas Card -->
     <div class="glass-panel rounded-2xl p-3 relative overflow-hidden flex flex-col items-center">
       <div class="w-full flex justify-between items-center mb-2">
-        <h2 class="text-xs font-bold text-pink-400 uppercase tracking-wider">🎥 Rendu Vidéo Visuel (9:16)</h2>
+        <h2 class="text-xs font-bold text-pink-400 uppercase tracking-wider">🎥 Rendu Vidéo (9:16)</h2>
         <span id="render-progress" class="text-[10px] font-mono text-amber-400">Prêt</span>
       </div>
       
@@ -99,7 +100,7 @@
 
       <!-- Export Action Button -->
       <div class="flex gap-2 mt-3 w-full">
-        <button onclick="startVisualRecording()" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 text-xs font-bold text-white shadow-lg shadow-emerald-600/30">
+        <button onclick="startUniversalRecording()" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 text-xs font-bold text-white shadow-lg shadow-emerald-600/30">
           📥 Enregistrer & Télécharger la Vidéo (.WEBM)
         </button>
       </div>
@@ -107,7 +108,7 @@
 
     <!-- Script Details -->
     <div class="glass-panel rounded-2xl p-3.5">
-      <h2 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2">📜 Séquences & Visuels</h2>
+      <h2 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2">📜 Séquences & Visuels Correspondants</h2>
       <div id="script-scenes-view" class="space-y-2 text-xs text-slate-200"></div>
     </div>
   </div>
@@ -116,7 +117,7 @@
   <div id="history-modal" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-4">
     <div class="glass-panel rounded-2xl p-5 w-full max-w-md max-h-[80vh] flex flex-col">
       <div class="flex justify-between items-center mb-3">
-        <h2 class="text-sm font-bold text-white">📚 Projets Visuels</h2>
+        <h2 class="text-sm font-bold text-white">📚 Projets Sauvegardés</h2>
         <button onclick="toggleModal('history-modal')" class="text-slate-400 text-xs">✕</button>
       </div>
       <div id="history-list" class="flex-1 overflow-y-auto space-y-2 text-xs"></div>
@@ -164,13 +165,13 @@
       }
     }
 
-    async function generateVisualProject() {
+    async function generateUniversalProject() {
       const topic = document.getElementById('topic-input').value.trim();
       const duration = document.getElementById('duration-select').value;
       const style = document.getElementById('style-select').value;
 
       if (!topic) {
-        alert("Entre ton sujet de vidéo !");
+        alert("Entre ton sujet ou ton texte de vidéo !");
         return;
       }
 
@@ -180,21 +181,21 @@
         return;
       }
 
-      document.getElementById('status-bar').innerText = "⏳ Génération du script et des prompts visuels par l'IA...";
+      document.getElementById('status-bar').innerText = "⏳ Analyse du sujet et création du script sur-mesure...";
 
-      const prompt = `Tu es réalisateur de clips vidéo viraux.
-Sujet : "${topic}"
-Durée : ${duration}
-Style global : ${style}
+      const prompt = `Tu es un réalisateur professionnel de documentaires et vidéos virales.
+L'utilisateur te donne ce sujet / texte exact : "${topic}"
+Durée demandée : ${duration}
 
-Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette structure :
+Tu dois créer un découpage vidéo en 4 scènes strictement fidèle et cohérent avec le sujet fourni.
+Génère UNIQUEMENT un objet JSON valide (sans aucun bloc markdown \`\`\`json) avec cette structure exacte :
 {
-  "hook": "Accroche choc",
+  "hook": "Accroche accrocheuse liée au sujet",
   "scenes": [
-    {"time": "0-3s", "title": "HOOK", "text": "Texte court scène 1", "image_prompt": "English prompt for AI image generation of scene 1, cinematic lighting"},
-    {"time": "3-15s", "title": "ACTION", "text": "Texte scène 2", "image_prompt": "English prompt for AI image generation of scene 2, dramatic action"},
-    {"time": "15-40s", "title": "CLIMAX", "text": "Texte scène 3", "image_prompt": "English prompt for AI image generation of scene 3, epic climax"},
-    {"time": "40-45s", "title": "CTA", "text": "Texte scène 4", "image_prompt": "English prompt for AI image generation of scene 4, outro celebration"}
+    {"time": "0-25%", "title": "INTRODUCTION", "text": "Texte court et fort pour la scène 1", "image_prompt": "Extremely detailed description in English representing strictly the user topic for scene 1, photographic quality"},
+    {"time": "25-50%", "title": "DÉVELOPPEMENT", "text": "Texte pour la scène 2", "image_prompt": "Extremely detailed description in English representing strictly the user topic for scene 2, cinematic action"},
+    {"time": "50-75%", "title": "CLIMAX", "text": "Texte pour le point culminant", "image_prompt": "Extremely detailed description in English representing strictly the user topic for scene 3, dramatic climax"},
+    {"time": "75-100%", "title": "CONCLUSION", "text": "Texte de fin / CTA", "image_prompt": "Extremely detailed description in English representing strictly the user topic for scene 4, epic conclusion"}
   ]
 }`;
 
@@ -214,17 +215,18 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette s
 
         currentProject = { topic, duration, style, date: new Date().toLocaleDateString(), ...parsed };
 
-        document.getElementById('status-bar').innerText = "🎨 Téléchargement des images IA pour chaque scène...";
+        document.getElementById('status-bar').innerText = "🎨 Génération des images IA ultra-cadrées pour chaque scène...";
         
-        // Load AI images for each scene in parallel using Pollinations.ai
+        // Load precise AI images matching the user's prompt
         loadedImages = await Promise.all(currentProject.scenes.map(async (s) => {
           return new Promise((resolve) => {
             const img = new Image();
             img.crossOrigin = "anonymous";
-            const encodedPrompt = encodeURIComponent(`${s.image_prompt}, ${style}, vertical 9:16 aspect ratio`);
+            // Combine strict user scene prompt + global selected style
+            const encodedPrompt = encodeURIComponent(`${s.image_prompt}, ${style}`);
             img.src = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=540&height=960&nologo=true`;
             img.onload = () => resolve(img);
-            img.onerror = () => resolve(null); // Fallback if image fails
+            img.onerror = () => resolve(null);
           });
         }));
 
@@ -235,13 +237,13 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette s
               ${loadedImages[i] ? `<img src="${loadedImages[i].src}" class="w-full h-full object-cover">` : ''}
             </div>
             <div class="overflow-hidden">
-              <span class="text-pink-400 font-bold">[${s.time}]</span> <span class="text-slate-200 truncate">${s.text}</span>
+              <span class="text-pink-400 font-bold">[${s.title}]</span> <span class="text-slate-200 truncate">${s.text}</span>
             </div>
           </div>
         `).join('');
 
         drawCanvasFrame(0);
-        document.getElementById('status-bar').innerText = "✅ Studio Hybride prêt à exporter !";
+        document.getElementById('status-bar').innerText = "✅ Studio Universel prêt !";
       } catch (e) {
         console.error(e);
         document.getElementById('status-bar').innerText = "❌ Erreur : " + e.message;
@@ -253,7 +255,7 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette s
       const scene = currentProject.scenes[sceneIdx] || currentProject.scenes[0];
       const img = loadedImages[sceneIdx];
 
-      // Draw background AI image or fallback gradient
+      // Draw AI image background
       if (img && img.complete) {
         ctx.drawImage(img, 0, 0, 540, 960);
       } else {
@@ -261,26 +263,26 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette s
         ctx.fillRect(0, 0, 540, 960);
       }
 
-      // Dark overlay gradient for readable text
+      // Dark overlay gradient for text readability
       let grad = ctx.createLinearGradient(0, 0, 0, 960);
-      grad.addColorStop(0, 'rgba(0,0,0,0.6)');
-      grad.addColorStop(0.5, 'rgba(0,0,0,0.3)');
-      grad.addColorStop(1, 'rgba(0,0,0,0.85)');
+      grad.addColorStop(0, 'rgba(0,0,0,0.65)');
+      grad.addColorStop(0.4, 'rgba(0,0,0,0.3)');
+      grad.addColorStop(1, 'rgba(0,0,0,0.9)');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, 540, 960);
 
-      // Badge time
+      // Badge title
       ctx.fillStyle = 'rgba(236, 72, 153, 0.9)';
-      ctx.roundRect(40, 80, 180, 50, 12);
+      ctx.roundRect(40, 80, 200, 45, 12);
       ctx.fill();
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 22px sans-serif';
-      ctx.fillText(scene.time + ' • ' + scene.title, 60, 113);
+      ctx.font = 'bold 20px sans-serif';
+      ctx.fillText(scene.title, 60, 110);
 
       // Main Text
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 36px sans-serif';
-      wrapText(ctx, scene.text, 40, 550, 460, 50);
+      wrapText(ctx, scene.text, 40, 520, 460, 50);
 
       // Footer branding
       ctx.fillStyle = '#f43f5e';
@@ -305,7 +307,7 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette s
       context.fillText(line, x, y);
     }
 
-    async function startVisualRecording() {
+    async function startUniversalRecording() {
       if (!currentProject) return;
       if (!window.MediaRecorder) {
         alert("Enregistrement vidéo non supporté.");
@@ -313,7 +315,7 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette s
       }
 
       const statusEl = document.getElementById('render-progress');
-      statusEl.innerText = "🔴 Enregistrement vidéo en cours...";
+      statusEl.innerText = "🔴 Rendu et enregistrement en cours...";
 
       const stream = canvas.captureStream(30);
       let recorder;
@@ -330,24 +332,25 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette s
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `shortflow_hybrid_${Date.now()}.webm`;
+        a.download = `shortflow_universel_${Date.now()}.webm`;
         a.click();
-        statusEl.innerText = "✅ Vidéo visuelle téléchargée !";
+        statusEl.innerText = "✅ Vidéo téléchargée avec succès !";
       };
 
       recorder.start();
 
-      // Play through scenes
+      // Play through scenes with proper timing (e.g. 4 seconds per scene)
       let currentScene = 0;
       const totalScenes = currentProject.scenes.length;
-      const sceneDuration = 3500;
+      const sceneDuration = 4000;
 
+      // Voice-over speech synthesis synchronized
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         const fullText = currentProject.scenes.map(s => s.text).join('. ');
         const utterance = new SpeechSynthesisUtterance(fullText);
         utterance.lang = 'fr-FR';
-        utterance.rate = 1.1;
+        utterance.rate = 1.0;
         window.speechSynthesis.speak(utterance);
       }
 
@@ -366,7 +369,7 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette s
 
     function renderHistory() {
       const list = document.getElementById('history-list');
-      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_HYBRID') || '[]');
+      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_UNIVERSEL') || '[]');
       if (hist.length === 0) {
         list.innerHTML = `<div class="text-slate-500 text-center py-4">Aucun projet.</div>`;
         return;
@@ -383,7 +386,7 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette s
     }
 
     function loadProj(idx) {
-      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_HYBRID') || '[]');
+      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_UNIVERSEL') || '[]');
       if (hist[idx]) {
         currentProject = hist[idx];
         document.getElementById('topic-input').value = hist[idx].topic;
