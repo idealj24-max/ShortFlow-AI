@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ShortFlow AI — Ultimate Cinematic Studio v22</title>
+  <title>ShortFlow AI — Mini-Series & Preload v23</title>
   <meta name="theme-color" content="#090d16" />
   <link rel="manifest" href="./manifest.json" />
   <script src="https://cdn.tailwindcss.com"></script>
@@ -40,7 +40,7 @@
       </div>
       <div>
         <h1 class="text-sm font-bold tracking-wide text-white leading-none">SHORTFLOW <span class="text-pink-400">AI</span></h1>
-        <span class="text-[10px] text-pink-300 font-mono">CINEMATIC MOTION v22</span>
+        <span class="text-[10px] text-pink-300 font-mono">MINI-SERIES & PRELOAD v23</span>
       </div>
     </div>
     <div class="flex items-center gap-1.5">
@@ -55,23 +55,23 @@
 
   <!-- Status Bar -->
   <div id="status-bar" class="mb-3 px-3 py-2 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] font-mono text-pink-300 text-center">
-    Prêt • Moteur de Mouvement Cinématique & Cloud AI Actifs
+    Prêt • Cache Préchargé & Mode Mini-Série Actifs
   </div>
 
   <!-- Input Studio -->
   <div class="glass-panel rounded-2xl p-4 shadow-xl mb-3 space-y-3">
     <div>
-      <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">🎬 Sujet ou Scénario de Vidéo IA</label>
-      <textarea id="topic-input" rows="3" placeholder="Ex: Cristiano Ronaldo tire un coup franc surpuissant en boule de feu..." 
+      <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">🎬 Sujet ou Scénario de Mini-Série / Vidéo</label>
+      <textarea id="topic-input" rows="3" placeholder="Ex: Mini-série 3 épisodes : L'ascension d'un génie de la mécanique à Zouérate..." 
         class="w-full bg-slate-900/90 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-pink-500 resize-none"></textarea>
     </div>
 
     <div class="grid grid-cols-2 gap-2">
       <div>
-        <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Format / Durée</label>
+        <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Format & Longueur</label>
         <select id="duration-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none">
-          <option value="30">⚡ Punchy (30 sec)</option>
-          <option value="60" selected>📖 Storytelling (60 sec)</option>
+          <option value="4">⚡ Short Standard (4 Scènes)</option>
+          <option value="8" selected>🎬 Mini-Série TikTok (8 Scènes / Long)</option>
         </select>
       </div>
       <div>
@@ -84,8 +84,8 @@
       </div>
     </div>
 
-    <button onclick="generateCinematicStudio()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-pink-600 via-rose-600 to-amber-600 hover:from-pink-500 hover:to-amber-500 text-white font-bold text-xs shadow-lg shadow-pink-600/30 transition active:scale-95">
-      🚀 Générer le Studio Cinématique & les Visuels IA
+    <button onclick="generateMiniSeriesStudio()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-pink-600 via-rose-600 to-amber-600 hover:from-pink-500 hover:to-amber-500 text-white font-bold text-xs shadow-lg shadow-pink-600/30 transition active:scale-95">
+      🚀 Générer la Mini-Série & Précharger le Cache
     </button>
   </div>
 
@@ -95,13 +95,13 @@
     <!-- Video Preview Cinematic Card -->
     <div class="glass-panel rounded-2xl p-3 relative overflow-hidden flex flex-col items-center">
       <div class="w-full flex justify-between items-center mb-2">
-        <h2 class="text-xs font-bold text-pink-400 uppercase tracking-wider">🎥 Lecteur Cinématique Live (9:16)</h2>
-        <span id="render-progress" class="text-[10px] font-mono text-amber-400">Prêt à diffuser</span>
+        <h2 class="text-xs font-bold text-pink-400 uppercase tracking-wider">🎥 Lecteur Mini-Série Live (9:16)</h2>
+        <span id="render-progress" class="text-[10px] font-mono text-amber-400">Cache prêt (0 latence)</span>
       </div>
       
       <!-- Screen container with Ken Burns Motion Effect -->
       <div class="relative w-full max-w-[220px] aspect-[9/16] bg-black rounded-xl overflow-hidden border border-pink-500/40 shadow-2xl flex items-center justify-center">
-        <img id="cinematic-screen-img" src="" alt="Visuel Cinématique" class="absolute inset-0 w-full h-full object-cover ken-burns transition-opacity duration-700" crossorigin="anonymous" />
+        <img id="cinematic-screen-img" src="" alt="Visuel Mini-Série" class="absolute inset-0 w-full h-full object-cover ken-burns transition-opacity duration-700" crossorigin="anonymous" />
         
         <!-- Overlay Subtitles & Scene Badge -->
         <div class="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/95 via-black/70 to-transparent flex flex-col justify-end pointer-events-none z-10">
@@ -110,18 +110,13 @@
         </div>
       </div>
 
-      <!-- Scene Switcher / Timeline Controls -->
-      <div class="flex gap-1.5 mt-2.5 w-full justify-center">
-        <button onclick="previewScene(0)" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-pink-600 text-[10px] font-bold">Scène 1</button>
-        <button onclick="previewScene(1)" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-pink-600 text-[10px] font-bold">Scène 2</button>
-        <button onclick="previewScene(2)" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-pink-600 text-[10px] font-bold">Scène 3</button>
-        <button onclick="previewScene(3)" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-pink-600 text-[10px] font-bold">Scène 4</button>
-      </div>
+      <!-- Dynamic Scene Switcher / Timeline Bar -->
+      <div id="timeline-switcher" class="flex gap-1 mt-2.5 w-full justify-center overflow-x-auto py-1"></div>
 
       <!-- Export Action Button -->
       <div class="flex gap-2 mt-3 w-full">
         <button id="record-btn" onclick="startCinematicRecording()" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 text-xs font-bold text-white shadow-lg shadow-emerald-600/30">
-          📥 Enregistrer & Télécharger la Vidéo (.WEBM)
+          📥 Enregistrer & Télécharger la Mini-Série (.WEBM)
         </button>
       </div>
     </div>
@@ -179,6 +174,7 @@
 
     let currentPipeline = null;
     let activeSceneIndex = 0;
+    let preloadedImages = []; // Cache mémoire anti-latence
 
     function toggleModal(id) {
       const m = document.getElementById(id);
@@ -196,9 +192,9 @@
       }
     }
 
-    async function generateCinematicStudio() {
+    async function generateMiniSeriesStudio() {
       const topic = document.getElementById('topic-input').value.trim();
-      const totalSeconds = parseInt(document.getElementById('duration-select').value);
+      const sceneCount = parseInt(document.getElementById('duration-select').value); // 4 ou 8 scènes
       const style = document.getElementById('style-select').value;
 
       if (!topic) {
@@ -212,26 +208,23 @@
         return;
       }
 
-      document.getElementById('status-bar').innerText = "🧠 Analyse cinématique & Génération des visuels...";
+      document.getElementById('status-bar').innerText = `🧠 Génération de la mini-série (${sceneCount} scènes) & Prompts 8K...`;
 
-      const prompt = `Tu es un réalisateur de films d'animation et de clips viraux (style Sora / Runway).
+      const prompt = `Tu es un réalisateur de mini-séries virales et de clips (style Sora / Runway).
 Sujet : "${topic}"
-Durée : ${totalSeconds}s
+Nombre de scènes / épisodes : ${sceneCount}
 Style : "${style}"
 
-Analyse ce sujet et génère un pipeline de 4 scènes. Pour chaque scène :
-1. "time": minutage (ex: "0-15s")
+Analyse ce sujet et génère un pipeline de exactement ${sceneCount} scènes narratives continues. Pour chaque scène :
+1. "time": minutage (ex: "0-10s")
 2. "voiceover": voix-off percutante en français.
 3. "video_prompt": prompt visuel 8K détaillé en anglais pour générer l'image.
 
-Réponds UNIQUEMENT en JSON valide (sans markdown) :
+Réponds UNIQUEMENT en JSON valide (sans markdown) avec cette structure exacte :
 {
-  "hook": "Accroche choc",
+  "hook": "Accroche choc de la mini-série",
   "scenes": [
-    {"time": "0-15s", "voiceover": "...", "video_prompt": "..."},
-    {"time": "15-30s", "voiceover": "...", "video_prompt": "..."},
-    {"time": "30-45s", "voiceover": "...", "video_prompt": "..."},
-    {"time": "45-60s", "voiceover": "...", "video_prompt": "..."}
+    ${Array.from({length: sceneCount}, (_, i) => `{"time": "${i*10}-${(i+1)*10}s", "voiceover": "...", "video_prompt": "..."}`).join(',\n    ')}
   ]
 }`;
 
@@ -247,30 +240,33 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) :
 
         const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
         const cleanJson = rawText.replace(/```json|```/g, '').trim();
-        currentPipeline = { topic, totalSeconds, style, date: new Date().toLocaleDateString(), ...JSON.parse(cleanJson) };
-        finishPipelineLoad();
+        currentPipeline = { topic, sceneCount, style, date: new Date().toLocaleDateString(), ...JSON.parse(cleanJson) };
+        await finishPipelineLoad();
       } catch (e) {
-        console.warn("Quota atteint -> Mode Secours Intelligent :", e);
-        document.getElementById('status-bar').innerText = "⚡ Quota API atteint -> Mode Secours Actif !";
-        currentPipeline = generateFallbackPipeline(topic, totalSeconds, style);
-        finishPipelineLoad();
+        console.warn("Quota atteint -> Mode Mini-Série de Secours :", e);
+        document.getElementById('status-bar').innerText = "⚡ Quota API atteint -> Mode Mini-Série Local Actif !";
+        currentPipeline = generateFallbackMiniSeries(topic, sceneCount, style);
+        await finishPipelineLoad();
       }
     }
 
-    function generateFallbackPipeline(topic, totalSeconds, style) {
+    function generateFallbackMiniSeries(topic, sceneCount, style) {
+      const scenes = [];
+      for (let i = 0; i < sceneCount; i++) {
+        scenes.push({
+          time: `${i*8}-${(i+1)*8}s`,
+          voiceover: `Épisode ${i+1} : Développement intense et captivant de l'intrigue.`,
+          video_prompt: `Cinematic scene ${i+1} of ${topic}, hyper-realistic 8k resolution, dramatic cinematic lighting`
+        });
+      }
       return {
-        topic, totalSeconds, style, date: new Date().toLocaleDateString(),
-        hook: "Le jour où l'action a atteint un niveau légendaire...",
-        scenes: [
-          { time: "0-15s", voiceover: "Première séquence au sommet de la tension.", video_prompt: `Cinematic wide establishing shot of ${topic}, dramatic lighting, 8k resolution` },
-          { time: "15-30s", voiceover: "L'accélération foudroyante qui change tout.", video_prompt: `Dynamic action shot showcasing ${topic}, intense motion blur, cinematic 8k` },
-          { time: "30-45s", voiceover: "Le point culminant spectaculaire et explosif.", video_prompt: `Climax scene of ${topic}, epic visual effects, dramatic depth of field, 8k` },
-          { time: "45-60s", voiceover: "Conclusion légendaire. Abonne-toi !", video_prompt: `Epic cinematic closing shot for ${topic}, masterpiece lighting` }
-        ]
+        topic, sceneCount, style, date: new Date().toLocaleDateString(),
+        hook: `La saga épique : ${topic.substring(0, 45)}...`,
+        scenes
       };
     }
 
-    function finishPipelineLoad() {
+    async function finishPipelineLoad() {
       saveToHistory(currentPipeline);
 
       document.getElementById('hook-view').innerText = `"${currentPipeline.hook}"`;
@@ -293,9 +289,30 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) :
         </div>
       `).join('');
 
+      // Générer dynamiquement la barre de timeline selon le nombre de scènes
+      document.getElementById('timeline-switcher').innerHTML = currentPipeline.scenes.map((_, idx) => `
+        <button onclick="previewScene(${idx})" class="px-2 py-1 rounded bg-slate-800 hover:bg-pink-600 text-[10px] font-bold shrink-0">S${idx + 1}</button>
+      `).join('');
+
       document.getElementById('results-container').classList.remove('hidden');
+
+      // 🔥 ÉTAPE CLÉ : PRÉCHARGEMENT TOTAL DU CACHE (ANTI-LATENCE)
+      document.getElementById('status-bar').innerText = "⏳ Préchargement de toutes les images en cache (0 latence)...";
+      preloadedImages = [];
+      
+      for (let i = 0; i < currentPipeline.scenes.length; i++) {
+        await new Promise(resolve => {
+          const img = new Image();
+          img.crossOrigin = "anonymous";
+          const promptEnc = encodeURIComponent(currentPipeline.scenes[i].video_prompt + ", 8k resolution, vertical 9:16");
+          img.src = `https://image.pollinations.ai/prompt/${promptEnc}?width=540&height=960&nologo=true&seed=${i * 7777}`;
+          img.onload = () => { preloadedImages[i] = img; resolve(); };
+          img.onerror = () => { preloadedImages[i] = null; resolve(); };
+        });
+      }
+
+      document.getElementById('status-bar').innerText = "✅ Mini-Série prête & Cache chargé sans latence !";
       previewScene(0);
-      document.getElementById('status-bar').innerText = "✅ Studio Cinématique synchronisé avec succès !";
     }
 
     function previewScene(idx) {
@@ -306,16 +323,12 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) :
       document.getElementById('subtitle-view').innerText = sceneData.voiceover;
 
       const imgEl = document.getElementById('cinematic-screen-img');
-      const encodedPrompt = encodeURIComponent(sceneData.video_prompt + ", 8k resolution, cinematic lighting, vertical 9:16 aspect ratio");
-      const cloudAIUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=540&height=960&nologo=true&seed=${idx * 9999}`;
-
-      document.getElementById('render-progress').innerText = `Chargement Scène ${idx + 1}...`;
-      
-      imgEl.onload = () => {
-        document.getElementById('render-progress').innerText = "Rendu Cinématique Actif ✓";
-      };
-
-      imgEl.src = cloudAIUrl;
+      if (preloadedImages[idx] && preloadedImages[idx].complete) {
+        imgEl.src = preloadedImages[idx].src; // Affichage instantané depuis le cache mémoire !
+      } else {
+        const promptEnc = encodeURIComponent(sceneData.video_prompt + ", 8k resolution, vertical 9:16");
+        imgEl.src = `https://image.pollinations.ai/prompt/${promptEnc}?width=540&height=960&nologo=true&seed=${idx * 7777}`;
+      }
     }
 
     async function startCinematicRecording() {
@@ -329,9 +342,8 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) :
       const statusEl = document.getElementById('render-progress');
       btn.disabled = true;
       btn.classList.add('opacity-50');
-      statusEl.innerText = "🔴 Enregistrement de la Vidéo Cinématique (.WEBM)...";
+      statusEl.innerText = "🔴 Enregistrement de la Mini-Série (.WEBM)...";
 
-      // Création d'un canvas offscreen pour capturer les images animées avec l'effet Ken Burns
       const canvas = document.createElement('canvas');
       canvas.width = 540;
       canvas.height = 960;
@@ -352,31 +364,19 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) :
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `shortflow_cinematic_${Date.now()}.webm`;
+        a.download = `shortflow_miniseries_${Date.now()}.webm`;
         a.click();
-        statusEl.innerText = "✅ Vidéo cinématique téléchargée avec succès !";
+        statusEl.innerText = "✅ Mini-Série téléchargée avec succès !";
         btn.disabled = false;
         btn.classList.remove('opacity-50');
       };
 
-      const totalMs = (currentPipeline.totalSeconds || 60) * 1000;
-      const sceneMs = totalMs / 4;
+      const sceneCount = currentPipeline.scenes.length;
+      const totalMs = (currentPipeline.scenes.length * 8) * 1000;
+      const sceneMs = totalMs / sceneCount;
 
       activeSceneIndex = 0;
       recorder.start();
-
-      // Charger les 4 images en avance
-      const images = [];
-      for (let i = 0; i < 4; i++) {
-        await new Promise(resolve => {
-          const img = new Image();
-          img.crossOrigin = "anonymous";
-          const promptEnc = encodeURIComponent(currentPipeline.scenes[i].video_prompt + ", 8k resolution, vertical 9:16");
-          img.src = `https://image.pollinations.ai/prompt/${promptEnc}?width=540&height=960&nologo=true&seed=${i * 9999}`;
-          img.onload = () => { images[i] = img; resolve(); };
-          img.onerror = () => { images[i] = null; resolve(); };
-        });
-      }
 
       function speakScene(idx) {
         if ('speechSynthesis' in window && currentPipeline.scenes[idx]) {
@@ -396,12 +396,11 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) :
       const totalFramesPerScene = (sceneMs / 1000) * 30;
 
       const renderInterval = setInterval(() => {
-        const img = images[currentStep];
+        const img = preloadedImages[currentStep];
         ctx.fillStyle = "#000";
         ctx.fillRect(0, 0, 540, 960);
 
         if (img && img.complete) {
-          // Effet de zoom progressif (Ken Burns)
           const scale = 1.0 + (frameInScene / totalFramesPerScene) * 0.1;
           const w = 540 * scale;
           const h = 960 * scale;
@@ -410,7 +409,6 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) :
           ctx.drawImage(img, x, y, w, h);
         }
 
-        // Overlay Bandeau & Sous-titres
         ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
         ctx.fillRect(0, 800, 540, 160);
 
@@ -426,7 +424,7 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) :
         if (frameInScene >= totalFramesPerScene) {
           frameInScene = 0;
           currentStep++;
-          if (currentStep < 4) {
+          if (currentStep < sceneCount) {
             previewScene(currentStep);
             speakScene(currentStep);
           } else {
@@ -462,16 +460,16 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) :
     }
 
     function saveToHistory(proj) {
-      let hist = JSON.parse(localStorage.getItem('SHORTFLOW_CINEMATIC') || '[]');
+      let hist = JSON.parse(localStorage.getItem('SHORTFLOW_SERIES') || '[]');
       hist.unshift(proj);
       if (hist.length > 15) hist.pop();
-      localStorage.setItem('SHORTFLOW_CINEMATIC', JSON.stringify(hist));
+      localStorage.setItem('SHORTFLOW_SERIES', JSON.stringify(hist));
     }
 
     function saveCurrentPipeline() {
       if (!currentPipeline) return;
       saveToHistory(currentPipeline);
-      document.getElementById('status-bar').innerText = "💾 Projet sauvegardé ✓";
+      document.getElementById('status-bar').innerText = "💾 Projet Mini-Série sauvegardé ✓";
     }
 
     function exportPipelineJSON() {
@@ -479,7 +477,7 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) :
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentPipeline, null, 2));
       const dlAnchor = document.createElement('a');
       dlAnchor.setAttribute("href", dataStr);
-      dlAnchor.setAttribute("download", `shortflow_cinematic_${Date.now()}.json`);
+      dlAnchor.setAttribute("download", `shortflow_series_${Date.now()}.json`);
       document.body.appendChild(dlAnchor);
       dlAnchor.click();
       dlAnchor.remove();
@@ -487,7 +485,7 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) :
 
     function renderHistory() {
       const list = document.getElementById('history-list');
-      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_CINEMATIC') || '[]');
+      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_SERIES') || '[]');
       if (hist.length === 0) {
         list.innerHTML = `<div class="text-slate-500 text-center py-4">Aucun projet sauvegardé.</div>`;
         return;
@@ -496,7 +494,7 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) :
         <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800 flex justify-between items-center gap-2">
           <div class="truncate">
             <div class="text-white font-bold truncate">${item.topic}</div>
-            <div class="text-[10px] text-slate-400">${item.totalSeconds}s • ${item.date}</div>
+            <div class="text-[10px] text-slate-400">${item.sceneCount || 4} scènes • ${item.date}</div>
           </div>
           <button onclick="loadProj(${idx})" class="px-2.5 py-1 rounded bg-pink-600 text-white font-bold text-[10px] shrink-0">Ouvrir</button>
         </div>
@@ -504,10 +502,11 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) :
     }
 
     function loadProj(idx) {
-      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_CINEMATIC') || '[]');
+      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_SERIES') || '[]');
       if (hist[idx]) {
         currentPipeline = hist[idx];
         document.getElementById('topic-input').value = hist[idx].topic;
+        // Re-déclencher le préchargement
         finishPipelineLoad();
         toggleModal('history-modal');
       }
