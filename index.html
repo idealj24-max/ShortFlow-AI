@@ -47,7 +47,7 @@
 
   <!-- Status Bar -->
   <div id="status-bar" class="mb-3 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] font-mono text-pink-300 text-center">
-    Prêt • Gemini 3.8 Flash Actif
+    Prêt • Gemini 3.6 Flash Actif
   </div>
 
   <!-- Input Studio -->
@@ -206,7 +206,7 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette s
 }`;
 
       try {
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`, {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
