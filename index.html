@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ShortFlow AI — Ultimate Hybrid Studio v16</title>
+  <title>ShortFlow AI — WebGL 3D Engine v17</title>
   <meta name="theme-color" content="#090d16" />
   <link rel="manifest" href="./manifest.json" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Three.js pour le rendu 3D WebGL autonome -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <style>
     body, html {
       margin: 0; padding: 0; width: 100%; height: 100%;
@@ -32,7 +34,7 @@
       </div>
       <div>
         <h1 class="text-sm font-bold tracking-wide text-white leading-none">SHORTFLOW <span class="text-pink-400">AI</span></h1>
-        <span class="text-[10px] text-pink-300 font-mono">HYBRID STUDIO v16 (RENDERER + PROMPTS)</span>
+        <span class="text-[10px] text-pink-300 font-mono">WEBGL 3D ENGINE v17</span>
       </div>
     </div>
     <div class="flex items-center gap-1.5">
@@ -47,13 +49,13 @@
 
   <!-- Status Bar -->
   <div id="status-bar" class="mb-3 px-3 py-2 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] font-mono text-pink-300 text-center">
-    Prêt • Studio Hybride Prêt à Générer
+    Prêt • Moteur WebGL 3D & Prompts 8K Actifs
   </div>
 
   <!-- Input Studio -->
   <div class="glass-panel rounded-2xl p-4 shadow-xl mb-3 space-y-3">
     <div>
-      <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">🎬 Sujet ou Scénario de Vidéo IA</label>
+      <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">🎬 Sujet ou Scénario de Vidéo IA (3D WebGL)</label>
       <textarea id="topic-input" rows="3" placeholder="Ex: Cristiano Ronaldo tire un coup franc surpuissant en boule de feu..." 
         class="w-full bg-slate-900/90 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-pink-500 resize-none"></textarea>
     </div>
@@ -67,33 +69,39 @@
         </select>
       </div>
       <div>
-        <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Moteur Vidéo IA</label>
+        <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Moteur 3D & Style</label>
         <select id="style-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none">
-          <option value="cinematic 8k">✨ Cinématique HD (Sora / Runway)</option>
-          <option value="cyberpunk 8k">🌆 Cyberpunk Néon</option>
-          <option value="industrial 8k">🏭 Documentaire Industriel / Mines</option>
+          <option value="cinematic 3d">✨ 3D Cinématique (Sora / Runway)</option>
+          <option value="cyberpunk 3d">🌆 3D Cyberpunk Néon</option>
+          <option value="industrial 3d">🏭 3D Industriel / Mines</option>
         </select>
       </div>
     </div>
 
-    <button onclick="generateHybridStudio()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-pink-600 via-rose-600 to-amber-600 hover:from-pink-500 hover:to-amber-500 text-white font-bold text-xs shadow-lg shadow-pink-600/30 transition active:scale-95">
-      🚀 Lancer la Génération Hybride (Rendu & Prompts)
+    <button onclick="generateWebGLStudio()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-pink-600 via-rose-600 to-amber-600 hover:from-pink-500 hover:to-amber-500 text-white font-bold text-xs shadow-lg shadow-pink-600/30 transition active:scale-95">
+      🚀 Générer le Rendu 3D WebGL & les Prompts 8K
     </button>
   </div>
 
   <!-- Workspace Container -->
   <div id="results-container" class="hidden space-y-3 flex-1">
     
-    <!-- Video Preview Canvas Card -->
+    <!-- Video Preview WebGL 3D Card -->
     <div class="glass-panel rounded-2xl p-3 relative overflow-hidden flex flex-col items-center">
       <div class="w-full flex justify-between items-center mb-2">
-        <h2 class="text-xs font-bold text-pink-400 uppercase tracking-wider">🎥 Rendu Vidéo Live (9:16)</h2>
-        <span id="render-progress" class="text-[10px] font-mono text-amber-400">En lecture</span>
+        <h2 class="text-xs font-bold text-pink-400 uppercase tracking-wider">🎥 Rendu 3D WebGL Live (9:16)</h2>
+        <span id="render-progress" class="text-[10px] font-mono text-amber-400">En lecture 3D</span>
       </div>
       
-      <!-- Canvas Screen -->
+      <!-- Canvas 3D Screen -->
       <div class="relative w-full max-w-[220px] aspect-[9/16] bg-black rounded-xl overflow-hidden border border-pink-500/40 shadow-2xl flex items-center justify-center">
-        <canvas id="video-canvas" width="540" height="960" class="w-full h-full object-cover"></canvas>
+        <canvas id="webgl-canvas" class="w-full h-full object-cover"></canvas>
+        
+        <!-- Overlay Subtitles -->
+        <div class="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/95 via-black/70 to-transparent flex flex-col justify-end pointer-events-none">
+          <div id="scene-badge" class="self-start px-2 py-0.5 rounded bg-pink-600/90 text-white font-bold text-[9px] mb-1">SCÈNE 1</div>
+          <p id="subtitle-view" class="text-xs font-bold text-white leading-snug drop-shadow"></p>
+        </div>
       </div>
 
       <!-- Scene Switcher for Preview -->
@@ -164,12 +172,31 @@
     }
 
     let currentPipeline = null;
-    let compiledDrawFns = [];
-    const canvas = document.getElementById('video-canvas');
-    const ctx = canvas.getContext('2d');
-    let animFrameId = null;
+    let scene3DObjects = [];
     let activeSceneIndex = 0;
     let sceneStartTime = 0;
+    let animFrameId = null;
+
+    // Three.js Setup Global
+    const canvas = document.getElementById('webgl-canvas');
+    const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, preserveDrawingBuffer: true });
+    renderer.setSize(540, 960);
+    renderer.setPixelRatio(window.devicePixelRatio > 1 ? 2 : 1);
+
+    const scene3D = new THREE.Scene();
+    scene3D.background = new THREE.Color(0x050814);
+
+    const camera = new THREE.PerspectiveCamera(60, 540 / 960, 0.1, 1000);
+    camera.position.set(0, 2, 8);
+    camera.lookAt(0, 0, 0);
+
+    // Éclairage 3D Volumétrique
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+    scene3D.add(ambientLight);
+
+    const pointLight = new THREE.PointLight(0xff3366, 3, 50);
+    pointLight.position.set(0, 5, 3);
+    scene3D.add(pointLight);
 
     function toggleModal(id) {
       const m = document.getElementById(id);
@@ -187,7 +214,7 @@
       }
     }
 
-    async function generateHybridStudio() {
+    async function generateWebGLStudio() {
       const topic = document.getElementById('topic-input').value.trim();
       const totalSeconds = parseInt(document.getElementById('duration-select').value);
       const style = document.getElementById('style-select').value;
@@ -203,9 +230,9 @@
         return;
       }
 
-      document.getElementById('status-bar').innerText = "🧠 Génération du pipeline et des animations vectorielles...";
+      document.getElementById('status-bar').innerText = "🧠 Génération du pipeline et configuration 3D WebGL...";
 
-      const prompt = `Tu es un réalisateur professionnel de vidéos IA (style Sora, Runway) et un ingénieur graphique Canvas 2D.
+      const prompt = `Tu es un réalisateur professionnel de vidéos IA (style Sora, Runway) et un ingénieur 3D Three.js.
 Sujet : "${topic}"
 Durée : ${totalSeconds}s
 Style : "${style}"
@@ -214,16 +241,16 @@ Génère un pipeline de 4 scènes. Pour chaque scène, fournis :
 1. "time": minutage (ex: "0-15s")
 2. "voiceover": texte voix-off percutant en français.
 3. "video_prompt": prompt vidéo 8K détaillé en anglais pour Sora/Runway.
-4. "draw_code": code JavaScript pur (exécuté avec ctx, W=540, H=960, t en secondes, p de 0.0 à 1.0) qui dessine et anime graphiquement le sujet de la scène.
+4. "theme_3d": type de scène 3D parmi ('football', 'mining', 'cyber', 'space', 'generic').
 
 Génère UNIQUEMENT un objet JSON valide (sans markdown) avec cette structure :
 {
   "hook": "Phrase d'accroche choc",
   "scenes": [
-    {"time": "0-15s", "voiceover": "...", "video_prompt": "...", "draw_code": "ctx.fillStyle='#1e1b4b';ctx.fillRect(0,0,W,H);ctx.fillStyle='#f59e0b';ctx.beginPath();ctx.arc(W/2,H*0.4,40+Math.sin(t*4)*20,0,Math.PI*2);ctx.fill();"},
-    {"time": "15-30s", "voiceover": "...", "video_prompt": "...", "draw_code": "ctx.fillStyle='#0f172a';ctx.fillRect(0,0,W,H);ctx.fillStyle='#ef4444';ctx.fillRect(W/2 - 80, H*0.35 + Math.sin(t*6)*30, 160, 100);"},
-    {"time": "30-45s", "voiceover": "...", "video_prompt": "...", "draw_code": "ctx.fillStyle='#450a0a';ctx.fillRect(0,0,W,H);ctx.strokeStyle='#38bdf8';ctx.lineWidth=5;ctx.beginPath();ctx.arc(W/2,H*0.45,70+p*50,0,Math.PI*2);ctx.stroke();"},
-    {"time": "45-60s", "voiceover": "...", "video_prompt": "...", "draw_code": "ctx.fillStyle='#065f46';ctx.fillRect(0,0,W,H);ctx.fillStyle='#34d399';ctx.fillRect(50,H*0.35,W-100,160);"}
+    {"time": "0-15s", "voiceover": "...", "video_prompt": "...", "theme_3d": "football"},
+    {"time": "15-30s", "voiceover": "...", "video_prompt": "...", "theme_3d": "football"},
+    {"time": "30-45s", "voiceover": "...", "video_prompt": "...", "theme_3d": "football"},
+    {"time": "45-60s", "voiceover": "...", "video_prompt": "...", "theme_3d": "football"}
   ]
 }`;
 
@@ -242,45 +269,33 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown) avec cette structure :
         currentPipeline = { topic, totalSeconds, style, date: new Date().toLocaleDateString(), ...JSON.parse(cleanJson) };
         finishPipelineLoad();
       } catch (e) {
-        console.warn("Quota atteint -> Bascule sur le générateur local intelligent anti-quota :", e);
-        document.getElementById('status-bar').innerText = "⚡ Quota API atteint -> Activation du Moteur Local Intelligent !";
-        currentPipeline = generateSmartLocalHybrid(topic, totalSeconds, style);
+        console.warn("Quota atteint -> Bascule sur le générateur local anti-quota 3D :", e);
+        document.getElementById('status-bar').innerText = "⚡ Quota API atteint -> Activation du Moteur 3D Local Intelligent !";
+        currentPipeline = generateSmartLocal3D(topic, totalSeconds, style);
         finishPipelineLoad();
       }
     }
 
-    function generateSmartLocalHybrid(topic, totalSeconds, style) {
+    function generateSmartLocal3D(topic, totalSeconds, style) {
       const lower = topic.toLowerCase();
-      let isFootball = lower.includes('ronaldo') || lower.includes('foot') || lower.includes('ballon') || lower.includes('but');
-      let isMining = lower.includes('camion') || lower.includes('mine') || lower.includes('pelleteuse');
+      let theme = 'football';
+      if (lower.includes('camion') || lower.includes('mine') || lower.includes('pelleteuse')) theme = 'mining';
+      if (lower.includes('cyber') || lower.includes('futur')) theme = 'cyber';
+      if (lower.includes('espace') || lower.includes('fusée')) theme = 'space';
 
-      if (isFootball) {
-        return {
-          topic, totalSeconds, style, date: new Date().toLocaleDateString(),
-          hook: "Le jour où Cristiano Ronaldo a littéralement détruit les lois de la physique...",
-          scenes: [
-            { time: "0-15s", voiceover: "À 40 mètres du but, la pression est au sommet.", video_prompt: "Cinematic low-angle shot of Cristiano Ronaldo standing over a soccer ball at night, 8k.", draw_code: "ctx.fillStyle='#047857';ctx.fillRect(0,0,W,H);ctx.fillStyle='#065f46';for(let i=0;i<H;i+=60){ctx.fillRect(0,i,W,30);}ctx.fillStyle='rgba(255,255,255,0.8)';ctx.beginPath();ctx.arc(W/2,H*0.45,35+Math.sin(t*5)*5,0,Math.PI*2);ctx.fill();" },
-            { time: "15-30s", voiceover: "Quatre pas en arrière. La respiration mythique.", video_prompt: "Dynamic camera tracking motion behind Cristiano Ronaldo, cinematic sports documentary style.", draw_code: "let g=ctx.createRadialGradient(W/2,H*0.4,10,W/2,H*0.4,250);g.addColorStop(0,'#f59e0b');g.addColorStop(1,'#1e1b4b');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);ctx.fillStyle='#ef4444';ctx.beginPath();ctx.arc(W/2 + Math.sin(t*10)*80, H*0.4 - t*20, 25 + (p*15), 0, Math.PI*2);ctx.fill();" },
-            { time: "30-45s", voiceover: "La frappe pure ! Une puissance surhumaine. Le ballon s'enflamme !", video_prompt: "High energy cinematic action, fiery meteor ball tearing through goal net, 8k video.", draw_code: "ctx.fillStyle='#111827';ctx.fillRect(0,0,W,H);ctx.strokeStyle='#ef4444';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(W/2-100,H*0.3);ctx.lineTo(W/2+100,H*0.3);ctx.lineTo(W/2,H*0.6);ctx.closePath();ctx.stroke();ctx.fillStyle='#f59e0b';ctx.beginPath();ctx.arc(W/2,H*0.45,60*Math.sin(p*Math.PI),0,Math.PI*2);ctx.fill();" },
-            { time: "45-60s", voiceover: "Ronaldo s'élance... SIUUU ! Le stade en délire ! Abonne-toi !", video_prompt: "Epic cinematic shot of Ronaldo performing SIUUU celebration, stadium cheering, 8k.", draw_code: "let g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#7c2d12');g.addColorStop(1,'#111827');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);ctx.fillStyle='#fbbf24';for(let i=0;i<40;i++){ctx.fillRect((i*73)%W,(i*91 + t*100)%H,6,6);}" }
-          ]
-        };
-      } else {
-        return {
-          topic, totalSeconds, style, date: new Date().toLocaleDateString(),
-          hook: "Voici l'histoire incroyable qui va captiver tous les regards...",
-          scenes: [
-            { time: "0-15s", voiceover: "Introduction saisissante au cœur de l'action.", video_prompt: "Cinematic establishing shot, hyper-realistic, 8k resolution.", draw_code: "let g=ctx.createLinearGradient(0,0,W,H);g.addColorStop(0,'#1e1b4b');g.addColorStop(1,'#311026');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);ctx.fillStyle='#ec4899';ctx.beginPath();ctx.arc(W/2,H*0.4,50+Math.sin(t*4)*15,0,Math.PI*2);ctx.fill();" },
-            { time: "15-30s", voiceover: "Le développement monte en puissance.", video_prompt: "Dynamic camera movement showcasing core mechanics, cinematic color grading, 8k.", draw_code: "let g=ctx.createLinearGradient(0,0,W,H);g.addColorStop(0,'#0f172a');g.addColorStop(1,'#0284c7');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);ctx.strokeStyle='#38bdf8';ctx.lineWidth=6;ctx.beginPath();ctx.arc(W/2,H*0.45,80+p*40,0,Math.PI*2);ctx.stroke();" },
-            { time: "30-45s", voiceover: "Le point culminant spectaculaire.", video_prompt: "Climax action sequence, explosive visual effects, dramatic depth of field, 8k.", draw_code: "let g=ctx.createLinearGradient(0,0,W,H);g.addColorStop(0,'#7f1d1d');g.addColorStop(1,'#450a0a');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);ctx.fillStyle='#fbbf24';ctx.fillRect(W/2 - 90, H*0.35 + Math.sin(t*8)*20, 180, 120);" },
-            { time: "45-60s", voiceover: "Conclusion mémorable. Abonne-toi !", video_prompt: "Epic cinematic closing shot, masterpiece lighting, outro style, 8k.", draw_code: "let g=ctx.createLinearGradient(0,0,W,H);g.addColorStop(0,'#065f46');g.addColorStop(1,'#064e3b');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);ctx.fillStyle='#34d399';ctx.fillRect(60,H*0.35,W-120,150);" }
-          ]
-        };
-      }
+      return {
+        topic, totalSeconds, style, date: new Date().toLocaleDateString(),
+        hook: "Le jour où la technologie 3D a redéfini les standards de la réalité...",
+        scenes: [
+          { time: "0-15s", voiceover: "Première séquence immersive : mise en place de l'action.", video_prompt: "Cinematic 3D establishing shot, volumetric lighting, hyper-realistic 8k.", theme_3d: theme },
+          { time: "15-30s", voiceover: "Le rythme s'accélère, les objets 3D entrent en mouvement dynamique.", video_prompt: "Dynamic camera motion tracking 3D assets, cinematic color grading, 8k.", theme_3d: theme },
+          { time: "30-45s", voiceover: "Le climax spectaculaire ! Explosion de particules et effets visuels 3D.", video_prompt: "Climax action sequence, epic particle effects, dramatic lighting, 8k.", theme_3d: theme },
+          { time: "45-60s", voiceover: "Conclusion mémorable de cette expérience visuelle. Abonne-toi !", video_prompt: "Epic cinematic closing shot, masterpiece lighting, outro style, 8k.", theme_3d: theme }
+        ]
+      };
     }
 
     function finishPipelineLoad() {
-      compileSceneFunctions(currentPipeline);
       saveToHistory(currentPipeline);
 
       document.getElementById('hook-view').innerText = `"${currentPipeline.hook}"`;
@@ -289,7 +304,7 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown) avec cette structure :
           <div class="flex justify-between items-center">
             <span class="text-pink-400 font-bold text-xs">Scène ${idx + 1} (${s.time})</span>
             <button onclick="copyPrompt(${idx})" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-pink-300 px-2 py-1 rounded border border-slate-700">
-              📋 Copier Prompt IA
+              📋 Copier Prompt 8K
             </button>
           </div>
           <div>
@@ -305,22 +320,81 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown) avec cette structure :
 
       document.getElementById('results-container').classList.remove('hidden');
       previewScene(0);
-      document.getElementById('status-bar').innerText = "✅ Studio Hybride prêt : Rendu Live & Prompts 8K actifs !";
+      document.getElementById('status-bar').innerText = "✅ Studio WebGL 3D prêt : Rendu 3D Live & Prompts 8K !";
     }
 
-    function compileSceneFunctions(project) {
-      compiledDrawFns = project.scenes.map((scene) => {
-        try {
-          return new Function('ctx', 'W', 'H', 't', 'p', scene.draw_code);
-        } catch (err) {
-          return null;
+    // Construction de la Scène 3D Three.js selon le thème
+    function build3DScene(theme) {
+      // Nettoyer les objets précédents
+      scene3D.children.forEach(child => {
+        if (child !== ambientLight && child !== pointLight && child !== camera) {
+          scene3D.remove(child);
         }
       });
+      scene3D.background = new THREE.Color(theme === 'cyber' ? 0x030712 : 0x050814);
+
+      scene3DObjects = [];
+
+      if (theme === 'football') {
+        // Sol de stade (pelouse)
+        const planeGeo = new THREE.PlaneGeometry(20, 20);
+        const planeMat = new THREE.MeshStandardMaterial({ color: 0x047857, roughness: 0.8 });
+        const plane = new THREE.Mesh(planeGeo, planeMat);
+        plane.rotation.x = -Math.PI / 2;
+        plane.position.y = -1.5;
+        scene3D.add(plane);
+
+        // Ballon 3D enflammé au centre
+        const ballGeo = new THREE.SphereGeometry(0.8, 32, 32);
+        const ballMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, emissive: 0xef4444, roughness: 0.2 });
+        const ball = new THREE.Mesh(ballGeo, ballMat);
+        ball.position.set(0, 0, 0);
+        scene3D.add(ball);
+        scene3DObjects.push(ball);
+
+        // Anneaux d'énergie orbitaux 3D
+        for (let i = 0; i < 3; i++) {
+          const ringGeo = new THREE.TorusGeometry(1.5 + i * 0.6, 0.05, 16, 100);
+          const ringMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true });
+          const ring = new THREE.Mesh(ringGeo, ringMat);
+          scene3D.add(ring);
+          scene3DObjects.push(ring);
+        }
+      } else if (theme === 'mining') {
+        // Sol rocheux minier
+        const gridGeo = new THREE.PlaneGeometry(20, 20, 10, 10);
+        const gridMat = new THREE.MeshStandardMaterial({ color: 0x78350f, wireframe: true });
+        const grid = new THREE.Mesh(gridGeo, gridMat);
+        grid.rotation.x = -Math.PI / 2;
+        grid.position.y = -1.5;
+        scene3D.add(grid);
+
+        // Colosse minier 3D (Boîtes empilées modélisant un camion lourd)
+        const truckGeo = new THREE.BoxGeometry(2.5, 1.2, 4);
+        const truckMat = new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.4 });
+        const truck = new THREE.Mesh(truckGeo, truckMat);
+        truck.position.set(0, -0.5, 0);
+        scene3D.add(truck);
+        scene3DObjects.push(truck);
+      } else {
+        // Formes géométriques futuristes abstraites 3D (Icosaèdre & Cubes)
+        const geo = new THREE.IcosahedronGeometry(1.5, 0);
+        const mat = new THREE.MeshStandardMaterial({ color: 0xec4899, wireframe: true });
+        const mesh = new THREE.Mesh(geo, mat);
+        scene3D.add(mesh);
+        scene3DObjects.push(mesh);
+      }
     }
 
     function previewScene(idx) {
       activeSceneIndex = idx;
       sceneStartTime = performance.now();
+      const sceneData = currentPipeline.scenes[idx] || currentPipeline.scenes[0];
+      build3DScene(sceneData.theme_3d || 'football');
+
+      document.getElementById('scene-badge').innerText = `SCÈNE ${idx + 1}`;
+      document.getElementById('subtitle-view').innerText = sceneData.voiceover;
+
       if (!animFrameId) {
         renderLoop();
       }
@@ -334,70 +408,20 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown) avec cette structure :
       const t = (now - sceneStartTime) / 1000;
       const p = Math.min(1, (t % sceneDurationSec) / sceneDurationSec);
 
-      const W = 540;
-      const H = 960;
-      const scene = currentPipeline.scenes[activeSceneIndex] || currentPipeline.scenes[0];
-      const drawFn = compiledDrawFns[activeSceneIndex];
-
-      ctx.save();
-      ctx.clearRect(0, 0, W, H);
-      if (drawFn) {
-        try {
-          drawFn(ctx, W, H, t, p);
-        } catch (e) {
-          ctx.fillStyle = '#1e1b4b'; ctx.fillRect(0,0,W,H);
-        }
-      } else {
-        ctx.fillStyle = '#0f172a'; ctx.fillRect(0,0,W,H);
-      }
-      ctx.restore();
-
-      // Dégradé bas pour lisibilité des sous-titres
-      let bottomGrad = ctx.createLinearGradient(0, H * 0.58, 0, H);
-      bottomGrad.addColorStop(0, 'rgba(0,0,0,0)');
-      bottomGrad.addColorStop(0.45, 'rgba(0,0,0,0.75)');
-      bottomGrad.addColorStop(1, 'rgba(0,0,0,0.95)');
-      ctx.fillStyle = bottomGrad;
-      ctx.fillRect(0, H * 0.58, W, H * 0.42);
-
-      // Badge Scène
-      ctx.fillStyle = 'rgba(236, 72, 153, 0.9)';
-      ctx.beginPath();
-      ctx.roundRect(32, 48, 260, 40, 10);
-      ctx.fill();
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 17px sans-serif';
-      ctx.fillText(`SCÈNE ${activeSceneIndex + 1}`, 48, 74);
-
-      // Sous-titre Voix-Off
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 28px sans-serif';
-      wrapText(ctx, scene.voiceover, 36, 690, 468, 38);
-
-      // Barre de progression
-      ctx.fillStyle = 'rgba(255,255,255,0.2)';
-      ctx.fillRect(36, 915, 468, 6);
-      ctx.fillStyle = '#ec4899';
-      ctx.fillRect(36, 915, 468 * p, 6);
-
-      animFrameId = requestAnimationFrame(renderLoop);
-    }
-
-    function wrapText(context, text, x, y, maxWidth, lineHeight) {
-      const words = text.split(' ');
-      let line = '';
-      for (let n = 0; n < words.length; n++) {
-        let testLine = line + words[n] + ' ';
-        let metrics = context.measureText(testLine);
-        if (metrics.width > maxWidth && n > 0) {
-          context.fillText(line, x, y);
-          line = words[n] + ' ';
-          y += lineHeight;
+      // Animation dynamique des objets 3D dans la scène
+      scene3DObjects.forEach((obj, index) => {
+        if (index === 0) {
+          obj.rotation.x += 0.01;
+          obj.rotation.y += 0.02;
+          obj.position.y = Math.sin(t * 3) * 0.5;
         } else {
-          line = testLine;
+          obj.rotation.z += 0.015 * (index % 2 === 0 ? 1 : -1);
+          obj.rotation.x += 0.01;
         }
-      }
-      context.fillText(line, x, y);
+      });
+
+      renderer.render(scene3D, camera);
+      animFrameId = requestAnimationFrame(renderLoop);
     }
 
     async function startVideoRecording() {
@@ -411,7 +435,7 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown) avec cette structure :
       const statusEl = document.getElementById('render-progress');
       btn.disabled = true;
       btn.classList.add('opacity-50');
-      statusEl.innerText = "🔴 Enregistrement de la vidéo (.WEBM)...";
+      statusEl.innerText = "🔴 Enregistrement 3D (.WEBM)...";
 
       const stream = canvas.captureStream(30);
       let recorder;
@@ -428,9 +452,9 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown) avec cette structure :
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `shortflow_master_${Date.now()}.webm`;
+        a.download = `shortflow_3d_${Date.now()}.webm`;
         a.click();
-        statusEl.innerText = "✅ Vidéo téléchargée avec succès !";
+        statusEl.innerText = "✅ Vidéo 3D téléchargée avec succès !";
         btn.disabled = false;
         btn.classList.remove('opacity-50');
       };
@@ -440,6 +464,7 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown) avec cette structure :
 
       activeSceneIndex = 0;
       sceneStartTime = performance.now();
+      build3DScene(currentPipeline.scenes[0].theme_3d || 'football');
       recorder.start();
 
       function speakScene(idx) {
@@ -460,6 +485,9 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown) avec cette structure :
         if (step < 4) {
           activeSceneIndex = step;
           sceneStartTime = performance.now();
+          build3DScene(currentPipeline.scenes[step].theme_3d || 'football');
+          document.getElementById('scene-badge').innerText = `SCÈNE ${step + 1}`;
+          document.getElementById('subtitle-view').innerText = currentPipeline.scenes[step].voiceover;
           speakScene(step);
         } else {
           clearInterval(timer);
@@ -471,21 +499,21 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown) avec cette structure :
     function copyPrompt(idx) {
       if (!currentPipeline || !currentPipeline.scenes[idx]) return;
       navigator.clipboard.writeText(currentPipeline.scenes[idx].video_prompt).then(() => {
-        alert(`Prompt de la Scène ${idx + 1} copié !`);
+        alert(`Prompt 8K de la Scène ${idx + 1} copié !`);
       });
     }
 
     function saveToHistory(proj) {
-      let hist = JSON.parse(localStorage.getItem('SHORTFLOW_HYBRID') || '[]');
+      let hist = JSON.parse(localStorage.getItem('SHORTFLOW_3D') || '[]');
       hist.unshift(proj);
       if (hist.length > 15) hist.pop();
-      localStorage.setItem('SHORTFLOW_HYBRID', JSON.stringify(hist));
+      localStorage.setItem('SHORTFLOW_3D', JSON.stringify(hist));
     }
 
     function saveCurrentPipeline() {
       if (!currentPipeline) return;
       saveToHistory(currentPipeline);
-      document.getElementById('status-bar').innerText = "💾 Projet sauvegardé dans les favoris ✓";
+      document.getElementById('status-bar').innerText = "💾 Projet 3D sauvegardé ✓";
     }
 
     function exportPipelineJSON() {
@@ -493,7 +521,7 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown) avec cette structure :
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentPipeline, null, 2));
       const dlAnchor = document.createElement('a');
       dlAnchor.setAttribute("href", dataStr);
-      dlAnchor.setAttribute("download", `shortflow_hybrid_${Date.now()}.json`);
+      dlAnchor.setAttribute("download", `shortflow_3d_${Date.now()}.json`);
       document.body.appendChild(dlAnchor);
       dlAnchor.click();
       dlAnchor.remove();
@@ -501,7 +529,7 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown) avec cette structure :
 
     function renderHistory() {
       const list = document.getElementById('history-list');
-      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_HYBRID') || '[]');
+      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_3D') || '[]');
       if (hist.length === 0) {
         list.innerHTML = `<div class="text-slate-500 text-center py-4">Aucun projet sauvegardé.</div>`;
         return;
@@ -518,11 +546,31 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown) avec cette structure :
     }
 
     function loadProj(idx) {
-      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_HYBRID') || '[]');
+      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_3D') || '[]');
       if (hist[idx]) {
         currentPipeline = hist[idx];
         document.getElementById('topic-input').value = hist[idx].topic;
-        finishPipelineLoad();
+        document.getElementById('hook-view').innerText = `"${currentPipeline.hook}"`;
+        document.getElementById('scenes-pipeline-view').innerHTML = currentPipeline.scenes.map((s, i) => `
+          <div class="glass-panel rounded-xl p-3 space-y-2 border-slate-800">
+            <div class="flex justify-between items-center">
+              <span class="text-pink-400 font-bold text-xs">Scène ${i + 1} (${s.time})</span>
+              <button onclick="copyPrompt(${i})" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-pink-300 px-2 py-1 rounded border border-slate-700">
+                📋 Copier Prompt 8K
+              </button>
+            </div>
+            <div>
+              <span class="text-[10px] font-bold text-slate-400 uppercase block">Voix-Off :</span>
+              <p class="text-xs text-slate-200">${s.voiceover}</p>
+            </div>
+            <div class="bg-black/50 p-2 rounded-lg border border-slate-800/80">
+              <span class="text-[9px] font-bold text-amber-400 uppercase block mb-0.5">Prompt Vidéo (Anglais 8K) :</span>
+              <p class="text-[11px] font-mono text-emerald-300 select-all">${s.video_prompt}</p>
+            </div>
+          </div>
+        `).join('');
+        document.getElementById('results-container').classList.remove('hidden');
+        previewScene(0);
         toggleModal('history-modal');
       }
     }
