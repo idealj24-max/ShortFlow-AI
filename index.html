@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ShortFlow AI — Moteur de Rendu Vidéo Autonome</title>
+  <title>ShortFlow AI — Studio Hybride Visuel</title>
   <meta name="theme-color" content="#090d16" />
   <link rel="manifest" href="./manifest.json" />
   <script src="https://cdn.tailwindcss.com"></script>
@@ -32,7 +32,7 @@
       </div>
       <div>
         <h1 class="text-sm font-bold tracking-wide text-white leading-none">SHORTFLOW <span class="text-pink-400">AI</span></h1>
-        <span class="text-[10px] text-pink-300 font-mono">MOTEUR VIDÉO AUTONOME</span>
+        <span class="text-[10px] text-pink-300 font-mono">STUDIO HYBRIDE VISUEL</span>
       </div>
     </div>
     <div class="flex items-center gap-1.5">
@@ -47,7 +47,7 @@
 
   <!-- Status Bar -->
   <div id="status-bar" class="mb-3 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] font-mono text-pink-300 text-center">
-    Prêt • Moteur de Génération Prêt
+    Prêt • Moteur Visuel Hybride Actif
   </div>
 
   <!-- Input Studio -->
@@ -68,27 +68,27 @@
         </select>
       </div>
       <div>
-        <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Ambiance Visuelle</label>
-        <select id="theme-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none">
-          <option value="cyber">🌆 Cyberpunk Néon</option>
-          <option value="fire">🔥 Stade en Feu (Sports)</option>
-          <option value="matrix">💻 Matrix Tech</option>
+        <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Style Visuel IA</label>
+        <select id="style-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none">
+          <option value="cinematic hyper-realistic 8k">✨ Photoréaliste Cinématique</option>
+          <option value="cyberpunk neon glowing style">🌆 Cyberpunk Néon</option>
+          <option value="epic fantasy movie style">🔥 Épique / Fantastique</option>
         </select>
       </div>
     </div>
 
-    <button onclick="generateAndRenderVideo()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-pink-600 via-rose-600 to-amber-600 hover:from-pink-500 hover:to-amber-500 text-white font-bold text-xs shadow-lg shadow-pink-600/30 transition active:scale-95">
-      🚀 Générer & Exporter la Vidéo Finale
+    <button onclick="generateVisualProject()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-pink-600 via-rose-600 to-amber-600 hover:from-pink-500 hover:to-amber-500 text-white font-bold text-xs shadow-lg shadow-pink-600/30 transition active:scale-95">
+      🔮 Générer le Scénario & Charger les Images IA
     </button>
   </div>
 
-  <!-- Video Studio Workspace -->
+  <!-- Workspace Container -->
   <div id="results-container" class="hidden space-y-3 flex-1">
     
     <!-- Video Preview Canvas Card -->
     <div class="glass-panel rounded-2xl p-3 relative overflow-hidden flex flex-col items-center">
       <div class="w-full flex justify-between items-center mb-2">
-        <h2 class="text-xs font-bold text-pink-400 uppercase tracking-wider">🎥 Rendu Vidéo Actif (9:16)</h2>
+        <h2 class="text-xs font-bold text-pink-400 uppercase tracking-wider">🎥 Rendu Vidéo Visuel (9:16)</h2>
         <span id="render-progress" class="text-[10px] font-mono text-amber-400">Prêt</span>
       </div>
       
@@ -97,17 +97,17 @@
         <canvas id="video-canvas" width="540" height="960" class="w-full h-full object-cover"></canvas>
       </div>
 
-      <!-- Auto Render Action Button -->
+      <!-- Export Action Button -->
       <div class="flex gap-2 mt-3 w-full">
-        <button onclick="startFullRenderingProcess()" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 text-xs font-bold text-white shadow-lg shadow-emerald-600/30">
-          🎬 Lancer le Rendu & Télécharger (.WEBM)
+        <button onclick="startVisualRecording()" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 text-xs font-bold text-white shadow-lg shadow-emerald-600/30">
+          📥 Enregistrer & Télécharger la Vidéo (.WEBM)
         </button>
       </div>
     </div>
 
     <!-- Script Details -->
     <div class="glass-panel rounded-2xl p-3.5">
-      <h2 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2">📜 Séquences du Script</h2>
+      <h2 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2">📜 Séquences & Visuels</h2>
       <div id="script-scenes-view" class="space-y-2 text-xs text-slate-200"></div>
     </div>
   </div>
@@ -116,7 +116,7 @@
   <div id="history-modal" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-4">
     <div class="glass-panel rounded-2xl p-5 w-full max-w-md max-h-[80vh] flex flex-col">
       <div class="flex justify-between items-center mb-3">
-        <h2 class="text-sm font-bold text-white">📚 Projets Vidéo</h2>
+        <h2 class="text-sm font-bold text-white">📚 Projets Visuels</h2>
         <button onclick="toggleModal('history-modal')" class="text-slate-400 text-xs">✕</button>
       </div>
       <div id="history-list" class="flex-1 overflow-y-auto space-y-2 text-xs"></div>
@@ -144,6 +144,7 @@
     }
 
     let currentProject = null;
+    let loadedImages = [];
     const canvas = document.getElementById('video-canvas');
     const ctx = canvas.getContext('2d');
 
@@ -163,13 +164,13 @@
       }
     }
 
-    async function generateAndRenderVideo() {
+    async function generateVisualProject() {
       const topic = document.getElementById('topic-input').value.trim();
       const duration = document.getElementById('duration-select').value;
-      const theme = document.getElementById('theme-select').value;
+      const style = document.getElementById('style-select').value;
 
       if (!topic) {
-        alert("Entre ton idée de vidéo !");
+        alert("Entre ton sujet de vidéo !");
         return;
       }
 
@@ -179,20 +180,21 @@
         return;
       }
 
-      document.getElementById('status-bar').innerText = "⏳ Génération du scénario vidéo par l'IA...";
+      document.getElementById('status-bar').innerText = "⏳ Génération du script et des prompts visuels par l'IA...";
 
-      const prompt = `Tu es le réalisateur d'un studio vidéo viral.
+      const prompt = `Tu es réalisateur de clips vidéo viraux.
 Sujet : "${topic}"
 Durée : ${duration}
+Style global : ${style}
 
 Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette structure :
 {
-  "hook": "Accroche percutante",
+  "hook": "Accroche choc",
   "scenes": [
-    {"time": "0-3s", "title": "HOOK", "text": "Texte court et accrocheur de la scène 1"},
-    {"time": "3-15s", "title": "ACTION", "text": "Développement rapide de l'action"},
-    {"time": "15-40s", "title": "CLIMAX", "text": "Le moment le plus fort et spectaculaire"},
-    {"time": "40-45s", "title": "CTA", "text": "Appel à l'abonnement final"}
+    {"time": "0-3s", "title": "HOOK", "text": "Texte court scène 1", "image_prompt": "English prompt for AI image generation of scene 1, cinematic lighting"},
+    {"time": "3-15s", "title": "ACTION", "text": "Texte scène 2", "image_prompt": "English prompt for AI image generation of scene 2, dramatic action"},
+    {"time": "15-40s", "title": "CLIMAX", "text": "Texte scène 3", "image_prompt": "English prompt for AI image generation of scene 3, epic climax"},
+    {"time": "40-45s", "title": "CTA", "text": "Texte scène 4", "image_prompt": "English prompt for AI image generation of scene 4, outro celebration"}
   ]
 }`;
 
@@ -210,61 +212,80 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette s
         const cleanJson = rawText.replace(/```json|```/g, '').trim();
         const parsed = JSON.parse(cleanJson);
 
-        currentProject = { topic, duration, theme, date: new Date().toLocaleDateString(), ...parsed };
+        currentProject = { topic, duration, style, date: new Date().toLocaleDateString(), ...parsed };
+
+        document.getElementById('status-bar').innerText = "🎨 Téléchargement des images IA pour chaque scène...";
         
+        // Load AI images for each scene in parallel using Pollinations.ai
+        loadedImages = await Promise.all(currentProject.scenes.map(async (s) => {
+          return new Promise((resolve) => {
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            const encodedPrompt = encodeURIComponent(`${s.image_prompt}, ${style}, vertical 9:16 aspect ratio`);
+            img.src = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=540&height=960&nologo=true`;
+            img.onload = () => resolve(img);
+            img.onerror = () => resolve(null); // Fallback if image fails
+          });
+        }));
+
         document.getElementById('results-container').classList.remove('hidden');
-        document.getElementById('script-scenes-view').innerHTML = currentProject.scenes.map(s => `
-          <div class="p-2 bg-slate-900 rounded-xl border border-slate-800">
-            <span class="text-pink-400 font-bold">[${s.time}]</span> <span class="text-slate-200">${s.text}</span>
+        document.getElementById('script-scenes-view').innerHTML = currentProject.scenes.map((s, i) => `
+          <div class="p-2 bg-slate-900 rounded-xl border border-slate-800 flex items-center gap-2">
+            <div class="w-8 h-12 bg-slate-800 rounded overflow-hidden shrink-0">
+              ${loadedImages[i] ? `<img src="${loadedImages[i].src}" class="w-full h-full object-cover">` : ''}
+            </div>
+            <div class="overflow-hidden">
+              <span class="text-pink-400 font-bold">[${s.time}]</span> <span class="text-slate-200 truncate">${s.text}</span>
+            </div>
           </div>
         `).join('');
 
-        drawStaticCanvasFrame(0);
-        document.getElementById('status-bar').innerText = "✅ Scénario prêt pour le rendu vidéo !";
+        drawCanvasFrame(0);
+        document.getElementById('status-bar').innerText = "✅ Studio Hybride prêt à exporter !";
       } catch (e) {
         console.error(e);
         document.getElementById('status-bar').innerText = "❌ Erreur : " + e.message;
       }
     }
 
-    function drawStaticCanvasFrame(sceneIdx) {
+    function drawCanvasFrame(sceneIdx) {
       if (!currentProject) return;
       const scene = currentProject.scenes[sceneIdx] || currentProject.scenes[0];
+      const img = loadedImages[sceneIdx];
 
-      // Background theme gradient
-      let grad = ctx.createLinearGradient(0, 0, 540, 960);
-      if (currentProject.theme === 'cyber') {
-        grad.addColorStop(0, '#020617'); grad.addColorStop(1, '#831843');
-      } else if (currentProject.theme === 'fire') {
-        grad.addColorStop(0, '#450a0a'); grad.addColorStop(1, '#9a3412');
+      // Draw background AI image or fallback gradient
+      if (img && img.complete) {
+        ctx.drawImage(img, 0, 0, 540, 960);
       } else {
-        grad.addColorStop(0, '#022c22'); grad.addColorStop(1, '#065f46');
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(0, 0, 540, 960);
       }
+
+      // Dark overlay gradient for readable text
+      let grad = ctx.createLinearGradient(0, 0, 0, 960);
+      grad.addColorStop(0, 'rgba(0,0,0,0.6)');
+      grad.addColorStop(0.5, 'rgba(0,0,0,0.3)');
+      grad.addColorStop(1, 'rgba(0,0,0,0.85)');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, 540, 960);
 
       // Badge time
       ctx.fillStyle = 'rgba(236, 72, 153, 0.9)';
-      ctx.roundRect(40, 100, 180, 50, 12);
+      ctx.roundRect(40, 80, 180, 50, 12);
       ctx.fill();
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 22px sans-serif';
-      ctx.fillText(scene.time + ' • ' + scene.title, 60, 133);
-
-      // Topic header
-      ctx.fillStyle = '#cbd5e1';
-      ctx.font = '18px sans-serif';
-      ctx.fillText(currentProject.topic.toUpperCase().substring(0, 30) + '...', 40, 200);
+      ctx.fillText(scene.time + ' • ' + scene.title, 60, 113);
 
       // Main Text
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 38px sans-serif';
-      wrapText(ctx, scene.text, 40, 400, 460, 52);
+      ctx.font = 'bold 36px sans-serif';
+      wrapText(ctx, scene.text, 40, 550, 460, 50);
 
       // Footer branding
       ctx.fillStyle = '#f43f5e';
-      ctx.font = 'bold 22px monospace';
-      ctx.fillText('⚡ SHORTFLOW AI STUDIO', 40, 900);
+      ctx.font = 'bold 20px monospace';
+      ctx.fillText('⚡ SHORTFLOW AI STUDIO', 40, 910);
     }
 
     function wrapText(context, text, x, y, maxWidth, lineHeight) {
@@ -284,16 +305,15 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette s
       context.fillText(line, x, y);
     }
 
-    // --- AUTOMATED VIDEO RECORDING & SPEECH ENGINE ---
-    async function startFullRenderingProcess() {
+    async function startVisualRecording() {
       if (!currentProject) return;
       if (!window.MediaRecorder) {
-        alert("Enregistrement vidéo non supporté sur ce navigateur.");
+        alert("Enregistrement vidéo non supporté.");
         return;
       }
 
       const statusEl = document.getElementById('render-progress');
-      statusEl.innerText = "🔴 Rendu & Enregistrement en cours...";
+      statusEl.innerText = "🔴 Enregistrement vidéo en cours...";
 
       const stream = canvas.captureStream(30);
       let recorder;
@@ -310,19 +330,18 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette s
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `shortflow_final_${Date.now()}.webm`;
+        a.download = `shortflow_hybrid_${Date.now()}.webm`;
         a.click();
-        statusEl.innerText = "✅ Vidéo générée & téléchargée !";
+        statusEl.innerText = "✅ Vidéo visuelle téléchargée !";
       };
 
       recorder.start();
 
-      // Play through scenes sequentially
+      // Play through scenes
       let currentScene = 0;
       const totalScenes = currentProject.scenes.length;
-      const sceneDuration = 3000; // 3 seconds per scene for render demo
+      const sceneDuration = 3500;
 
-      // Optional: Text-to-Speech audio reading
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         const fullText = currentProject.scenes.map(s => s.text).join('. ');
@@ -335,7 +354,7 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette s
       const interval = setInterval(() => {
         currentScene++;
         if (currentScene < totalScenes) {
-          drawStaticCanvasFrame(currentScene);
+          drawCanvasFrame(currentScene);
         } else {
           clearInterval(interval);
           setTimeout(() => {
@@ -347,7 +366,7 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette s
 
     function renderHistory() {
       const list = document.getElementById('history-list');
-      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_VIDEOS') || '[]');
+      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_HYBRID') || '[]');
       if (hist.length === 0) {
         list.innerHTML = `<div class="text-slate-500 text-center py-4">Aucun projet.</div>`;
         return;
@@ -364,12 +383,12 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette s
     }
 
     function loadProj(idx) {
-      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_VIDEOS') || '[]');
+      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_HYBRID') || '[]');
       if (hist[idx]) {
         currentProject = hist[idx];
         document.getElementById('topic-input').value = hist[idx].topic;
         document.getElementById('results-container').classList.remove('hidden');
-        drawStaticCanvasFrame(0);
+        drawCanvasFrame(0);
         toggleModal('history-modal');
       }
     }
