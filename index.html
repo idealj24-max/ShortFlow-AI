@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ShortFlow AI — Master Orchestrator Studio</title>
+  <title>ShortFlow AI — Master Orchestrator v15</title>
   <meta name="theme-color" content="#090d16" />
   <link rel="manifest" href="./manifest.json" />
   <script src="https://cdn.tailwindcss.com"></script>
@@ -32,7 +32,7 @@
       </div>
       <div>
         <h1 class="text-sm font-bold tracking-wide text-white leading-none">SHORTFLOW <span class="text-pink-400">AI</span></h1>
-        <span class="text-[10px] text-pink-300 font-mono">ORCHESTRATEUR VIDÉO IA v14</span>
+        <span class="text-[10px] text-pink-300 font-mono">ORCHESTRATEUR v15 (ANTI-QUOTA)</span>
       </div>
     </div>
     <div class="flex items-center gap-1.5">
@@ -47,14 +47,14 @@
 
   <!-- Status Bar -->
   <div id="status-bar" class="mb-3 px-3 py-2 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] font-mono text-pink-300 text-center">
-    Prêt • Studio d'Orchestration IA Actif
+    Prêt • Mode Anti-Quota Actif
   </div>
 
   <!-- Input Studio -->
   <div class="glass-panel rounded-2xl p-4 shadow-xl mb-3 space-y-3">
     <div>
       <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">🎬 Sujet ou Scénario de Vidéo IA</label>
-      <textarea id="topic-input" rows="3" placeholder="Ex: Cristiano Ronaldo tire un coup franc surpuissant qui se transforme en boule de feu..." 
+      <textarea id="topic-input" rows="3" placeholder="Ex: Cristiano Ronaldo tire un coup franc surpuissant en boule de feu..." 
         class="w-full bg-slate-900/90 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-pink-500 resize-none"></textarea>
     </div>
 
@@ -169,7 +169,7 @@
         return;
       }
 
-      document.getElementById('status-bar').innerText = "🧠 Orchestration du pipeline et rédaction des prompts 8K...";
+      document.getElementById('status-bar').innerText = "🧠 Orchestration du pipeline en cours...";
 
       const prompt = `Tu es un réalisateur professionnel de films et de clips viraux générés par IA (style Sora, Runway Gen-3, Kling).
 Sujet de l'utilisateur : "${topic}"
@@ -208,33 +208,80 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette s
         const parsed = JSON.parse(cleanJson);
 
         currentPipeline = { topic, duration, style, date: new Date().toLocaleDateString(), ...parsed };
-
-        document.getElementById('hook-view').innerText = `"${currentPipeline.hook}"`;
-        document.getElementById('scenes-pipeline-view').innerHTML = currentPipeline.scenes.map((s, idx) => `
-          <div class="glass-panel rounded-xl p-3 space-y-2 border-slate-800">
-            <div class="flex justify-between items-center">
-              <span class="text-pink-400 font-bold text-xs">Scène ${idx + 1} (${s.time})</span>
-              <button onclick="copyPrompt(${idx})" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-pink-300 px-2 py-1 rounded border border-slate-700">
-                📋 Copier Prompt IA
-              </button>
-            </div>
-            <div>
-              <span class="text-[10px] font-bold text-slate-400 uppercase block">Voix-Off :</span>
-              <p class="text-xs text-slate-200">${s.voiceover}</p>
-            </div>
-            <div class="bg-black/50 p-2 rounded-lg border border-slate-800/80">
-              <span class="text-[9px] font-bold text-amber-400 uppercase block mb-0.5">Prompt Vidéo (Anglais 8K) :</span>
-              <p class="text-[11px] font-mono text-emerald-300 select-all">${s.video_prompt}</p>
-            </div>
-          </div>
-        `).join('');
-
-        document.getElementById('results-container').classList.remove('hidden');
+        renderPipelineUI();
         document.getElementById('status-bar').innerText = "✅ Pipeline vidéo IA orchestré avec succès !";
       } catch (e) {
-        console.error(e);
-        document.getElementById('status-bar').innerText = "❌ Erreur : " + e.message;
+        console.warn("Quota API atteint, bascule sur le générateur local anti-quota :", e);
+        document.getElementById('status-bar').innerText = "⚡ Quota API atteint -> Activation du Générateur Local Intelligent !";
+        
+        currentPipeline = generateSmartLocalPipeline(topic, duration, style);
+        renderPipelineUI();
       }
+    }
+
+    function generateSmartLocalPipeline(topic, duration, style) {
+      const lower = topic.toLowerCase();
+      let isFootball = lower.includes('ronaldo') || lower.includes('foot') || lower.includes('ballon') || lower.includes('but') || lower.includes('match');
+      let isMining = lower.includes('camion') || lower.includes('mine') || lower.includes('pelleteuse') || lower.includes('grue');
+
+      if (isFootball) {
+        return {
+          topic, duration, style, date: new Date().toLocaleDateString(),
+          hook: "Le jour où Cristiano Ronaldo a littéralement détruit les lois de la physique...",
+          scenes: [
+            { time: "0-5s", voiceover: "À 40 mètres du but, la pression est au sommet.", video_prompt: "Cinematic low-angle shot of Cristiano Ronaldo standing over a soccer ball at night in a massive packed stadium, extreme close-up on intense eyes, rain droplets falling in slow motion, stadium floodlights creating brilliant lens flare, hyper-realistic, photorealistic, 8k resolution." },
+            { time: "5-20s", voiceover: "Quatre pas en arrière. La respiration mythique. Tout le stade retient son souffle.", video_prompt: "Dynamic camera tracking motion behind Cristiano Ronaldo as he takes four steps back, stands with iconic wide posture, deep chest rise breath, background stadium crowd blurred with high depth of field, slow-motion cinematic sports documentary style." },
+            { time: "20-45s", voiceover: "Et là... la frappe pure ! Une puissance surhumaine. Le ballon s'enflamme et déchire les filets !", video_prompt: "High energy cinematic action sequence, fast zoom shot of Ronaldo striking the ball with incredible power, ball instantly transforms into a blazing fiery meteor with orange flame trails, dynamic fast camera following projectile across 40 meters, fireball violently tears and burns through goal net, goalkeeper left completely shocked, explosive volumetric smoke and VFX fire effect, ultra-detailed 8k video." },
+            { time: "45-60s", voiceover: "Ronaldo s'élance... SIUUU ! Le stade entre en éruption totale. Abonne-toi !", video_prompt: "Epic cinematic medium shot of Cristiano Ronaldo running to corner flag, performing iconic jump-spin SIUUU celebration, shockwave ember effect around him, thousands of stadium fans standing up jumping in total ecstasy, dynamic camera rotation, vivid cinematic colors, masterpiece lighting, outro style." }
+          ]
+        };
+      } else if (isMining) {
+        return {
+          topic, duration, style, date: new Date().toLocaleDateString(),
+          hook: "Au cœur d'un géant d'acier de plus de 300 tonnes dans le désert...",
+          scenes: [
+            { time: "0-5s", voiceover: "Sur les pistes poussiéreuses de la mine, le colosse se met en mouvement.", video_prompt: "Cinematic drone shot of a massive heavy haul mining truck driving through a gigantic open-pit iron ore mine, dramatic dust clouds kicked up by giant tires, blazing desert sun casting sharp shadows, industrial documentary style, 8k." },
+            { time: "5-20s", voiceover: "Un convoi exceptionnel transporte une pelleteuse géante à travers les cratères.", video_prompt: "Low-angle tracking shot of a heavy lowboy trailer transporting a massive excavator, powerful diesel engine vibration, rugged red earth tracks, hyper-realistic metal reflections, cinematic industrial lighting." },
+            { time: "20-45s", voiceover: "Virage serré au bord du précipice : la moindre erreur de trajectoire est fatale.", video_prompt: "Extreme close-up on giant rubber tires gripping cliff edges, steep rocky descent, camera shaking with raw industrial power, dramatic tension, photorealistic 8k video." },
+            { time: "45-60s", voiceover: "Mission accomplie. Le titan est livré, prêt à creuser la terre. Abonne-toi !", video_prompt: "Epic wide cinematic shot of mining machinery deployed at sunset, golden hour light reflecting off steel structures, triumphant industrial workers cheering, cinematic outro, 8k resolution." }
+          ]
+        };
+      } else {
+        return {
+          topic, duration, style, date: new Date().toLocaleDateString(),
+          hook: "Voici l'histoire incroyable qui va redéfinir votre vision de ce sujet...",
+          scenes: [
+            { time: "0-5s", voiceover: "Introduction saisissante au cœur de l'action.", video_prompt: `Cinematic establishing shot of ${topic}, dramatic lighting, hyper-realistic, 8k resolution, volumetric atmosphere.` },
+            { time: "5-20s", voiceover: "Le développement monte en puissance avec des détails saisissants.", video_prompt: `Dynamic camera movement showcasing the core mechanics of ${topic}, crisp textures, cinematic color grading, 8k.` },
+            { time: "20-45s", voiceover: "Le point culminant de l'histoire, intense et spectaculaire.", video_prompt: `Climax action sequence for ${topic}, explosive visual effects, intense cinematic lighting, dramatic depth of field, 8k.` },
+            { time: "45-60s", voiceover: "Conclusion mémorable. Abonne-toi pour ne rien rater !", video_prompt: `Epic cinematic closing shot for ${topic}, masterpiece lighting, gorgeous composition, outro style, 8k.` }
+          ]
+        };
+      }
+    }
+
+    function renderPipelineUI() {
+      document.getElementById('hook-view').innerText = `"${currentPipeline.hook}"`;
+      document.getElementById('scenes-pipeline-view').innerHTML = currentPipeline.scenes.map((s, idx) => `
+        <div class="glass-panel rounded-xl p-3 space-y-2 border-slate-800">
+          <div class="flex justify-between items-center">
+            <span class="text-pink-400 font-bold text-xs">Scène ${idx + 1} (${s.time})</span>
+            <button onclick="copyPrompt(${idx})" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-pink-300 px-2 py-1 rounded border border-slate-700">
+              📋 Copier Prompt IA
+            </button>
+          </div>
+          <div>
+            <span class="text-[10px] font-bold text-slate-400 uppercase block">Voix-Off :</span>
+            <p class="text-xs text-slate-200">${s.voiceover}</p>
+          </div>
+          <div class="bg-black/50 p-2 rounded-lg border border-slate-800/80">
+            <span class="text-[9px] font-bold text-amber-400 uppercase block mb-0.5">Prompt Vidéo (Anglais 8K) :</span>
+            <p class="text-[11px] font-mono text-emerald-300 select-all">${s.video_prompt}</p>
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('results-container').classList.remove('hidden');
     }
 
     function copyPrompt(idx) {
@@ -288,26 +335,7 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette s
       if (hist[idx]) {
         currentPipeline = hist[idx];
         document.getElementById('topic-input').value = hist[idx].topic;
-        document.getElementById('hook-view').innerText = `"${currentPipeline.hook}"`;
-        document.getElementById('scenes-pipeline-view').innerHTML = currentPipeline.scenes.map((s, i) => `
-          <div class="glass-panel rounded-xl p-3 space-y-2 border-slate-800">
-            <div class="flex justify-between items-center">
-              <span class="text-pink-400 font-bold text-xs">Scène ${i + 1} (${s.time})</span>
-              <button onclick="copyPrompt(${i})" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-pink-300 px-2 py-1 rounded border border-slate-700">
-                📋 Copier Prompt IA
-              </button>
-            </div>
-            <div>
-              <span class="text-[10px] font-bold text-slate-400 uppercase block">Voix-Off :</span>
-              <p class="text-xs text-slate-200">${s.voiceover}</p>
-            </div>
-            <div class="bg-black/50 p-2 rounded-lg border border-slate-800/80">
-              <span class="text-[9px] font-bold text-amber-400 uppercase block mb-0.5">Prompt Vidéo (Anglais 8K) :</span>
-              <p class="text-[11px] font-mono text-emerald-300 select-all">${s.video_prompt}</p>
-            </div>
-          </div>
-        `).join('');
-        document.getElementById('results-container').classList.remove('hidden');
+        renderPipelineUI();
         toggleModal('history-modal');
       }
     }
