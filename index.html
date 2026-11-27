@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ShortFlow AI — Mini-Series & Preload v23</title>
+  <title>ShortFlow AI — Anti-Rate-Limit v24</title>
   <meta name="theme-color" content="#090d16" />
   <link rel="manifest" href="./manifest.json" />
   <script src="https://cdn.tailwindcss.com"></script>
@@ -40,7 +40,7 @@
       </div>
       <div>
         <h1 class="text-sm font-bold tracking-wide text-white leading-none">SHORTFLOW <span class="text-pink-400">AI</span></h1>
-        <span class="text-[10px] text-pink-300 font-mono">MINI-SERIES & PRELOAD v23</span>
+        <span class="text-[10px] text-pink-300 font-mono">ANTI-RATE-LIMIT v24</span>
       </div>
     </div>
     <div class="flex items-center gap-1.5">
@@ -55,14 +55,14 @@
 
   <!-- Status Bar -->
   <div id="status-bar" class="mb-3 px-3 py-2 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] font-mono text-pink-300 text-center">
-    Prêt • Cache Préchargé & Mode Mini-Série Actifs
+    Prêt • File d'attente intelligente anti-saturation active
   </div>
 
   <!-- Input Studio -->
   <div class="glass-panel rounded-2xl p-4 shadow-xl mb-3 space-y-3">
     <div>
       <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">🎬 Sujet ou Scénario de Mini-Série / Vidéo</label>
-      <textarea id="topic-input" rows="3" placeholder="Ex: Mini-série 3 épisodes : L'ascension d'un génie de la mécanique à Zouérate..." 
+      <textarea id="topic-input" rows="3" placeholder="Ex: Un générateur électrique révolutionnaire et autonome à Zouérate..." 
         class="w-full bg-slate-900/90 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-pink-500 resize-none"></textarea>
     </div>
 
@@ -70,8 +70,8 @@
       <div>
         <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Format & Longueur</label>
         <select id="duration-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none">
-          <option value="4">⚡ Short Standard (4 Scènes)</option>
-          <option value="8" selected>🎬 Mini-Série TikTok (8 Scènes / Long)</option>
+          <option value="4" selected>⚡ Short Standard (4 Scènes)</option>
+          <option value="8">🎬 Mini-Série TikTok (8 Scènes)</option>
         </select>
       </div>
       <div>
@@ -85,7 +85,7 @@
     </div>
 
     <button onclick="generateMiniSeriesStudio()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-pink-600 via-rose-600 to-amber-600 hover:from-pink-500 hover:to-amber-500 text-white font-bold text-xs shadow-lg shadow-pink-600/30 transition active:scale-95">
-      🚀 Générer la Mini-Série & Précharger le Cache
+      🚀 Générer la Mini-Série & Charger en Séquence
     </button>
   </div>
 
@@ -96,7 +96,7 @@
     <div class="glass-panel rounded-2xl p-3 relative overflow-hidden flex flex-col items-center">
       <div class="w-full flex justify-between items-center mb-2">
         <h2 class="text-xs font-bold text-pink-400 uppercase tracking-wider">🎥 Lecteur Mini-Série Live (9:16)</h2>
-        <span id="render-progress" class="text-[10px] font-mono text-amber-400">Cache prêt (0 latence)</span>
+        <span id="render-progress" class="text-[10px] font-mono text-amber-400">Prêt</span>
       </div>
       
       <!-- Screen container with Ken Burns Motion Effect -->
@@ -174,7 +174,7 @@
 
     let currentPipeline = null;
     let activeSceneIndex = 0;
-    let preloadedImages = []; // Cache mémoire anti-latence
+    let preloadedImages = [];
 
     function toggleModal(id) {
       const m = document.getElementById(id);
@@ -194,7 +194,7 @@
 
     async function generateMiniSeriesStudio() {
       const topic = document.getElementById('topic-input').value.trim();
-      const sceneCount = parseInt(document.getElementById('duration-select').value); // 4 ou 8 scènes
+      const sceneCount = parseInt(document.getElementById('duration-select').value);
       const style = document.getElementById('style-select').value;
 
       if (!topic) {
@@ -208,23 +208,23 @@
         return;
       }
 
-      document.getElementById('status-bar').innerText = `🧠 Génération de la mini-série (${sceneCount} scènes) & Prompts 8K...`;
+      document.getElementById('status-bar').innerText = `🧠 Génération du scénario (${sceneCount} scènes)...`;
 
-      const prompt = `Tu es un réalisateur de mini-séries virales et de clips (style Sora / Runway).
+      const prompt = `Tu es un réalisateur de mini-séries virales.
 Sujet : "${topic}"
-Nombre de scènes / épisodes : ${sceneCount}
+Nombre de scènes : ${sceneCount}
 Style : "${style}"
 
-Analyse ce sujet et génère un pipeline de exactement ${sceneCount} scènes narratives continues. Pour chaque scène :
+Génère un pipeline de exactement ${sceneCount} scènes narratives. Pour chaque scène :
 1. "time": minutage (ex: "0-10s")
-2. "voiceover": voix-off percutante en français.
-3. "video_prompt": prompt visuel 8K détaillé en anglais pour générer l'image.
+2. "voiceover": voix-off percutante en français (courte et percutante).
+3. "video_prompt": prompt visuel 8K détaillé en anglais court.
 
-Réponds UNIQUEMENT en JSON valide (sans markdown) avec cette structure exacte :
+Réponds UNIQUEMENT en JSON valide (sans markdown) :
 {
-  "hook": "Accroche choc de la mini-série",
+  "hook": "Accroche choc",
   "scenes": [
-    ${Array.from({length: sceneCount}, (_, i) => `{"time": "${i*10}-${(i+1)*10}s", "voiceover": "...", "video_prompt": "..."}`).join(',\n    ')}
+    ${Array.from({length: sceneCount}, (_, i) => `{"time": "${i*8}-${(i+1)*8}s", "voiceover": "...", "video_prompt": "..."}`).join(',\n    ')}
   ]
 }`;
 
@@ -243,8 +243,8 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) avec cette structure exacte :
         currentPipeline = { topic, sceneCount, style, date: new Date().toLocaleDateString(), ...JSON.parse(cleanJson) };
         await finishPipelineLoad();
       } catch (e) {
-        console.warn("Quota atteint -> Mode Mini-Série de Secours :", e);
-        document.getElementById('status-bar').innerText = "⚡ Quota API atteint -> Mode Mini-Série Local Actif !";
+        console.warn("Quota atteint -> Mode Secours :", e);
+        document.getElementById('status-bar').innerText = "⚡ Quota API atteint -> Mode Secours Actif !";
         currentPipeline = generateFallbackMiniSeries(topic, sceneCount, style);
         await finishPipelineLoad();
       }
@@ -255,13 +255,13 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) avec cette structure exacte :
       for (let i = 0; i < sceneCount; i++) {
         scenes.push({
           time: `${i*8}-${(i+1)*8}s`,
-          voiceover: `Épisode ${i+1} : Développement intense et captivant de l'intrigue.`,
-          video_prompt: `Cinematic scene ${i+1} of ${topic}, hyper-realistic 8k resolution, dramatic cinematic lighting`
+          voiceover: `Épisode ${i+1} : ${topic.substring(0, 30)}...`,
+          video_prompt: `Cinematic 8k shot of ${topic}, dramatic lighting`
         });
       }
       return {
         topic, sceneCount, style, date: new Date().toLocaleDateString(),
-        hook: `La saga épique : ${topic.substring(0, 45)}...`,
+        hook: `La saga : ${topic.substring(0, 40)}...`,
         scenes
       };
     }
@@ -289,30 +289,46 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) avec cette structure exacte :
         </div>
       `).join('');
 
-      // Générer dynamiquement la barre de timeline selon le nombre de scènes
       document.getElementById('timeline-switcher').innerHTML = currentPipeline.scenes.map((_, idx) => `
-        <button onclick="previewScene(${idx})" class="px-2 py-1 rounded bg-slate-800 hover:bg-pink-600 text-[10px] font-bold shrink-0">S${idx + 1}</button>
+        <button onclick="previewScene(${idx})" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-pink-600 text-[10px] font-bold shrink-0">S${idx + 1}</button>
       `).join('');
 
       document.getElementById('results-container').classList.remove('hidden');
 
-      // 🔥 ÉTAPE CLÉ : PRÉCHARGEMENT TOTAL DU CACHE (ANTI-LATENCE)
-      document.getElementById('status-bar').innerText = "⏳ Préchargement de toutes les images en cache (0 latence)...";
-      preloadedImages = [];
+      // 🔥 FILE D'ATTENTE SÉQUENTIELLE ANTI-SATURATION (1 image toutes les 1.8 secondes)
+      preloadedImages = new Array(currentPipeline.scenes.length).fill(null);
       
       for (let i = 0; i < currentPipeline.scenes.length; i++) {
+        document.getElementById('status-bar').innerText = `⏳ Chargement scène ${i + 1}/${currentPipeline.scenes.length} (Anti-saturation)...`;
+        
         await new Promise(resolve => {
           const img = new Image();
           img.crossOrigin = "anonymous";
-          const promptEnc = encodeURIComponent(currentPipeline.scenes[i].video_prompt + ", 8k resolution, vertical 9:16");
-          img.src = `https://image.pollinations.ai/prompt/${promptEnc}?width=540&height=960&nologo=true&seed=${i * 7777}`;
-          img.onload = () => { preloadedImages[i] = img; resolve(); };
-          img.onerror = () => { preloadedImages[i] = null; resolve(); };
+          const promptEnc = encodeURIComponent(currentPipeline.scenes[i].video_prompt + ", 8k resolution, vertical 9:16 aspect ratio");
+          img.src = `https://image.pollinations.ai/prompt/${promptEnc}?width=540&height=960&nologo=true&seed=${1000 + i * 543}`;
+          
+          img.onload = () => {
+            preloadedImages[i] = img;
+            resolve();
+          };
+          img.onerror = () => {
+            preloadedImages[i] = null;
+            resolve();
+          };
         });
+
+        // Afficher immédiatement la première image dès qu'elle arrive
+        if (i === 0) {
+          previewScene(0);
+        }
+
+        // Pause de 1.8 seconde pour ne pas saturer le serveur gratuit Pollinations
+        if (i < currentPipeline.scenes.length - 1) {
+          await new Promise(r => setTimeout(r, 1800));
+        }
       }
 
-      document.getElementById('status-bar').innerText = "✅ Mini-Série prête & Cache chargé sans latence !";
-      previewScene(0);
+      document.getElementById('status-bar').innerText = "✅ Mini-Série chargée avec succès sans saturation !";
     }
 
     function previewScene(idx) {
@@ -324,10 +340,10 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) avec cette structure exacte :
 
       const imgEl = document.getElementById('cinematic-screen-img');
       if (preloadedImages[idx] && preloadedImages[idx].complete) {
-        imgEl.src = preloadedImages[idx].src; // Affichage instantané depuis le cache mémoire !
+        imgEl.src = preloadedImages[idx].src;
       } else {
         const promptEnc = encodeURIComponent(sceneData.video_prompt + ", 8k resolution, vertical 9:16");
-        imgEl.src = `https://image.pollinations.ai/prompt/${promptEnc}?width=540&height=960&nologo=true&seed=${idx * 7777}`;
+        imgEl.src = `https://image.pollinations.ai/prompt/${promptEnc}?width=540&height=960&nologo=true&seed=${1000 + idx * 543}`;
       }
     }
 
@@ -372,7 +388,7 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) avec cette structure exacte :
       };
 
       const sceneCount = currentPipeline.scenes.length;
-      const totalMs = (currentPipeline.scenes.length * 8) * 1000;
+      const totalMs = (sceneCount * 8) * 1000;
       const sceneMs = totalMs / sceneCount;
 
       activeSceneIndex = 0;
@@ -469,7 +485,7 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) avec cette structure exacte :
     function saveCurrentPipeline() {
       if (!currentPipeline) return;
       saveToHistory(currentPipeline);
-      document.getElementById('status-bar').innerText = "💾 Projet Mini-Série sauvegardé ✓";
+      document.getElementById('status-bar').innerText = "💾 Projet sauvegardé ✓";
     }
 
     function exportPipelineJSON() {
@@ -506,7 +522,6 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) avec cette structure exacte :
       if (hist[idx]) {
         currentPipeline = hist[idx];
         document.getElementById('topic-input').value = hist[idx].topic;
-        // Re-déclencher le préchargement
         finishPipelineLoad();
         toggleModal('history-modal');
       }
