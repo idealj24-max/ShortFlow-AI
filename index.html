@@ -3,12 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ShortFlow AI — Cloud Neural Matrix v21</title>
+  <title>ShortFlow AI — Ultimate Cinematic Studio v22</title>
   <meta name="theme-color" content="#090d16" />
   <link rel="manifest" href="./manifest.json" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Three.js pour le rendu 3D procédural de secours -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <style>
     body, html {
       margin: 0; padding: 0; width: 100%; height: 100%;
@@ -22,6 +20,14 @@
       -webkit-backdrop-filter: blur(16px);
       border: 1px solid rgba(236, 72, 153, 0.3);
     }
+    @keyframes kenBurns {
+      0% { transform: scale(1) translate(0, 0); }
+      50% { transform: scale(1.12) translate(-2%, -2%); }
+      100% { transform: scale(1.05) translate(2%, 1%); }
+    }
+    .ken-burns {
+      animation: kenBurns 12s ease-in-out infinite alternate;
+    }
   </style>
 </head>
 <body class="p-3 pb-16 max-w-lg mx-auto flex flex-col min-h-screen">
@@ -34,7 +40,7 @@
       </div>
       <div>
         <h1 class="text-sm font-bold tracking-wide text-white leading-none">SHORTFLOW <span class="text-pink-400">AI</span></h1>
-        <span class="text-[10px] text-pink-300 font-mono">CLOUD NEURAL MATRIX v21</span>
+        <span class="text-[10px] text-pink-300 font-mono">CINEMATIC MOTION v22</span>
       </div>
     </div>
     <div class="flex items-center gap-1.5">
@@ -49,7 +55,7 @@
 
   <!-- Status Bar -->
   <div id="status-bar" class="mb-3 px-3 py-2 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] font-mono text-pink-300 text-center">
-    Prêt • Connexion Cloud GPU & Prompts 8K Actifs
+    Prêt • Moteur de Mouvement Cinématique & Cloud AI Actifs
   </div>
 
   <!-- Input Studio -->
@@ -69,46 +75,42 @@
         </select>
       </div>
       <div>
-        <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Moteur Visuel Cloud</label>
+        <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Style Visuel Cloud</label>
         <select id="style-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none">
-          <option value="cinematic 8k">✨ Cloud Neural HD (Flux / Sora)</option>
-          <option value="cyberpunk 8k">🌆 Cyberpunk Néon 8K</option>
+          <option value="cinematic 8k">✨ Cinématique Hollywood (8K)</option>
+          <option value="cyberpunk 8k">🌆 Cyberpunk Néon</option>
           <option value="hyperrealistic">🔥 Hyperréaliste 3D FX</option>
         </select>
       </div>
     </div>
 
-    <button onclick="generateCloudNeuralStudio()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-pink-600 via-rose-600 to-amber-600 hover:from-pink-500 hover:to-amber-500 text-white font-bold text-xs shadow-lg shadow-pink-600/30 transition active:scale-95">
-      🚀 Activer le Cloud GPU & Générer la Vidéo IA
+    <button onclick="generateCinematicStudio()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-pink-600 via-rose-600 to-amber-600 hover:from-pink-500 hover:to-amber-500 text-white font-bold text-xs shadow-lg shadow-pink-600/30 transition active:scale-95">
+      🚀 Générer le Studio Cinématique & les Visuels IA
     </button>
   </div>
 
   <!-- Workspace Container -->
   <div id="results-container" class="hidden space-y-3 flex-1">
     
-    <!-- Video Preview Cloud Neural Card -->
+    <!-- Video Preview Cinematic Card -->
     <div class="glass-panel rounded-2xl p-3 relative overflow-hidden flex flex-col items-center">
       <div class="w-full flex justify-between items-center mb-2">
-        <h2 class="text-xs font-bold text-pink-400 uppercase tracking-wider">🎥 Rendu Cloud Neural Live (9:16)</h2>
-        <span id="render-progress" class="text-[10px] font-mono text-amber-400">Génération par le Cloud GPU...</span>
+        <h2 class="text-xs font-bold text-pink-400 uppercase tracking-wider">🎥 Lecteur Cinématique Live (9:16)</h2>
+        <span id="render-progress" class="text-[10px] font-mono text-amber-400">Prêt à diffuser</span>
       </div>
       
-      <!-- Screen container with image/video display and 3D fallback -->
+      <!-- Screen container with Ken Burns Motion Effect -->
       <div class="relative w-full max-w-[220px] aspect-[9/16] bg-black rounded-xl overflow-hidden border border-pink-500/40 shadow-2xl flex items-center justify-center">
-        <!-- AI Generated Visual Display -->
-        <img id="neural-visual-display" src="" alt="Rendu IA" class="absolute inset-0 w-full h-full object-cover opacity-90 transition-opacity duration-500" crossorigin="anonymous" />
+        <img id="cinematic-screen-img" src="" alt="Visuel Cinématique" class="absolute inset-0 w-full h-full object-cover ken-burns transition-opacity duration-700" crossorigin="anonymous" />
         
-        <!-- Three.js Fallback Canvas -->
-        <canvas id="fallback-canvas" class="absolute inset-0 w-full h-full object-cover hidden"></canvas>
-        
-        <!-- Overlay Subtitles -->
+        <!-- Overlay Subtitles & Scene Badge -->
         <div class="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/95 via-black/70 to-transparent flex flex-col justify-end pointer-events-none z-10">
           <div id="scene-badge" class="self-start px-2 py-0.5 rounded bg-pink-600/90 text-white font-bold text-[9px] mb-1">SCÈNE 1</div>
           <p id="subtitle-view" class="text-xs font-bold text-white leading-snug drop-shadow"></p>
         </div>
       </div>
 
-      <!-- Scene Switcher for Preview -->
+      <!-- Scene Switcher / Timeline Controls -->
       <div class="flex gap-1.5 mt-2.5 w-full justify-center">
         <button onclick="previewScene(0)" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-pink-600 text-[10px] font-bold">Scène 1</button>
         <button onclick="previewScene(1)" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-pink-600 text-[10px] font-bold">Scène 2</button>
@@ -118,7 +120,7 @@
 
       <!-- Export Action Button -->
       <div class="flex gap-2 mt-3 w-full">
-        <button id="record-btn" onclick="startVideoRecording()" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 text-xs font-bold text-white shadow-lg shadow-emerald-600/30">
+        <button id="record-btn" onclick="startCinematicRecording()" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 text-xs font-bold text-white shadow-lg shadow-emerald-600/30">
           📥 Enregistrer & Télécharger la Vidéo (.WEBM)
         </button>
       </div>
@@ -177,29 +179,6 @@
 
     let currentPipeline = null;
     let activeSceneIndex = 0;
-    let sceneStartTime = 0;
-    let animTimer = null;
-
-    // Three.js Fallback Setup
-    const fallbackCanvas = document.getElementById('fallback-canvas');
-    const renderer = new THREE.WebGLRenderer({ canvas: fallbackCanvas, antialias: true, preserveDrawingBuffer: true });
-    renderer.setSize(540, 960);
-    const scene3D = new THREE.Scene();
-    scene3D.background = new THREE.Color(0x050814);
-    const camera = new THREE.PerspectiveCamera(60, 540 / 960, 0.1, 1000);
-    camera.position.set(0, 2, 6);
-    camera.lookAt(0, 0, 0);
-
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
-    scene3D.add(ambientLight);
-    const pointLight = new THREE.PointLight(0xff3366, 4, 50);
-    pointLight.position.set(0, 5, 3);
-    scene3D.add(pointLight);
-
-    const geom = new THREE.SphereGeometry(1.2, 32, 32);
-    const mat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.2 });
-    const meshObj = new THREE.Mesh(geom, mat);
-    scene3D.add(meshObj);
 
     function toggleModal(id) {
       const m = document.getElementById(id);
@@ -217,7 +196,7 @@
       }
     }
 
-    async function generateCloudNeuralStudio() {
+    async function generateCinematicStudio() {
       const topic = document.getElementById('topic-input').value.trim();
       const totalSeconds = parseInt(document.getElementById('duration-select').value);
       const style = document.getElementById('style-select').value;
@@ -233,21 +212,21 @@
         return;
       }
 
-      document.getElementById('status-bar').innerText = "🧠 Connexion au Cloud Neural & Génération des Prompts 8K...";
+      document.getElementById('status-bar').innerText = "🧠 Analyse cinématique & Génération des visuels...";
 
-      const prompt = `Tu es un réalisateur professionnel de films et de clips viraux générés par IA (style Sora, Runway).
-Sujet de l'utilisateur : "${topic}"
+      const prompt = `Tu es un réalisateur de films d'animation et de clips viraux (style Sora / Runway).
+Sujet : "${topic}"
 Durée : ${totalSeconds}s
 Style : "${style}"
 
-Analyse précisément ce sujet et génère un pipeline de 4 scènes. Pour chaque scène, fournis :
-1. "time": minutage exact (ex: "0-15s")
-2. "voiceover": texte de voix-off en français percutant.
-3. "video_prompt": prompt visuel 8K détaillé en anglais pour générer l'image/vidéo IA correspondante.
+Analyse ce sujet et génère un pipeline de 4 scènes. Pour chaque scène :
+1. "time": minutage (ex: "0-15s")
+2. "voiceover": voix-off percutante en français.
+3. "video_prompt": prompt visuel 8K détaillé en anglais pour générer l'image.
 
-Génère UNIQUEMENT un objet JSON valide (sans markdown) avec cette structure :
+Réponds UNIQUEMENT en JSON valide (sans markdown) :
 {
-  "hook": "Accroche choc basée sur le sujet",
+  "hook": "Accroche choc",
   "scenes": [
     {"time": "0-15s", "voiceover": "...", "video_prompt": "..."},
     {"time": "15-30s", "voiceover": "...", "video_prompt": "..."},
@@ -271,38 +250,24 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown) avec cette structure :
         currentPipeline = { topic, totalSeconds, style, date: new Date().toLocaleDateString(), ...JSON.parse(cleanJson) };
         finishPipelineLoad();
       } catch (e) {
-        console.warn("Quota atteint -> Mode Cloud Neural de Secours :", e);
-        document.getElementById('status-bar').innerText = "⚡ Quota API atteint -> Mode Neural Local Actif !";
-        currentPipeline = generateCloudFallbackPipeline(topic, totalSeconds, style);
+        console.warn("Quota atteint -> Mode Secours Intelligent :", e);
+        document.getElementById('status-bar').innerText = "⚡ Quota API atteint -> Mode Secours Actif !";
+        currentPipeline = generateFallbackPipeline(topic, totalSeconds, style);
         finishPipelineLoad();
       }
     }
 
-    function generateCloudFallbackPipeline(topic, totalSeconds, style) {
-      const lower = topic.toLowerCase();
-      if (lower.includes('ronaldo') || lower.includes('foot') || lower.includes('but')) {
-        return {
-          topic, totalSeconds, style, date: new Date().toLocaleDateString(),
-          hook: "Le jour où Cristiano Ronaldo a littéralement détruit les lois de la physique...",
-          scenes: [
-            { time: "0-15s", voiceover: "À 40 mètres du but, un coup franc d'une distance impossible...", video_prompt: "Cristiano Ronaldo standing over soccer ball at night in massive colossal football stadium under bright floodlights, 8k photorealistic cinematic render" },
-            { time: "15-30s", voiceover: "Une course d'élan millimétrée, une frappe d'une violence inouïe.", video_prompt: "High speed action shot of Cristiano Ronaldo striking soccer ball with immense power, turf flying, cinematic sports photography" },
-            { time: "30-45s", voiceover: "Le ballon s'enflamme en pleine volée, devenant une météore ardente !", video_prompt: "Soccer ball morphing into a blazing fiery meteor with roaring fire and sparks tearing through goal net, 8k cinematic VFX" },
-            { time: "45-60s", voiceover: "SIUUU ! Le stade entier entre en éruption sous l'énergie du roi !", video_prompt: "Cristiano Ronaldo performing iconic jump-spin SIUUU celebration in packed stadium with fireworks and cheering fans, masterpiece" }
-          ]
-        };
-      } else {
-        return {
-          topic, totalSeconds, style, date: new Date().toLocaleDateString(),
-          hook: `Le projet ultime autour de : ${topic.substring(0, 40)}...`,
-          scenes: [
-            { time: "0-15s", voiceover: `Introduction spectaculaire : ${topic.substring(0, 30)}...`, video_prompt: `Cinematic 3D establishing shot of ${topic}, hyper-realistic 8k resolution` },
-            { time: "15-30s", voiceover: "Le rythme s'accélère avec une intensité dramatique saisissante.", video_prompt: `Dynamic camera movement showcasing core action of ${topic}, cinematic lighting` },
-            { time: "30-45s", voiceover: "Le climax absolu ! L'action atteint son paroxysme.", video_prompt: `Climax action sequence for ${topic}, epic visual effects, masterpiece 8k` },
-            { time: "45-60s", voiceover: "Conclusion légendaire. Abonne-toi pour ne rien rater !", video_prompt: `Epic cinematic closing shot for ${topic}, stunning visual aesthetics` }
-          ]
-        };
-      }
+    function generateFallbackPipeline(topic, totalSeconds, style) {
+      return {
+        topic, totalSeconds, style, date: new Date().toLocaleDateString(),
+        hook: "Le jour où l'action a atteint un niveau légendaire...",
+        scenes: [
+          { time: "0-15s", voiceover: "Première séquence au sommet de la tension.", video_prompt: `Cinematic wide establishing shot of ${topic}, dramatic lighting, 8k resolution` },
+          { time: "15-30s", voiceover: "L'accélération foudroyante qui change tout.", video_prompt: `Dynamic action shot showcasing ${topic}, intense motion blur, cinematic 8k` },
+          { time: "30-45s", voiceover: "Le point culminant spectaculaire et explosif.", video_prompt: `Climax scene of ${topic}, epic visual effects, dramatic depth of field, 8k` },
+          { time: "45-60s", voiceover: "Conclusion légendaire. Abonne-toi !", video_prompt: `Epic cinematic closing shot for ${topic}, masterpiece lighting` }
+        ]
+      };
     }
 
     function finishPipelineLoad() {
@@ -330,56 +295,30 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown) avec cette structure :
 
       document.getElementById('results-container').classList.remove('hidden');
       previewScene(0);
-      document.getElementById('status-bar').innerText = "✅ Cloud Neural & Prompts synchronisés !";
+      document.getElementById('status-bar').innerText = "✅ Studio Cinématique synchronisé avec succès !";
     }
 
-    // Charger l'image générée par le Cloud GPU mondial (Pollinations.ai / HuggingFace gateway)
     function previewScene(idx) {
       activeSceneIndex = idx;
-      sceneStartTime = performance.now();
       const sceneData = currentPipeline.scenes[idx] || currentPipeline.scenes[0];
 
       document.getElementById('scene-badge').innerText = `SCÈNE ${idx + 1}`;
       document.getElementById('subtitle-view').innerText = sceneData.voiceover;
 
-      const imgEl = document.getElementById('neural-visual-display');
-      const fallbackCanvas = document.getElementById('fallback-canvas');
-      
-      // Encoder le prompt pour interroger le réseau mondial de GPU cloud d'images IA
+      const imgEl = document.getElementById('cinematic-screen-img');
       const encodedPrompt = encodeURIComponent(sceneData.video_prompt + ", 8k resolution, cinematic lighting, vertical 9:16 aspect ratio");
-      const cloudAIUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=540&height=960&nologo=true&seed=${idx * 12345}`;
+      const cloudAIUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=540&height=960&nologo=true&seed=${idx * 9999}`;
 
-      document.getElementById('render-progress').innerText = `Chargement Cloud GPU (Scène ${idx + 1})...`;
+      document.getElementById('render-progress').innerText = `Chargement Scène ${idx + 1}...`;
       
       imgEl.onload = () => {
-        document.getElementById('render-progress').innerText = "Rendu Cloud Actif ✓";
-        imgEl.classList.remove('hidden');
-        fallbackCanvas.classList.add('hidden');
-      };
-      
-      imgEl.onerror = () => {
-        // En cas de coupure réseau, basculer sur le moteur 3D procédural
-        imgEl.classList.add('hidden');
-        fallbackCanvas.classList.remove('hidden');
-        document.getElementById('render-progress').innerText = "Mode 3D Procédural Actif";
-        startFallbackAnimation();
+        document.getElementById('render-progress').innerText = "Rendu Cinématique Actif ✓";
       };
 
       imgEl.src = cloudAIUrl;
     }
 
-    function startFallbackAnimation() {
-      if (animTimer) cancelAnimationFrame(animTimer);
-      function loop() {
-        meshObj.rotation.x += 0.01;
-        meshObj.rotation.y += 0.02;
-        renderer.render(scene3D, camera);
-        animTimer = requestAnimationFrame(loop);
-      }
-      loop();
-    }
-
-    async function startVideoRecording() {
+    async function startCinematicRecording() {
       if (!currentPipeline) return;
       if (!window.MediaRecorder) {
         alert("Enregistrement non supporté sur ce navigateur.");
@@ -390,18 +329,14 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown) avec cette structure :
       const statusEl = document.getElementById('render-progress');
       btn.disabled = true;
       btn.classList.add('opacity-50');
-      statusEl.innerText = "🔴 Enregistrement de la Vidéo Cloud (.WEBM)...";
+      statusEl.innerText = "🔴 Enregistrement de la Vidéo Cinématique (.WEBM)...";
 
-      // Capturer le flux du conteneur d'affichage
-      const displayCard = document.querySelector('.aspect-\\[9\\/16\\]');
-      
-      // Utiliser canvas si disponible ou capture stream
-      const stream = fallbackCanvas.captureStream ? fallbackCanvas.captureStream(30) : null;
-      if (!stream) {
-        alert("Veuillez utiliser un navigateur supportant l'enregistrement vidéo.");
-        btn.disabled = false;
-        return;
-      }
+      // Création d'un canvas offscreen pour capturer les images animées avec l'effet Ken Burns
+      const canvas = document.createElement('canvas');
+      canvas.width = 540;
+      canvas.height = 960;
+      const ctx = canvas.getContext('2d');
+      const stream = canvas.captureStream(30);
 
       let recorder;
       try {
@@ -417,9 +352,9 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown) avec cette structure :
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `shortflow_cloud_${Date.now()}.webm`;
+        a.download = `shortflow_cinematic_${Date.now()}.webm`;
         a.click();
-        statusEl.innerText = "✅ Vidéo Cloud téléchargée avec succès !";
+        statusEl.innerText = "✅ Vidéo cinématique téléchargée avec succès !";
         btn.disabled = false;
         btn.classList.remove('opacity-50');
       };
@@ -428,8 +363,20 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown) avec cette structure :
       const sceneMs = totalMs / 4;
 
       activeSceneIndex = 0;
-      previewScene(0);
       recorder.start();
+
+      // Charger les 4 images en avance
+      const images = [];
+      for (let i = 0; i < 4; i++) {
+        await new Promise(resolve => {
+          const img = new Image();
+          img.crossOrigin = "anonymous";
+          const promptEnc = encodeURIComponent(currentPipeline.scenes[i].video_prompt + ", 8k resolution, vertical 9:16");
+          img.src = `https://image.pollinations.ai/prompt/${promptEnc}?width=540&height=960&nologo=true&seed=${i * 9999}`;
+          img.onload = () => { images[i] = img; resolve(); };
+          img.onerror = () => { images[i] = null; resolve(); };
+        });
+      }
 
       function speakScene(idx) {
         if ('speechSynthesis' in window && currentPipeline.scenes[idx]) {
@@ -442,38 +389,89 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown) avec cette structure :
       }
 
       speakScene(0);
+      previewScene(0);
 
-      let step = 0;
-      const timer = setInterval(() => {
-        step++;
-        if (step < 4) {
-          previewScene(step);
-          speakScene(step);
-        } else {
-          clearInterval(timer);
-          setTimeout(() => { recorder.stop(); }, 1000);
+      let currentStep = 0;
+      let frameInScene = 0;
+      const totalFramesPerScene = (sceneMs / 1000) * 30;
+
+      const renderInterval = setInterval(() => {
+        const img = images[currentStep];
+        ctx.fillStyle = "#000";
+        ctx.fillRect(0, 0, 540, 960);
+
+        if (img && img.complete) {
+          // Effet de zoom progressif (Ken Burns)
+          const scale = 1.0 + (frameInScene / totalFramesPerScene) * 0.1;
+          const w = 540 * scale;
+          const h = 960 * scale;
+          const x = (540 - w) / 2;
+          const y = (960 - h) / 2;
+          ctx.drawImage(img, x, y, w, h);
         }
-      }, sceneMs);
+
+        // Overlay Bandeau & Sous-titres
+        ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
+        ctx.fillRect(0, 800, 540, 160);
+
+        ctx.fillStyle = "#ec4899";
+        ctx.font = "bold 18px sans-serif";
+        ctx.fillText(`SCÈNE ${currentStep + 1}`, 36, 835);
+
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 22px sans-serif";
+        wrapCanvasText(ctx, currentPipeline.scenes[currentStep].voiceover, 36, 870, 468, 28);
+
+        frameInScene++;
+        if (frameInScene >= totalFramesPerScene) {
+          frameInScene = 0;
+          currentStep++;
+          if (currentStep < 4) {
+            previewScene(currentStep);
+            speakScene(currentStep);
+          } else {
+            clearInterval(renderInterval);
+            setTimeout(() => { recorder.stop(); }, 500);
+          }
+        }
+      }, 1000 / 30);
+    }
+
+    function wrapCanvasText(context, text, x, y, maxWidth, lineHeight) {
+      const words = text.split(' ');
+      let line = '';
+      for (let n = 0; n < words.length; n++) {
+        let testLine = line + words[n] + ' ';
+        let metrics = context.measureText(testLine);
+        if (metrics.width > maxWidth && n > 0) {
+          context.fillText(line, x, y);
+          line = words[n] + ' ';
+          y += lineHeight;
+        } else {
+          line = testLine;
+        }
+      }
+      context.fillText(line, x, y);
     }
 
     function copyPrompt(idx) {
       if (!currentPipeline || !currentPipeline.scenes[idx]) return;
       navigator.clipboard.writeText(currentPipeline.scenes[idx].video_prompt).then(() => {
-        alert(`Prompt Cloud de la Scène ${idx + 1} copié !`);
+        alert(`Prompt de la Scène ${idx + 1} copié !`);
       });
     }
 
     function saveToHistory(proj) {
-      let hist = JSON.parse(localStorage.getItem('SHORTFLOW_CLOUD') || '[]');
+      let hist = JSON.parse(localStorage.getItem('SHORTFLOW_CINEMATIC') || '[]');
       hist.unshift(proj);
       if (hist.length > 15) hist.pop();
-      localStorage.setItem('SHORTFLOW_CLOUD', JSON.stringify(hist));
+      localStorage.setItem('SHORTFLOW_CINEMATIC', JSON.stringify(hist));
     }
 
     function saveCurrentPipeline() {
       if (!currentPipeline) return;
       saveToHistory(currentPipeline);
-      document.getElementById('status-bar').innerText = "💾 Projet Cloud sauvegardé ✓";
+      document.getElementById('status-bar').innerText = "💾 Projet sauvegardé ✓";
     }
 
     function exportPipelineJSON() {
@@ -481,7 +479,7 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown) avec cette structure :
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentPipeline, null, 2));
       const dlAnchor = document.createElement('a');
       dlAnchor.setAttribute("href", dataStr);
-      dlAnchor.setAttribute("download", `shortflow_cloud_${Date.now()}.json`);
+      dlAnchor.setAttribute("download", `shortflow_cinematic_${Date.now()}.json`);
       document.body.appendChild(dlAnchor);
       dlAnchor.click();
       dlAnchor.remove();
@@ -489,7 +487,7 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown) avec cette structure :
 
     function renderHistory() {
       const list = document.getElementById('history-list');
-      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_CLOUD') || '[]');
+      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_CINEMATIC') || '[]');
       if (hist.length === 0) {
         list.innerHTML = `<div class="text-slate-500 text-center py-4">Aucun projet sauvegardé.</div>`;
         return;
@@ -506,7 +504,7 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown) avec cette structure :
     }
 
     function loadProj(idx) {
-      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_CLOUD') || '[]');
+      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_CINEMATIC') || '[]');
       if (hist[idx]) {
         currentPipeline = hist[idx];
         document.getElementById('topic-input').value = hist[idx].topic;
