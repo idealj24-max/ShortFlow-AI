@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ShortFlow AI — Smart Vector Engine v13</title>
+  <title>ShortFlow AI — Master Orchestrator Studio</title>
   <meta name="theme-color" content="#090d16" />
   <link rel="manifest" href="./manifest.json" />
   <script src="https://cdn.tailwindcss.com"></script>
@@ -15,14 +15,14 @@
       color: #f8fafc; overflow-x: hidden;
     }
     .glass-panel {
-      background: rgba(15, 23, 42, 0.92);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(236, 72, 153, 0.25);
+      background: rgba(15, 23, 42, 0.94);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(236, 72, 153, 0.3);
     }
   </style>
 </head>
-<body class="p-3 pb-14 max-w-lg mx-auto flex flex-col min-h-screen">
+<body class="p-3 pb-16 max-w-lg mx-auto flex flex-col min-h-screen">
 
   <!-- Header -->
   <header class="flex items-center justify-between py-3 mb-3 border-b border-slate-800">
@@ -32,7 +32,7 @@
       </div>
       <div>
         <h1 class="text-sm font-bold tracking-wide text-white leading-none">SHORTFLOW <span class="text-pink-400">AI</span></h1>
-        <span class="text-[10px] text-pink-300 font-mono">SMART ENGINE V13 (ANTI-QUOTA)</span>
+        <span class="text-[10px] text-pink-300 font-mono">ORCHESTRATEUR VIDÉO IA v14</span>
       </div>
     </div>
     <div class="flex items-center gap-1.5">
@@ -46,77 +46,61 @@
   </header>
 
   <!-- Status Bar -->
-  <div id="status-bar" class="mb-3 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] font-mono text-pink-300 text-center">
-    Prêt • Mode Intelligent Anti-Quota Actif
+  <div id="status-bar" class="mb-3 px-3 py-2 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] font-mono text-pink-300 text-center">
+    Prêt • Studio d'Orchestration IA Actif
   </div>
 
   <!-- Input Studio -->
-  <div class="glass-panel rounded-2xl p-3.5 shadow-xl mb-3 space-y-3">
+  <div class="glass-panel rounded-2xl p-4 shadow-xl mb-3 space-y-3">
     <div>
-      <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">🎬 Sujet ou Scène à Animer</label>
-      <textarea id="topic-input" rows="3" placeholder="Ex: Cristiano Ronaldo tire un coup franc surpuissant dans le stade..." 
+      <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">🎬 Sujet ou Scénario de Vidéo IA</label>
+      <textarea id="topic-input" rows="3" placeholder="Ex: Cristiano Ronaldo tire un coup franc surpuissant qui se transforme en boule de feu..." 
         class="w-full bg-slate-900/90 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-pink-500 resize-none"></textarea>
     </div>
 
     <div class="grid grid-cols-2 gap-2">
       <div>
-        <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Durée Cible</label>
+        <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Format / Durée</label>
         <select id="duration-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none">
-          <option value="20">⚡ Court (20 sec)</option>
-          <option value="32" selected>🔥 Standard (32 sec)</option>
-          <option value="48">📖 Storytelling (48 sec)</option>
+          <option value="30s">⚡ Punchy (30 sec)</option>
+          <option value="60s" selected>📖 Storytelling (60 sec)</option>
         </select>
       </div>
       <div>
-        <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Direction Artistique</label>
+        <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Moteur Vidéo IA</label>
         <select id="style-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none">
-          <option value="cinematic">🎬 Cinématique Dynamique</option>
-          <option value="neon">🌆 Néon / Cyberpunk</option>
-          <option value="blueprint">📐 Schéma Technique</option>
+          <option value="cinematic 8k photorealistic">✨ Cinématique HD (Sora / Runway)</option>
+          <option value="cyberpunk neon futuristic 8k">🌆 Cyberpunk Néon</option>
+          <option value="documentary industrial 8k">🏭 Documentaire Industriel / Mines</option>
         </select>
       </div>
     </div>
 
-    <button onclick="generateOrFallbackProject()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-pink-600 via-rose-600 to-amber-600 hover:from-pink-500 hover:to-amber-500 text-white font-bold text-xs shadow-lg shadow-pink-600/30 transition active:scale-95">
-      ⚡ Générer ou Compiler la Vidéo Animée
+    <button onclick="generateOrchestratorPipeline()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-pink-600 via-rose-600 to-amber-600 hover:from-pink-500 hover:to-amber-500 text-white font-bold text-xs shadow-lg shadow-pink-600/30 transition active:scale-95">
+      🚀 Lancer le Pipeline de Génération IA
     </button>
   </div>
 
   <!-- Workspace Container -->
   <div id="results-container" class="hidden space-y-3 flex-1">
     
-    <!-- Video Preview Canvas Card -->
-    <div class="glass-panel rounded-2xl p-3 relative overflow-hidden flex flex-col items-center">
-      <div class="w-full flex justify-between items-center mb-2">
-        <h2 class="text-xs font-bold text-pink-400 uppercase tracking-wider">🎥 Aperçu Vectoriel Live (9:16)</h2>
-        <span id="render-progress" class="text-[10px] font-mono text-amber-400">En lecture</span>
-      </div>
-      
-      <!-- Canvas Screen -->
-      <div class="relative w-full max-w-[230px] aspect-[9/16] bg-black rounded-xl overflow-hidden border border-pink-500/40 shadow-2xl flex items-center justify-center">
-        <canvas id="video-canvas" width="540" height="960" class="w-full h-full object-cover"></canvas>
-      </div>
-
-      <!-- Scene Switcher for Preview -->
-      <div class="flex gap-1.5 mt-2.5 w-full justify-center">
-        <button onclick="previewScene(0)" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-pink-600 text-[10px] font-bold">Scène 1</button>
-        <button onclick="previewScene(1)" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-pink-600 text-[10px] font-bold">Scène 2</button>
-        <button onclick="previewScene(2)" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-pink-600 text-[10px] font-bold">Scène 3</button>
-        <button onclick="previewScene(3)" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-pink-600 text-[10px] font-bold">Scène 4</button>
-      </div>
-
-      <!-- Export Action Button -->
-      <div class="flex gap-2 mt-3 w-full">
-        <button id="record-btn" onclick="startVectorRecording()" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 text-xs font-bold text-white shadow-lg shadow-emerald-600/30">
-          📥 Exporter la Vidéo Animée (.WEBM)
-        </button>
-      </div>
+    <!-- Hook Principal -->
+    <div class="glass-panel rounded-2xl p-3 border-pink-500/40">
+      <span class="text-[10px] font-bold text-pink-400 uppercase tracking-widest block mb-1">💡 Hook Principal</span>
+      <p id="hook-view" class="text-xs font-bold text-white italic"></p>
     </div>
 
-    <!-- Script Details -->
-    <div class="glass-panel rounded-2xl p-3.5">
-      <h2 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2">📜 Scénario & Moteur Graphique</h2>
-      <div id="script-scenes-view" class="space-y-2 text-xs text-slate-200"></div>
+    <!-- Scenes & Prompts List -->
+    <div class="space-y-3" id="scenes-pipeline-view"></div>
+
+    <!-- Export & Save Actions -->
+    <div class="flex gap-2 pt-2">
+      <button onclick="saveCurrentPipeline()" class="flex-1 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold text-slate-200">
+        💾 Sauvegarder Pipeline
+      </button>
+      <button onclick="exportPipelineJSON()" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 text-xs font-bold text-white shadow-lg shadow-emerald-600/30">
+        📥 Exporter le Pack (.JSON)
+      </button>
     </div>
   </div>
 
@@ -124,7 +108,7 @@
   <div id="history-modal" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-4">
     <div class="glass-panel rounded-2xl p-5 w-full max-w-md max-h-[80vh] flex flex-col">
       <div class="flex justify-between items-center mb-3">
-        <h2 class="text-sm font-bold text-white">📚 Projets Vectoriels</h2>
+        <h2 class="text-sm font-bold text-white">📚 Projets Sauvegardés</h2>
         <button onclick="toggleModal('history-modal')" class="text-slate-400 text-xs">✕</button>
       </div>
       <div id="history-list" class="flex-1 overflow-y-auto space-y-2 text-xs"></div>
@@ -151,13 +135,7 @@
       });
     }
 
-    let currentProject = null;
-    let compiledDrawFns = [];
-    const canvas = document.getElementById('video-canvas');
-    const ctx = canvas.getContext('2d');
-    let animFrameId = null;
-    let activeSceneIndex = 0;
-    let sceneStartTime = 0;
+    let currentPipeline = null;
 
     function toggleModal(id) {
       const m = document.getElementById(id);
@@ -175,13 +153,13 @@
       }
     }
 
-    async function generateOrFallbackProject() {
+    async function generateOrchestratorPipeline() {
       const topic = document.getElementById('topic-input').value.trim();
-      const totalSeconds = parseInt(document.getElementById('duration-select').value);
+      const duration = document.getElementById('duration-select').value;
       const style = document.getElementById('style-select').value;
 
       if (!topic) {
-        alert("Décris la scène ou le sujet que tu veux animer !");
+        alert("Entre ton sujet ou ton idée de vidéo !");
         return;
       }
 
@@ -191,29 +169,27 @@
         return;
       }
 
-      document.getElementById('status-bar').innerText = "🧠 Tentative de génération via Gemini 3.6 Flash...";
+      document.getElementById('status-bar').innerText = "🧠 Orchestration du pipeline et rédaction des prompts 8K...";
 
-      const prompt = `Tu es un ingénieur graphique expert en HTML5 Canvas 2D et un réalisateur vidéo.
-Sujet demandé par l'utilisateur : "${topic}"
-Style visuel : "${style}"
+      const prompt = `Tu es un réalisateur professionnel de films et de clips viraux générés par IA (style Sora, Runway Gen-3, Kling).
+Sujet de l'utilisateur : "${topic}"
+Durée : ${duration}
+Ambiance visuelle globale : "${style}"
 
-Tu dois découper ce sujet en 4 scènes visuelles animées.
-Pour CHAQUE scène, tu dois écrire du VRAI CODE JavaScript (le corps d'une fonction) qui dessine et anime les éléments visuels précis du sujet sur un canvas de largeur W=540 et hauteur H=960.
+Tu dois structurer ce projet en un pipeline complet de 4 scènes pour générer des vidéos IA de très haute qualité.
+Pour chaque scène, fournis :
+1. "time": le minutage exact (ex: "0-5s", "5-20s", etc.)
+2. "voiceover": le texte de la voix-off en français percutant et captivant.
+3. "video_prompt": un prompt vidéo en anglais ultra-détaillé, cinématographique, décrivant les mouvements de caméra (tracking, fast zoom, drone shot), l'éclairage volumétrique, les détails hyper-réalistes, la texture et la résolution 8K.
 
-RÈGLES STRICTES POUR LE CODE CANVAS ("draw_code") :
-1. Variables dispo : ctx, W (540), H (960), t (temps en secondes), p (progression 0.0 à 1.0).
-2. Dessine un décor et des objets vectoriels détaillés et animés en fonction de 't' et 'p' (ctx.beginPath(), ctx.arc(), ctx.fillRect(), ctx.moveTo(), ctx.lineTo(), Math.sin(), Math.cos()).
-3. Garde la zone basse (Y entre 650 et 880) sombre ou épurée pour les sous-titres.
-4. AUCUNE image externe, UNIQUEMENT du dessin vectoriel pur.
-5. Code JS 100% valide.
-
-Génère UNIQUEMENT un objet JSON valide sans markdown avec cette structure :
+Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette structure exacte :
 {
+  "hook": "Phrase d'accroche choc pour capturer l'attention",
   "scenes": [
-    {"title": "SCÈNE 1 • INTRO", "text": "Texte court scène 1", "draw_code": "Code JS scene 1"},
-    {"title": "SCÈNE 2 • ACTION", "text": "Texte court scène 2", "draw_code": "Code JS scene 2"},
-    {"title": "SCÈNE 3 • CLIMAX", "text": "Texte court scène 3", "draw_code": "Code JS scene 3"},
-    {"title": "SCÈNE 4 • CONCLUSION", "text": "Texte court scène 4", "draw_code": "Code JS scene 4"}
+    {"time": "0-5s", "voiceover": "Texte voix-off scène 1", "video_prompt": "Detailed cinematic 8k English video prompt for scene 1"},
+    {"time": "5-20s", "voiceover": "Texte voix-off scène 2", "video_prompt": "Detailed cinematic 8k English video prompt for scene 2"},
+    {"time": "20-45s", "voiceover": "Texte voix-off scène 3", "video_prompt": "Detailed cinematic 8k English video prompt for scene 3"},
+    {"time": "45-60s", "voiceover": "Texte voix-off scène 4", "video_prompt": "Detailed cinematic 8k English video prompt for scene 4"}
   ]
 }`;
 
@@ -221,10 +197,7 @@ Génère UNIQUEMENT un objet JSON valide sans markdown avec cette structure :
         const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: { responseMimeType: "application/json" }
-          })
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
         });
 
         const data = await res.json();
@@ -234,246 +207,67 @@ Génère UNIQUEMENT un objet JSON valide sans markdown avec cette structure :
         const cleanJson = rawText.replace(/```json|```/g, '').trim();
         const parsed = JSON.parse(cleanJson);
 
-        currentProject = { topic, totalSeconds, style, date: new Date().toLocaleDateString(), ...parsed };
-        successProjectLoad();
-      } catch (e) {
-        console.warn("Quota ou Erreur API détecté, passage au Mode Intelligent Local (Anti-Quota) :", e);
-        document.getElementById('status-bar').innerText = "⚡ Quota API atteint -> Activation du Moteur Local Intelligent !";
-        
-        // Génération d'un projet intelligent basé sur des templates vectoriels procéduraux locaux
-        currentProject = generateSmartLocalProject(topic, totalSeconds);
-        successProjectLoad();
-      }
-    }
+        currentPipeline = { topic, duration, style, date: new Date().toLocaleDateString(), ...parsed };
 
-    function successProjectLoad() {
-      saveToHistory(currentProject);
-      compileSceneFunctions(currentProject);
-
-      document.getElementById('results-container').classList.remove('hidden');
-      document.getElementById('script-scenes-view').innerHTML = currentProject.scenes.map((s, i) => `
-        <div onclick="previewScene(${i})" class="p-2.5 bg-slate-900 hover:bg-slate-800 cursor-pointer rounded-xl border border-slate-800 transition">
-          <div class="flex justify-between items-center mb-1">
-            <span class="text-pink-400 font-bold text-[11px]">${s.title}</span>
-            <span class="text-[10px] text-emerald-400 font-mono">▶ Voir</span>
+        document.getElementById('hook-view').innerText = `"${currentPipeline.hook}"`;
+        document.getElementById('scenes-pipeline-view').innerHTML = currentPipeline.scenes.map((s, idx) => `
+          <div class="glass-panel rounded-xl p-3 space-y-2 border-slate-800">
+            <div class="flex justify-between items-center">
+              <span class="text-pink-400 font-bold text-xs">Scène ${idx + 1} (${s.time})</span>
+              <button onclick="copyPrompt(${idx})" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-pink-300 px-2 py-1 rounded border border-slate-700">
+                📋 Copier Prompt IA
+              </button>
+            </div>
+            <div>
+              <span class="text-[10px] font-bold text-slate-400 uppercase block">Voix-Off :</span>
+              <p class="text-xs text-slate-200">${s.voiceover}</p>
+            </div>
+            <div class="bg-black/50 p-2 rounded-lg border border-slate-800/80">
+              <span class="text-[9px] font-bold text-amber-400 uppercase block mb-0.5">Prompt Vidéo (Anglais 8K) :</span>
+              <p class="text-[11px] font-mono text-emerald-300 select-all">${s.video_prompt}</p>
+            </div>
           </div>
-          <p class="text-slate-200">${s.text}</p>
-        </div>
-      `).join('');
+        `).join('');
 
-      previewScene(0);
-      document.getElementById('status-bar').innerText = "✅ Vidéo Vectorielle prête et animée !";
-    }
-
-    // Moteur Intelligent Local de Secours (Zéro Quota, Fonctionne toujours)
-    function generateSmartLocalProject(topic, totalSeconds) {
-      const lower = topic.toLowerCase();
-      let isFootball = lower.includes('ronaldo') || lower.includes('foot') || lower.includes('ballon') || lower.includes('but') || lower.includes('match');
-      let isMining = lower.includes('camion') || lower.includes('mine') || lower.includes('pelleteuse') || lower.includes('grue');
-
-      if (isFootball) {
-        return {
-          topic, totalSeconds, date: new Date().toLocaleDateString(),
-          scenes: [
-            { title: "SCÈNE 1 • LE COUP FRANC", text: "À plus de 40 mètres, Cristiano Ronaldo prend son élan légendaire.", draw_code: "ctx.fillStyle='#047857';ctx.fillRect(0,0,W,H);ctx.fillStyle='#065f46';for(let i=0;i<H;i+=60){ctx.fillRect(0,i,W,30);}ctx.fillStyle='rgba(255,255,255,0.8)';ctx.beginPath();ctx.arc(W/2,H*0.45,35+Math.sin(t*5)*5,0,Math.PI*2);ctx.fill();" },
-            { title: "SCÈNE 2 • LA FRAPPE", text: "Une frappe supersonique d'une puissance inouïe ! Le ballon s'enflamme.", draw_code: "let g=ctx.createRadialGradient(W/2,H*0.4,10,W/2,H*0.4,250);g.addColorStop(0,'#f59e0b');g.addColorStop(1,'#1e1b4b');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);ctx.fillStyle='#ef4444';ctx.beginPath();ctx.arc(W/2 + Math.sin(t*10)*80, H*0.4 - t*40, 25 + (p*15), 0, Math.PI*2);ctx.fill();" },
-            { title: "SCÈNE 3 • L'IMPACT", text: "La boule de feu transperce la lucarne et déchire les filets !", draw_code: "ctx.fillStyle='#111827';ctx.fillRect(0,0,W,H);ctx.strokeStyle='#ef4444';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(W/2-100,H*0.3);ctx.lineTo(W/2+100,H*0.3);ctx.lineTo(W/2,H*0.6);ctx.closePath();ctx.stroke();ctx.fillStyle='#f59e0b';ctx.beginPath();ctx.arc(W/2,H*0.45,60*Math.sin(p*Math.PI),0,Math.PI*2);ctx.fill();" },
-            { title: "SCÈNE 4 • CÉLÉBRATION", text: "Le SIUUU mythique embrase tout le stade en délire ! Abonne-toi !", draw_code: "let g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#7c2d12');g.addColorStop(1,'#111827');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);ctx.fillStyle='#fbbf24';for(let i=0;i<40;i++){ctx.fillRect((i*73)%W,(i*91 + t*100)%H,6,6);}" }
-          ]
-        };
-      } else if (isMining) {
-        return {
-          topic, totalSeconds, date: new Date().toLocaleDateString(),
-          scenes: [
-            { title: "SCÈNE 1 • LE COLOSSE", text: "Au cœur de la mine à ciel ouvert, le semi-remorque s'éveille.", draw_code: "ctx.fillStyle='#78350f';ctx.fillRect(0,0,W,H);ctx.fillStyle='#451a03';ctx.fillRect(0,H*0.5,W,H*0.5);ctx.fillStyle='#f59e0b';ctx.fillRect(80 + t*30, H*0.55, 180, 90);" },
-            { title: "SCÈNE 2 • CONVOI EXCEPTIONNEL", text: "Il transporte une pelleteuse géante sur des pistes de terre rouge.", draw_code: "ctx.fillStyle='#9a3412';ctx.fillRect(0,0,W,H);ctx.fillStyle='#1c1917';ctx.fillRect(0,H*0.6,W,H*0.4);ctx.fillStyle='#38bdf8';ctx.fillRect(W/2 - 60 + Math.sin(t)*5, H*0.45, 120, 80);" },
-            { title: "SCÈNE 3 • VIRAGE EXTRÊME", text: "Attention au précipice ! La moindre erreur de trajectoire est fatale.", draw_code: "ctx.fillStyle='#0f172a';ctx.fillRect(0,0,W,H);ctx.fillStyle='#e11d48';ctx.beginPath();ctx.moveTo(0,H*0.8);ctx.lineTo(W,H*0.4);ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.fill();" },
-            { title: "SCÈNE 4 • MISSION ACCOMPLIE", text: "La machine est livrée à bon port, prête à creuser. Victoire !", draw_code: "ctx.fillStyle='#065f46';ctx.fillRect(0,0,W,H);ctx.fillStyle='#34d399';ctx.beginPath();ctx.arc(W/2,H*0.4,80*p,0,Math.PI*2);ctx.fill();" }
-          ]
-        };
-      } else {
-        // Template universel générique ultra propre
-        return {
-          topic, totalSeconds, date: new Date().toLocaleDateString(),
-          scenes: [
-            { title: "SCÈNE 1 • INTRODUCTION", text: "Découverte de ce sujet fascinant et visionnaire.", draw_code: "let g=ctx.createLinearGradient(0,0,W,H);g.addColorStop(0,'#1e1b4b');g.addColorStop(1,'#311026');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);ctx.fillStyle='#ec4899';ctx.beginPath();ctx.arc(W/2,H*0.4,50+Math.sin(t*4)*15,0,Math.PI*2);ctx.fill();" },
-            { title: "SCÈNE 2 • DÉVELOPPEMENT", text: "Les mécaniques et les détails clés entrent en action.", draw_code: "let g=ctx.createLinearGradient(0,0,W,H);g.addColorStop(0,'#0f172a');g.addColorStop(1,'#0284c7');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);ctx.strokeStyle='#38bdf8';ctx.lineWidth=6;ctx.beginPath();ctx.arc(W/2,H*0.45,80+p*40,0,Math.PI*2);ctx.stroke();" },
-            { title: "SCÈNE 3 • CLIMAX", text: "Le moment le plus intense et marquant de l'histoire.", draw_code: "let g=ctx.createLinearGradient(0,0,W,H);g.addColorStop(0,'#7f1d1d');g.addColorStop(1,'#450a0a');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);ctx.fillStyle='#fbbf24';ctx.fillRect(W/2 - 90, H*0.35 + Math.sin(t*8)*20, 180, 120);" },
-            { title: "SCÈNE 4 • CONCLUSION", text: "Une réussite totale. Abonne-toi pour plus de contenu !", draw_code: "let g=ctx.createLinearGradient(0,0,W,H);g.addColorStop(0,'#065f46');g.addColorStop(1,'#064e3b');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);ctx.fillStyle='#34d399';ctx.fillRect(60,H*0.35,W-120,150);" }
-          ]
-        };
+        document.getElementById('results-container').classList.remove('hidden');
+        document.getElementById('status-bar').innerText = "✅ Pipeline vidéo IA orchestré avec succès !";
+      } catch (e) {
+        console.error(e);
+        document.getElementById('status-bar').innerText = "❌ Erreur : " + e.message;
       }
     }
 
-    function compileSceneFunctions(project) {
-      compiledDrawFns = project.scenes.map((scene) => {
-        try {
-          return new Function('ctx', 'W', 'H', 't', 'p', scene.draw_code);
-        } catch (err) {
-          return null;
-        }
+    function copyPrompt(idx) {
+      if (!currentPipeline || !currentPipeline.scenes[idx]) return;
+      const promptText = currentPipeline.scenes[idx].video_prompt;
+      navigator.clipboard.writeText(promptText).then(() => {
+        alert(`Prompt de la Scène ${idx + 1} copié dans le presse-papier !`);
       });
     }
 
-    function previewScene(idx) {
-      activeSceneIndex = idx;
-      sceneStartTime = performance.now();
-      if (!animFrameId) {
-        renderLoop();
-      }
-    }
-
-    function renderLoop() {
-      if (!currentProject) return;
-      const now = performance.now();
-      const sceneDurationSec = (currentProject.totalSeconds || 32) / 4;
-      const t = (now - sceneStartTime) / 1000;
-      const p = Math.min(1, (t % sceneDurationSec) / sceneDurationSec);
-
-      const W = 540;
-      const H = 960;
-      const scene = currentProject.scenes[activeSceneIndex] || currentProject.scenes[0];
-      const drawFn = compiledDrawFns[activeSceneIndex];
-
-      ctx.save();
-      ctx.clearRect(0, 0, W, H);
-      if (drawFn) {
-        try {
-          drawFn(ctx, W, H, t, p);
-        } catch (e) {
-          ctx.fillStyle = '#1e1b4b'; ctx.fillRect(0,0,W,H);
-        }
-      } else {
-        ctx.fillStyle = '#0f172a'; ctx.fillRect(0,0,W,H);
-      }
-      ctx.restore();
-
-      // Dégradé bas pour lisibilité des sous-titres
-      let bottomGrad = ctx.createLinearGradient(0, H * 0.58, 0, H);
-      bottomGrad.addColorStop(0, 'rgba(0,0,0,0)');
-      bottomGrad.addColorStop(0.45, 'rgba(0,0,0,0.75)');
-      bottomGrad.addColorStop(1, 'rgba(0,0,0,0.95)');
-      ctx.fillStyle = bottomGrad;
-      ctx.fillRect(0, H * 0.58, W, H * 0.42);
-
-      // Badge Scène
-      ctx.fillStyle = 'rgba(236, 72, 153, 0.9)';
-      ctx.beginPath();
-      ctx.roundRect(32, 48, 260, 40, 10);
-      ctx.fill();
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 17px sans-serif';
-      ctx.fillText(scene.title, 48, 74);
-
-      // Sous-titre
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 30px sans-serif';
-      wrapText(ctx, scene.text, 36, 690, 468, 42);
-
-      // Barre de progression
-      ctx.fillStyle = 'rgba(255,255,255,0.2)';
-      ctx.fillRect(36, 915, 468, 6);
-      ctx.fillStyle = '#ec4899';
-      ctx.fillRect(36, 915, 468 * p, 6);
-
-      animFrameId = requestAnimationFrame(renderLoop);
-    }
-
-    function wrapText(context, text, x, y, maxWidth, lineHeight) {
-      const words = text.split(' ');
-      let line = '';
-      for (let n = 0; n < words.length; n++) {
-        let testLine = line + words[n] + ' ';
-        let metrics = context.measureText(testLine);
-        if (metrics.width > maxWidth && n > 0) {
-          context.fillText(line, x, y);
-          line = words[n] + ' ';
-          y += lineHeight;
-        } else {
-          line = testLine;
-        }
-      }
-      context.fillText(line, x, y);
-    }
-
-    async function startVectorRecording() {
-      if (!currentProject) return;
-      if (!window.MediaRecorder) {
-        alert("Enregistrement non supporté.");
-        return;
-      }
-
-      const btn = document.getElementById('record-btn');
-      const statusEl = document.getElementById('render-progress');
-      btn.disabled = true;
-      btn.classList.add('opacity-50');
-      statusEl.innerText = "🔴 Enregistrement vidéo en cours...";
-
-      const stream = canvas.captureStream(30);
-      let recorder;
-      try {
-        recorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9' });
-      } catch (e) {
-        recorder = new MediaRecorder(stream);
-      }
-
-      let chunks = [];
-      recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
-      recorder.onstop = () => {
-        const blob = new Blob(chunks, { type: 'video/webm' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `shortflow_smart_${Date.now()}.webm`;
-        a.click();
-        statusEl.innerText = "✅ Vidéo téléchargée avec succès !";
-        btn.disabled = false;
-        btn.classList.remove('opacity-50');
-      };
-
-      const totalMs = (currentProject.totalSeconds || 32) * 1000;
-      const sceneMs = totalMs / currentProject.scenes.length;
-
-      activeSceneIndex = 0;
-      sceneStartTime = performance.now();
-      recorder.start();
-
-      function speakScene(idx) {
-        if ('speechSynthesis' in window && currentProject.scenes[idx]) {
-          window.speechSynthesis.cancel();
-          const utter = new SpeechSynthesisUtterance(currentProject.scenes[idx].text);
-          utter.lang = 'fr-FR';
-          utter.rate = 1.05;
-          window.speechSynthesis.speak(utter);
-        }
-      }
-
-      speakScene(0);
-
-      let step = 0;
-      const timer = setInterval(() => {
-        step++;
-        if (step < currentProject.scenes.length) {
-          activeSceneIndex = step;
-          sceneStartTime = performance.now();
-          speakScene(step);
-        } else {
-          clearInterval(timer);
-          recorder.stop();
-        }
-      }, sceneMs);
-    }
-
-    function saveToHistory(proj) {
-      let hist = JSON.parse(localStorage.getItem('SHORTFLOW_SMART') || '[]');
-      hist.unshift(proj);
+    function saveCurrentPipeline() {
+      if (!currentPipeline) return;
+      let hist = JSON.parse(localStorage.getItem('SHORTFLOW_ORCHESTRATOR') || '[]');
+      hist.unshift(currentPipeline);
       if (hist.length > 15) hist.pop();
-      localStorage.setItem('SHORTFLOW_SMART', JSON.stringify(hist));
+      localStorage.setItem('SHORTFLOW_ORCHESTRATOR', JSON.stringify(hist));
+      document.getElementById('status-bar').innerText = "💾 Pipeline sauvegardé dans les projets ✓";
+    }
+
+    function exportPipelineJSON() {
+      if (!currentPipeline) return;
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentPipeline, null, 2));
+      const dlAnchor = document.createElement('a');
+      dlAnchor.setAttribute("href", dataStr);
+      dlAnchor.setAttribute("download", `shortflow_pipeline_${Date.now()}.json`);
+      document.body.appendChild(dlAnchor);
+      dlAnchor.click();
+      dlAnchor.remove();
     }
 
     function renderHistory() {
       const list = document.getElementById('history-list');
-      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_SMART') || '[]');
+      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_ORCHESTRATOR') || '[]');
       if (hist.length === 0) {
         list.innerHTML = `<div class="text-slate-500 text-center py-4">Aucun projet sauvegardé.</div>`;
         return;
@@ -482,21 +276,38 @@ Génère UNIQUEMENT un objet JSON valide sans markdown avec cette structure :
         <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800 flex justify-between items-center gap-2">
           <div class="truncate">
             <div class="text-white font-bold truncate">${item.topic}</div>
-            <div class="text-[10px] text-slate-400">${item.totalSeconds}s • ${item.date}</div>
+            <div class="text-[10px] text-slate-400">${item.duration} • ${item.date}</div>
           </div>
-          <button onclick="loadProj(${idx})" class="px-2.5 py-1 rounded bg-pink-600 text-white font-bold text-[10px] shrink-0">Ouvrir</button>
+          <button onclick="loadPipeline(${idx})" class="px-2.5 py-1 rounded bg-pink-600 text-white font-bold text-[10px] shrink-0">Ouvrir</button>
         </div>
       `).join('');
     }
 
-    function loadProj(idx) {
-      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_SMART') || '[]');
+    function loadPipeline(idx) {
+      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_ORCHESTRATOR') || '[]');
       if (hist[idx]) {
-        currentProject = hist[idx];
-        compileSceneFunctions(currentProject);
+        currentPipeline = hist[idx];
         document.getElementById('topic-input').value = hist[idx].topic;
+        document.getElementById('hook-view').innerText = `"${currentPipeline.hook}"`;
+        document.getElementById('scenes-pipeline-view').innerHTML = currentPipeline.scenes.map((s, i) => `
+          <div class="glass-panel rounded-xl p-3 space-y-2 border-slate-800">
+            <div class="flex justify-between items-center">
+              <span class="text-pink-400 font-bold text-xs">Scène ${i + 1} (${s.time})</span>
+              <button onclick="copyPrompt(${i})" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-pink-300 px-2 py-1 rounded border border-slate-700">
+                📋 Copier Prompt IA
+              </button>
+            </div>
+            <div>
+              <span class="text-[10px] font-bold text-slate-400 uppercase block">Voix-Off :</span>
+              <p class="text-xs text-slate-200">${s.voiceover}</p>
+            </div>
+            <div class="bg-black/50 p-2 rounded-lg border border-slate-800/80">
+              <span class="text-[9px] font-bold text-amber-400 uppercase block mb-0.5">Prompt Vidéo (Anglais 8K) :</span>
+              <p class="text-[11px] font-mono text-emerald-300 select-all">${s.video_prompt}</p>
+            </div>
+          </div>
+        `).join('');
         document.getElementById('results-container').classList.remove('hidden');
-        previewScene(0);
         toggleModal('history-modal');
       }
     }
