@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ShortFlow AI — Studio Hybride Universel</title>
+  <title>ShortFlow AI — Studio Universel Stable</title>
   <meta name="theme-color" content="#090d16" />
   <link rel="manifest" href="./manifest.json" />
   <script src="https://cdn.tailwindcss.com"></script>
@@ -32,7 +32,7 @@
       </div>
       <div>
         <h1 class="text-sm font-bold tracking-wide text-white leading-none">SHORTFLOW <span class="text-pink-400">AI</span></h1>
-        <span class="text-[10px] text-pink-300 font-mono">STUDIO UNIVERSEL</span>
+        <span class="text-[10px] text-pink-300 font-mono">STUDIO STABLE</span>
       </div>
     </div>
     <div class="flex items-center gap-1.5">
@@ -47,14 +47,14 @@
 
   <!-- Status Bar -->
   <div id="status-bar" class="mb-3 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] font-mono text-pink-300 text-center">
-    Prêt • Moteur Universel Actif
+    Prêt • Moteur Stable Actif
   </div>
 
   <!-- Input Studio -->
   <div class="glass-panel rounded-2xl p-3.5 shadow-xl mb-3 space-y-3">
     <div>
       <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">🎬 Sujet, Texte ou Idée de Vidéo (Libre)</label>
-      <textarea id="topic-input" rows="3" placeholder="Ex: L'histoire de la conquête spatiale et du lancement de Spoutnik 1..." 
+      <textarea id="topic-input" rows="3" placeholder="Ex: Un camion semi-remorque transportant une pelleteuse dans une mine..." 
         class="w-full bg-slate-900/90 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-pink-500 resize-none"></textarea>
     </div>
 
@@ -70,9 +70,9 @@
       <div>
         <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Ambiance Visuelle</label>
         <select id="style-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none">
-          <option value="cinematic hyper-realistic 8k, professional cinematography">✨ Photoréaliste Cinématique</option>
+          <option value="cinematic hyper-realistic 8k, professional photography">✨ Photoréaliste Cinématique</option>
           <option value="cyberpunk neon glowing style, futuristic">🌆 Cyberpunk Néon</option>
-          <option value="documentary historical style, dramatic lighting">📜 Documentaire Historique</option>
+          <option value="documentary industrial style, dramatic lighting">🏭 Documentaire Industriel</option>
           <option value="epic cinematic action, high contrast">🔥 Action Épique</option>
         </select>
       </div>
@@ -215,39 +215,62 @@ Génère UNIQUEMENT un objet JSON valide (sans aucun bloc markdown \`\`\`json) a
 
         currentProject = { topic, duration, style, date: new Date().toLocaleDateString(), ...parsed };
 
-        document.getElementById('status-bar').innerText = "🎨 Génération des images IA ultra-cadrées pour chaque scène...";
+        document.getElementById('status-bar').innerText = "🎨 Chargement séquentiel des images IA (anti-saturation)...";
         
-        // Load precise AI images matching the user's prompt
-        loadedImages = await Promise.all(currentProject.scenes.map(async (s) => {
-          return new Promise((resolve) => {
-            const img = new Image();
-            img.crossOrigin = "anonymous";
-            // Combine strict user scene prompt + global selected style
-            const encodedPrompt = encodeURIComponent(`${s.image_prompt}, ${style}`);
-            img.src = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=540&height=960&nologo=true`;
-            img.onload = () => resolve(img);
-            img.onerror = () => resolve(null);
-          });
-        }));
+        loadedImages = [];
+        const containerView = document.getElementById('script-scenes-view');
+        containerView.innerHTML = '';
+
+        // Load images one by one with a delay to prevent rate limit
+        for (let i = 0; i < currentProject.scenes.length; i++) {
+          const s = currentProject.scenes[i];
+          document.getElementById('status-bar').innerText = `🎨 Chargement image ${i + 1}/4...`;
+          
+          const img = await loadImageWithRetry(s.image_prompt, style, i);
+          loadedImages.push(img);
+
+          // Render thumbnail as it loads
+          containerView.innerHTML += `
+            <div class="p-2 bg-slate-900 rounded-xl border border-slate-800 flex items-center gap-2">
+              <div class="w-8 h-12 bg-slate-800 rounded overflow-hidden shrink-0">
+                ${img ? `<img src="${img.src}" class="w-full h-full object-cover">` : ''}
+              </div>
+              <div class="overflow-hidden">
+                <span class="text-pink-400 font-bold">[${s.title}]</span> <span class="text-slate-200 truncate">${s.text}</span>
+              </div>
+            </div>
+          `;
+          // Wait 2.5 seconds between requests to respect free rate limits
+          if (i < currentProject.scenes.length - 1) {
+            await new Promise(r => setTimeout(r, 2500));
+          }
+        }
 
         document.getElementById('results-container').classList.remove('hidden');
-        document.getElementById('script-scenes-view').innerHTML = currentProject.scenes.map((s, i) => `
-          <div class="p-2 bg-slate-900 rounded-xl border border-slate-800 flex items-center gap-2">
-            <div class="w-8 h-12 bg-slate-800 rounded overflow-hidden shrink-0">
-              ${loadedImages[i] ? `<img src="${loadedImages[i].src}" class="w-full h-full object-cover">` : ''}
-            </div>
-            <div class="overflow-hidden">
-              <span class="text-pink-400 font-bold">[${s.title}]</span> <span class="text-slate-200 truncate">${s.text}</span>
-            </div>
-          </div>
-        `).join('');
-
         drawCanvasFrame(0);
-        document.getElementById('status-bar').innerText = "✅ Studio Universel prêt !";
+        document.getElementById('status-bar').innerText = "✅ Studio Universel stable prêt !";
       } catch (e) {
         console.error(e);
         document.getElementById('status-bar').innerText = "❌ Erreur : " + e.message;
       }
+    }
+
+    function loadImageWithRetry(scenePrompt, style, seedIndex) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        const cleanPrompt = encodeURIComponent(`${scenePrompt}, ${style}`);
+        // Add a unique seed to prevent caching issues and rate-limit lockups
+        img.src = `https://image.pollinations.ai/prompt/${cleanPrompt}?width=540&height=960&nologo=true&seed=${Date.now() + seedIndex}`;
+        
+        img.onload = () => {
+          // Check if it's the tiny fallback bee image by checking natural dimensions or let it pass
+          resolve(img);
+        };
+        img.onerror = () => resolve(null);
+        // Timeout safeguard in case image hangs
+        setTimeout(() => resolve(img), 8000);
+      });
     }
 
     function drawCanvasFrame(sceneIdx) {
@@ -255,11 +278,14 @@ Génère UNIQUEMENT un objet JSON valide (sans aucun bloc markdown \`\`\`json) a
       const scene = currentProject.scenes[sceneIdx] || currentProject.scenes[0];
       const img = loadedImages[sceneIdx];
 
-      // Draw AI image background
-      if (img && img.complete) {
+      // Draw AI image background or rich fallback gradient
+      if (img && img.complete && img.naturalWidth > 100) {
         ctx.drawImage(img, 0, 0, 540, 960);
       } else {
-        ctx.fillStyle = '#0f172a';
+        let gradFallback = ctx.createLinearGradient(0, 0, 540, 960);
+        gradFallback.addColorStop(0, '#1e1b4b');
+        gradFallback.addColorStop(1, '#311026');
+        ctx.fillStyle = gradFallback;
         ctx.fillRect(0, 0, 540, 960);
       }
 
@@ -267,7 +293,7 @@ Génère UNIQUEMENT un objet JSON valide (sans aucun bloc markdown \`\`\`json) a
       let grad = ctx.createLinearGradient(0, 0, 0, 960);
       grad.addColorStop(0, 'rgba(0,0,0,0.65)');
       grad.addColorStop(0.4, 'rgba(0,0,0,0.3)');
-      grad.addColorStop(1, 'rgba(0,0,0,0.9)');
+      grad.addColorStop(1, 'rgba(0,0,0,0.95)');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, 540, 960);
 
@@ -332,19 +358,17 @@ Génère UNIQUEMENT un objet JSON valide (sans aucun bloc markdown \`\`\`json) a
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `shortflow_universel_${Date.now()}.webm`;
+        a.download = `shortflow_stable_${Date.now()}.webm`;
         a.click();
         statusEl.innerText = "✅ Vidéo téléchargée avec succès !";
       };
 
       recorder.start();
 
-      // Play through scenes with proper timing (e.g. 4 seconds per scene)
       let currentScene = 0;
       const totalScenes = currentProject.scenes.length;
-      const sceneDuration = 4000;
+      const sceneDuration = 4500;
 
-      // Voice-over speech synthesis synchronized
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         const fullText = currentProject.scenes.map(s => s.text).join('. ');
@@ -369,7 +393,7 @@ Génère UNIQUEMENT un objet JSON valide (sans aucun bloc markdown \`\`\`json) a
 
     function renderHistory() {
       const list = document.getElementById('history-list');
-      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_UNIVERSEL') || '[]');
+      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_STABLE') || '[]');
       if (hist.length === 0) {
         list.innerHTML = `<div class="text-slate-500 text-center py-4">Aucun projet.</div>`;
         return;
@@ -386,7 +410,7 @@ Génère UNIQUEMENT un objet JSON valide (sans aucun bloc markdown \`\`\`json) a
     }
 
     function loadProj(idx) {
-      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_UNIVERSEL') || '[]');
+      const hist = JSON.parse(localStorage.getItem('SHORTFLOW_STABLE') || '[]');
       if (hist[idx]) {
         currentProject = hist[idx];
         document.getElementById('topic-input').value = hist[idx].topic;
