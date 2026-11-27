@@ -32,7 +32,7 @@
       </div>
       <div>
         <h1 class="text-sm font-bold tracking-wide text-white leading-none">SHORTFLOW <span class="text-pink-400">AI</span></h1>
-        <span class="text-[10px] text-pink-300 font-mono">MOTEUR VECTORIEL GÉNÉRATIF</span>
+        <span class="text-[10px] text-pink-300 font-mono">MOTEUR VECTORIEL V11</span>
       </div>
     </div>
     <div class="flex items-center gap-1.5">
@@ -47,14 +47,14 @@
 
   <!-- Status Bar -->
   <div id="status-bar" class="mb-3 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] font-mono text-pink-300 text-center">
-    Prêt • Réacteur Vectoriel & IA Actif
+    Prêt • Gemini 3.8 Flash Connecté
   </div>
 
   <!-- Input Studio -->
   <div class="glass-panel rounded-2xl p-3.5 shadow-xl mb-3 space-y-3">
     <div>
       <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">🎬 Sujet ou Scène à Animer par Code</label>
-      <textarea id="topic-input" rows="3" placeholder="Ex: Cristiano Ronaldo tire un coup franc surpuissant, le ballon s'enflamme et déchire les filets..." 
+      <textarea id="topic-input" rows="3" placeholder="Ex: Cristiano Ronaldo tire un coup franc surpuissant, le ballon s'enflamme..." 
         class="w-full bg-slate-900/90 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-pink-500 resize-none"></textarea>
     </div>
 
@@ -191,7 +191,7 @@
         return;
       }
 
-      document.getElementById('status-bar').innerText = "🧠 L'IA programme les animations vectorielles sur-mesure...";
+      document.getElementById('status-bar').innerText = "🧠 Gemini 3.8 Flash programme les animations...";
 
       const prompt = `Tu es un ingénieur graphique expert en HTML5 Canvas 2D et un réalisateur vidéo.
 Sujet demandé par l'utilisateur : "${topic}"
@@ -234,7 +234,7 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette s
 }`;
 
       try {
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -266,7 +266,7 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette s
         `).join('');
 
         previewScene(0);
-        document.getElementById('status-bar').innerText = "✅ Moteur Vectoriel compilé ! Clique sur Exporter pour enregistrer.";
+        document.getElementById('status-bar').innerText = "✅ Moteur Vectoriel compilé avec Gemini 3.8 Flash !";
       } catch (e) {
         console.error(e);
         document.getElementById('status-bar').innerText = "❌ Erreur : " + e.message;
@@ -423,7 +423,6 @@ Génère UNIQUEMENT un objet JSON valide (sans markdown \`\`\`json) avec cette s
       sceneStartTime = performance.now();
       recorder.start();
 
-      // Synthèse vocale synchronisée scène par scène
       function speakScene(idx) {
         if ('speechSynthesis' in window && currentProject.scenes[idx]) {
           window.speechSynthesis.cancel();
