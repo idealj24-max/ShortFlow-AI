@@ -1,4 +1,4 @@
-const CACHE_NAME = 'shortflow-v23';
+const CACHE_NAME = 'shortflow-v24';
 const assets = ['./index.html', './manifest.json'];
 
 self.addEventListener('install', e => {
