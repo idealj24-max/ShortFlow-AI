@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ShortFlow AI — Multi-Candidate v30</title>
+  <title>ShortFlow AI — Master Fix v31</title>
   <meta name="theme-color" content="#090d16" />
   <link rel="manifest" href="./manifest.json" />
   <script src="https://cdn.tailwindcss.com"></script>
@@ -32,32 +32,32 @@
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="p-3 pb-16 max-w-lg mx-auto flex flex-col min-h-screen">
+<body class="p-3 pb-16 max-w-lg mx-auto flex flex-col min-h-screen relative">
 
   <!-- Header -->
-  <header class="flex items-center justify-between py-3 mb-3 border-b border-slate-800">
+  <header class="flex items-center justify-between py-3 mb-3 border-b border-slate-800 z-10">
     <div class="flex items-center gap-2">
       <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center font-black text-white text-lg shadow-lg shadow-pink-500/30">
         S
       </div>
       <div>
         <h1 class="text-sm font-bold tracking-wide text-white leading-none">SHORTFLOW <span class="text-pink-400">AI</span></h1>
-        <span class="text-[10px] text-pink-300 font-mono">MULTI-CANDIDATE v30</span>
+        <span class="text-[10px] text-pink-300 font-mono">FIX v31</span>
       </div>
     </div>
-    <div class="flex items-center gap-1.5">
-      <button onclick="toggleModal('history-modal')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-slate-200">
+    <div class="flex items-center gap-2">
+      <button type="button" onclick="openModal('history-modal')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-slate-200 cursor-pointer active:scale-95">
         📚 Projets
       </button>
-      <button onclick="toggleModal('api-modal')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-medium text-pink-400">
-        🔑
+      <button type="button" onclick="openModal('api-modal')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-medium text-pink-400 cursor-pointer active:scale-95">
+        🔑 Clé
       </button>
     </div>
   </header>
 
   <!-- Status Bar -->
   <div id="status-bar" class="mb-3 px-3 py-2 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] font-mono text-pink-300 text-center">
-    Prêt • Moteur Multi-Variantes Actif
+    Prêt • Modèles & Boutons Opérationnels
   </div>
 
   <!-- Input Studio -->
@@ -115,7 +115,7 @@
         </div>
       </div>
 
-      <!-- Sélecteur de Variantes Visuelles pour la scène active (Anti-fatigue de clics) -->
+      <!-- Sélecteur de Variantes Visuelles -->
       <div class="w-full flex items-center justify-center gap-2 mt-2 bg-slate-900/80 p-2 rounded-xl border border-slate-800">
         <span class="text-[10px] font-bold text-slate-400 uppercase">Variante :</span>
         <div id="variant-buttons" class="flex gap-1.5">
@@ -161,12 +161,12 @@
     </div>
   </div>
 
-  <!-- History Modal -->
+  <!-- History Modal (Projets) -->
   <div id="history-modal" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-4">
-    <div class="glass-panel rounded-2xl p-5 w-full max-w-md max-h-[80vh] flex flex-col">
-      <div class="flex justify-between items-center mb-3">
+    <div class="glass-panel rounded-2xl p-5 w-full max-w-md max-h-[80vh] flex flex-col shadow-2xl">
+      <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
         <h2 class="text-sm font-bold text-white">📚 Projets Sauvegardés</h2>
-        <button onclick="toggleModal('history-modal')" class="text-slate-400 text-xs">✕</button>
+        <button type="button" onclick="closeModal('history-modal')" class="text-slate-400 hover:text-white text-base px-2">✕</button>
       </div>
       <div id="history-list" class="flex-1 overflow-y-auto space-y-2 text-xs"></div>
     </div>
@@ -174,13 +174,13 @@
 
   <!-- API Key Modal -->
   <div id="api-modal" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-4">
-    <div class="glass-panel rounded-2xl p-5 w-full max-w-sm">
+    <div class="glass-panel rounded-2xl p-5 w-full max-w-sm shadow-2xl">
       <h2 class="text-base font-bold text-white mb-1">Clé API Gemini</h2>
       <p class="text-xs text-slate-400 mb-3">Entrez votre clé Google AI Studio.</p>
       <input type="password" id="gemini-key-input" placeholder="AIzaSy..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white mb-3 focus:outline-none focus:border-pink-500" />
       <div class="flex justify-end gap-2">
-        <button onclick="toggleModal('api-modal')" class="px-3 py-2 rounded-lg bg-slate-800 text-xs text-slate-300">Fermer</button>
-        <button onclick="saveApiKey()" class="px-4 py-2 rounded-lg bg-pink-600 text-xs font-bold text-white">Enregistrer</button>
+        <button type="button" onclick="closeModal('api-modal')" class="px-3 py-2 rounded-lg bg-slate-800 text-xs text-slate-300">Fermer</button>
+        <button type="button" onclick="saveApiKey()" class="px-4 py-2 rounded-lg bg-pink-600 text-xs font-bold text-white">Enregistrer</button>
       </div>
     </div>
   </div>
@@ -195,22 +195,41 @@
     let currentPipeline = null;
     let activeSceneIndex = 0;
     let activeVariantIndex = 0;
-    let sceneImages = []; // Array of arrays: sceneImages[sceneIdx][variantIdx] = Image object
+    let sceneImages = [];
     let fallbackDataUrls = [];
 
-    function toggleModal(id) {
+    // Fonctions modales explicitement séparées pour éviter tout bug de bascule
+    function openModal(id) {
       const m = document.getElementById(id);
-      m.classList.toggle('hidden');
-      m.classList.toggle('flex');
-      if (id === 'history-modal') renderHistory();
+      if (m) {
+        m.classList.remove('hidden');
+        m.classList.add('flex');
+        if (id === 'history-modal') renderHistory();
+        if (id === 'api-modal') {
+          const savedKey = localStorage.getItem('GEMINI_API_KEY');
+          if (savedKey) {
+            document.getElementById('gemini-key-input').value = savedKey;
+          }
+        }
+      }
+    }
+
+    function closeModal(id) {
+      const m = document.getElementById(id);
+      if (m) {
+        m.classList.remove('flex');
+        m.classList.add('hidden');
+      }
     }
 
     function saveApiKey() {
       const key = document.getElementById('gemini-key-input').value.trim();
       if (key) {
         localStorage.setItem('GEMINI_API_KEY', key);
-        toggleModal('api-modal');
+        closeModal('api-modal');
         document.getElementById('status-bar').innerText = "Clé API enregistrée ✓";
+      } else {
+        alert("Entre une clé valide !");
       }
     }
 
@@ -266,7 +285,7 @@
 
       const apiKey = localStorage.getItem('GEMINI_API_KEY');
       if (!apiKey) {
-        toggleModal('api-modal');
+        openModal('api-modal');
         return;
       }
 
@@ -382,7 +401,7 @@ Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour) :
         <div class="glass-panel rounded-xl p-3 space-y-2 border-slate-800">
           <div class="flex justify-between items-center">
             <span class="text-pink-400 font-bold text-xs">Scène ${idx + 1} (${s.time})</span>
-            <button onclick="copyPrompt(${idx})" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-pink-300 px-2 py-1 rounded border border-slate-700">
+            <button type="button" onclick="copyPrompt(${idx})" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-pink-300 px-2 py-1 rounded border border-slate-700">
               📋 Copier Prompt
             </button>
           </div>
@@ -398,13 +417,12 @@ Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour) :
       `).join('');
 
       document.getElementById('timeline-switcher').innerHTML = currentPipeline.scenes.map((_, idx) => `
-        <button id="pill-s-${idx}" onclick="previewScene(${idx})" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-[11px] font-bold shrink-0 transition active:scale-95">S${idx + 1}</button>
+        <button type="button" id="pill-s-${idx}" onclick="previewScene(${idx})" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-[11px] font-bold shrink-0 transition active:scale-95">S${idx + 1}</button>
       `).join('');
 
       document.getElementById('results-container').classList.remove('hidden');
       previewScene(0);
 
-      // Chargement automatique des 3 variantes pour chaque scène en arrière-plan (Zéro spam de clics)
       for (let i = 0; i < count; i++) {
         if (!navigator.onLine) break;
         document.getElementById('status-bar').innerText = `⏳ Génération multi-variantes scène ${i + 1}/${count}...`;
@@ -465,7 +483,7 @@ Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour) :
     function renderActiveImage() {
       const imgEl = document.getElementById('cinematic-screen-img');
       const badge = document.getElementById('img-loader-badge');
-      const imgObj = sceneImages[activeSceneIndex]?[activeVariantIndex];
+      const imgObj = sceneImages[activeSceneIndex]?.[activeVariantIndex];
 
       if (imgObj && imgObj.complete && imgObj.naturalWidth > 100) {
         imgEl.src = imgObj.src;
@@ -521,7 +539,7 @@ Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour) :
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `shortflow_v30_${Date.now()}.webm`;
+        a.download = `shortflow_v31_${Date.now()}.webm`;
         a.click();
         statusEl.innerText = "✅ Vidéo téléchargée avec succès !";
         btn.disabled = false;
@@ -554,8 +572,7 @@ Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour) :
       const totalFramesPerScene = (sceneMs / 1000) * 30;
 
       const renderInterval = setInterval(() => {
-        // Utilise la variante active ou la variante 0 par défaut
-        const img = (sceneImages[currentStep]?[activeVariantIndex] && sceneImages[currentStep][activeVariantIndex].complete && sceneImages[currentStep][activeVariantIndex].naturalWidth > 100)
+        const img = (sceneImages[currentStep]?.[activeVariantIndex] && sceneImages[currentStep][activeVariantIndex].complete && sceneImages[currentStep][activeVariantIndex].naturalWidth > 100)
           ? sceneImages[currentStep][activeVariantIndex]
           : (sceneImages[currentStep]?.[0] && sceneImages[currentStep][0].complete ? sceneImages[currentStep][0] : null);
 
@@ -639,7 +656,7 @@ Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour) :
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentPipeline, null, 2));
       const dlAnchor = document.createElement('a');
       dlAnchor.setAttribute("href", dataStr);
-      dlAnchor.setAttribute("download", `shortflow_v30_${Date.now()}.json`);
+      dlAnchor.setAttribute("download", `shortflow_v31_${Date.now()}.json`);
       document.body.appendChild(dlAnchor);
       dlAnchor.click();
       dlAnchor.remove();
@@ -649,7 +666,7 @@ Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour) :
       const list = document.getElementById('history-list');
       const hist = JSON.parse(localStorage.getItem('SHORTFLOW_SERIES') || '[]');
       if (hist.length === 0) {
-        list.innerHTML = `<div class="text-slate-500 text-center py-4">Aucun projet.</div>`;
+        list.innerHTML = `<div class="text-slate-500 text-center py-4">Aucun projet enregistré.</div>`;
         return;
       }
       list.innerHTML = hist.map((item, idx) => `
@@ -658,7 +675,7 @@ Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour) :
             <div class="text-white font-bold truncate">${item.topic}</div>
             <div class="text-[10px] text-slate-400">${item.sceneCount || 4} scènes • ${item.date}</div>
           </div>
-          <button onclick="loadProj(${idx})" class="px-2.5 py-1 rounded bg-pink-600 text-white font-bold text-[10px] shrink-0">Ouvrir</button>
+          <button type="button" onclick="loadProj(${idx})" class="px-2.5 py-1 rounded bg-pink-600 text-white font-bold text-[10px] shrink-0">Ouvrir</button>
         </div>
       `).join('');
     }
@@ -669,7 +686,7 @@ Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour) :
         currentPipeline = hist[idx];
         document.getElementById('topic-input').value = hist[idx].topic;
         finishPipelineLoad();
-        toggleModal('history-modal');
+        closeModal('history-modal');
       }
     }
   </script>
