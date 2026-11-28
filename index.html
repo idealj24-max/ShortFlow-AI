@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ShortFlow AI — Smart Engine v29</title>
+  <title>ShortFlow AI — Multi-Candidate v30</title>
   <meta name="theme-color" content="#090d16" />
   <link rel="manifest" href="./manifest.json" />
   <script src="https://cdn.tailwindcss.com"></script>
@@ -42,7 +42,7 @@
       </div>
       <div>
         <h1 class="text-sm font-bold tracking-wide text-white leading-none">SHORTFLOW <span class="text-pink-400">AI</span></h1>
-        <span class="text-[10px] text-pink-300 font-mono">SMART ENGINE v29</span>
+        <span class="text-[10px] text-pink-300 font-mono">MULTI-CANDIDATE v30</span>
       </div>
     </div>
     <div class="flex items-center gap-1.5">
@@ -57,14 +57,14 @@
 
   <!-- Status Bar -->
   <div id="status-bar" class="mb-3 px-3 py-2 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] font-mono text-pink-300 text-center">
-    Prêt • Moteur de Scénario Intelligent Actif
+    Prêt • Moteur Multi-Variantes Actif
   </div>
 
   <!-- Input Studio -->
   <div class="glass-panel rounded-2xl p-4 shadow-xl mb-3 space-y-3">
     <div>
-      <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">🎬 Votre Scénario Détaillé ou Idée</label>
-      <textarea id="topic-input" rows="4" placeholder="Collez votre histoire ici (ex: Un basketteur prodige, un match tendu, un voyage dans le temps...)" 
+      <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">🎬 Votre Scénario / Histoire</label>
+      <textarea id="topic-input" rows="4" placeholder="Collez votre histoire détaillée ici..." 
         class="w-full bg-slate-900/90 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-pink-500 resize-none"></textarea>
     </div>
 
@@ -87,7 +87,7 @@
     </div>
 
     <button onclick="generateMiniSeriesStudio()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-pink-600 via-rose-600 to-amber-600 hover:from-pink-500 hover:to-amber-500 text-white font-bold text-xs shadow-lg shadow-pink-600/30 transition active:scale-95">
-      🚀 Analyser le Scénario & Générer les Visuels
+      🚀 Générer la Mini-Série & Multi-Variantes
     </button>
   </div>
 
@@ -101,7 +101,7 @@
         <span id="render-progress" class="text-[10px] font-mono text-amber-400">Prêt</span>
       </div>
       
-      <!-- Screen container with Ken Burns Motion Effect -->
+      <!-- Screen container -->
       <div class="relative w-full max-w-[220px] aspect-[9/16] bg-slate-950 rounded-xl overflow-hidden border border-pink-500/40 shadow-2xl flex items-center justify-center">
         <img id="cinematic-screen-img" src="" alt="" class="absolute inset-0 w-full h-full object-cover ken-burns transition-opacity duration-500" crossorigin="anonymous" />
         
@@ -115,20 +115,28 @@
         </div>
       </div>
 
-      <!-- Timeline Bar corrigée -->
-      <div class="w-full px-2 mt-2.5">
-        <div id="timeline-switcher" class="flex gap-1.5 overflow-x-auto no-scrollbar py-1 justify-start sm:justify-center"></div>
+      <!-- Sélecteur de Variantes Visuelles pour la scène active (Anti-fatigue de clics) -->
+      <div class="w-full flex items-center justify-center gap-2 mt-2 bg-slate-900/80 p-2 rounded-xl border border-slate-800">
+        <span class="text-[10px] font-bold text-slate-400 uppercase">Variante :</span>
+        <div id="variant-buttons" class="flex gap-1.5">
+          <button onclick="switchVariant(0)" id="var-btn-0" class="px-2.5 py-1 rounded bg-pink-600 text-white font-bold text-[10px]">Var 1</button>
+          <button onclick="switchVariant(1)" id="var-btn-1" class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 font-bold text-[10px]">Var 2</button>
+          <button onclick="switchVariant(2)" id="var-btn-2" class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 font-bold text-[10px]">Var 3</button>
+        </div>
+        <button onclick="retryCurrentSceneImage()" class="ml-2 text-[10px] text-pink-300 hover:text-white underline font-mono">
+          🔄 Relancer
+        </button>
       </div>
 
-      <!-- Reload single scene button -->
-      <button onclick="retryCurrentSceneImage()" class="mt-1.5 text-[10px] text-pink-300 hover:text-white underline font-mono">
-        🔄 Régénérer l'image de cette scène
-      </button>
+      <!-- Timeline Bar -->
+      <div class="w-full px-2 mt-2">
+        <div id="timeline-switcher" class="flex gap-1.5 overflow-x-auto no-scrollbar py-1 justify-start sm:justify-center"></div>
+      </div>
 
       <!-- Export Action Button -->
       <div class="flex gap-2 mt-3 w-full">
         <button id="record-btn" onclick="startCinematicRecording()" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 text-xs font-bold text-white shadow-lg shadow-emerald-600/30">
-          📥 Enregistrer & Télécharger la Mini-Série (.WEBM)
+          📥 Enregistrer & Télécharger (.WEBM)
         </button>
       </div>
     </div>
@@ -145,10 +153,10 @@
     <!-- Export JSON & Save Actions -->
     <div class="flex gap-2 pt-2">
       <button onclick="saveCurrentPipeline()" class="flex-1 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold text-slate-200">
-        💾 Sauvegarder Projet
+        💾 Sauvegarder
       </button>
       <button onclick="exportPipelineJSON()" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 text-xs font-bold text-white shadow-lg shadow-emerald-600/30">
-        📥 Exporter Pack (.JSON)
+        📥 Pack (.JSON)
       </button>
     </div>
   </div>
@@ -186,7 +194,8 @@
 
     let currentPipeline = null;
     let activeSceneIndex = 0;
-    let preloadedImages = [];
+    let activeVariantIndex = 0;
+    let sceneImages = []; // Array of arrays: sceneImages[sceneIdx][variantIdx] = Image object
     let fallbackDataUrls = [];
 
     function toggleModal(id) {
@@ -205,7 +214,7 @@
       }
     }
 
-    function createLocalPosterDataUrl(sceneIndex) {
+    function createLocalPosterDataUrl(sceneIndex, variantIndex = 0) {
       const c = document.createElement('canvas');
       c.width = 540;
       c.height = 960;
@@ -217,7 +226,7 @@
         ['#0f172a', '#064e3b', '#059669'],
         ['#18181b', '#7c2d12', '#ea580c']
       ];
-      const pal = palettes[sceneIndex % palettes.length];
+      const pal = palettes[(sceneIndex + variantIndex) % palettes.length];
       const grad = ctx.createLinearGradient(0, 0, 540, 960);
       grad.addColorStop(0, pal[0]);
       grad.addColorStop(0.55, pal[1]);
@@ -236,7 +245,7 @@
 
       ctx.fillStyle = 'rgba(255,255,255,0.85)';
       ctx.font = 'bold 22px sans-serif';
-      ctx.fillText(`SHORTFLOW STUDIO • S${sceneIndex + 1}`, 54, 110);
+      ctx.fillText(`SHORTFLOW • S${sceneIndex + 1} (V${variantIndex + 1})`, 54, 110);
 
       ctx.fillStyle = 'rgba(255,255,255,0.25)';
       ctx.font = 'bold 120px sans-serif';
@@ -251,7 +260,7 @@
       const style = document.getElementById('style-select').value;
 
       if (!rawTopic) {
-        alert("Entre ton scénario ou ton idée !");
+        alert("Entre ton scénario !");
         return;
       }
 
@@ -261,29 +270,23 @@
         return;
       }
 
-      document.getElementById('status-bar').innerText = `🧠 Analyse et découpage de ton histoire (${sceneCount} scènes)...`;
+      document.getElementById('status-bar').innerText = `🧠 Analyse de l'histoire en ${sceneCount} scènes...`;
 
-      // Prompt ultra-robuste qui intègre le texte utilisateur sans le tronquer
-      const prompt = `Tu es un réalisateur de mini-séries virales TikTok.
-Voici l'histoire / scénario détaillé fourni par l'auteur :
+      const prompt = `Tu es un réalisateur de mini-séries TikTok.
+Voici l'histoire fournie par l'auteur :
 """
 ${rawTopic}
 """
-
-Découpe cette histoire exacte en exactement ${sceneCount} scènes séquentielles et cohérentes. Pour chaque scène, crée :
+Découpe cette histoire en exactement ${sceneCount} scènes. Pour chaque scène, fournis :
 1. "time": minutage (ex: "0-8s")
-2. "voiceover": une voix-off narrative en français (max 25 mots) qui raconte fidèlement cette partie de l'histoire.
-3. "video_prompt": un prompt visuel 8K très détaillé en anglais décrivant précisément l'action, les personnages, le décor et l'ambiance de cette scène spécifique extraite du scénario.
+2. "voiceover": voix-off narrative en français (max 25 mots).
+3. "video_prompt": prompt visuel 8K très détaillé en anglais.
 
-Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour, pas de \`\`\`json) sous la forme exacte :
+Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour) :
 {
-  "hook": "Une accroche choc basée sur l'histoire",
+  "hook": "Accroche choc",
   "scenes": [
-    {
-      "time": "0-8s",
-      "voiceover": "...",
-      "video_prompt": "..."
-    }
+    { "time": "0-8s", "voiceover": "...", "video_prompt": "..." }
   ]
 }`;
 
@@ -304,8 +307,8 @@ Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour, pas de \`\`
         currentPipeline = { topic: rawTopic, sceneCount, style, date: new Date().toLocaleDateString(), ...parsed };
         await finishPipelineLoad();
       } catch (e) {
-        console.warn("Erreur API / JSON -> Mode Découpage Intelligent :", e);
-        document.getElementById('status-bar').innerText = "⚡ Mode Découpage Intelligent Actif !";
+        console.warn("Mode intelligent de secours actif :", e);
+        document.getElementById('status-bar').innerText = "⚡ Mode Intelligent Actif !";
         currentPipeline = generateSmartFallback(rawTopic, sceneCount, style);
         await finishPipelineLoad();
       }
@@ -314,81 +317,65 @@ Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour, pas de \`\`
     function generateSmartFallback(topic, sceneCount, style) {
       const scenes = [];
       const sentences = topic.split('.').map(s => s.trim()).filter(s => s.length > 5);
-      
       for (let i = 0; i < sceneCount; i++) {
         const partText = sentences[i % sentences.length] || topic.substring(0, 50);
         scenes.push({
           time: `${i*8}-${(i+1)*8}s`,
           voiceover: `Épisode ${i + 1} : ${partText}`,
-          video_prompt: `Cinematic 8k shot, scene ${i + 1}, ${partText}, ${style}, dramatic lighting, highly detailed`
+          video_prompt: `Cinematic 8k shot, scene ${i + 1}, ${partText}, ${style}, dramatic lighting`
         });
       }
       return {
         topic, sceneCount, style, date: new Date().toLocaleDateString(),
-        hook: `La saga : ${topic.substring(0, 50)}...`,
+        hook: `Saga : ${topic.substring(0, 45)}...`,
         scenes
       };
     }
 
-    function getDirectImageUrl(promptText, index, attempt = 0) {
-      const shortPrompt = promptText.slice(0, 180);
-      const encoded = encodeURIComponent(shortPrompt + ", vertical 9:16 aspect ratio, cinematic 8k, photorealistic");
-      const seed = Math.floor(Math.random() * 90000) + index * 1337 + attempt;
+    function getDirectImageUrl(promptText, index, variantIdx) {
+      const shortPrompt = promptText.slice(0, 160);
+      const encoded = encodeURIComponent(shortPrompt + ", vertical 9:16 aspect ratio, cinematic 8k");
+      const seed = Math.floor(Math.random() * 90000) + index * 1337 + variantIdx * 99;
       const models = ['flux', 'turbo', 'flux-realism'];
-      const model = models[(index + attempt) % models.length];
+      const model = models[(index + variantIdx) % models.length];
       return `https://image.pollinations.ai/prompt/${encoded}?width=540&height=960&model=${model}&nologo=true&seed=${seed}`;
     }
 
-    function loadSingleSceneImage(index, attempt = 0) {
+    async function loadSceneVariant(sceneIdx, variantIdx) {
       return new Promise(resolve => {
-        if (!currentPipeline || !currentPipeline.scenes[index]) return resolve(false);
+        if (!currentPipeline || !currentPipeline.scenes[sceneIdx]) return resolve(false);
         const img = new Image();
         img.crossOrigin = "anonymous";
-        const url = getDirectImageUrl(currentPipeline.scenes[index].video_prompt, index, attempt);
+        const url = getDirectImageUrl(currentPipeline.scenes[sceneIdx].video_prompt, sceneIdx, variantIdx);
         
-        const timeout = setTimeout(() => {
-          img.src = "";
-          resolve(false);
-        }, 12000);
+        const timeout = setTimeout(() => { img.src = ""; resolve(false); }, 10000);
 
         img.onload = () => {
           clearTimeout(timeout);
           if (img.naturalWidth > 100) {
-            preloadedImages[index] = img;
-            updateTimelinePill(index, true);
-            if (activeSceneIndex === index) {
+            sceneImages[sceneIdx][variantIdx] = img;
+            if (activeSceneIndex === sceneIdx && activeVariantIndex === variantIdx) {
               document.getElementById('cinematic-screen-img').src = img.src;
               document.getElementById('img-loader-badge').classList.add('hidden');
             }
             resolve(true);
-          } else {
-            resolve(false);
-          }
+          } else { resolve(false); }
         };
-        img.onerror = () => {
-          clearTimeout(timeout);
-          resolve(false);
-        };
+        img.onerror = () => { clearTimeout(timeout); resolve(false); };
         img.src = url;
       });
-    }
-
-    function updateTimelinePill(idx, isReady) {
-      const pill = document.getElementById(`pill-s-${idx}`);
-      if (!pill) return;
-      if (isReady) {
-        pill.classList.remove('border-slate-700', 'bg-slate-800');
-        pill.classList.add('border-emerald-500/80', 'bg-emerald-950/60', 'text-emerald-300');
-        pill.innerHTML = `S${idx + 1} ✓`;
-      }
     }
 
     async function finishPipelineLoad() {
       saveToHistory(currentPipeline);
 
       const count = currentPipeline.scenes.length;
-      preloadedImages = new Array(count).fill(null);
-      fallbackDataUrls = currentPipeline.scenes.map((_, idx) => createLocalPosterDataUrl(idx));
+      sceneImages = Array.from({length: count}, () => [null, null, null]);
+      fallbackDataUrls = currentPipeline.scenes.map((_, idx) => [
+        createLocalPosterDataUrl(idx, 0),
+        createLocalPosterDataUrl(idx, 1),
+        createLocalPosterDataUrl(idx, 2)
+      ]);
 
       document.getElementById('hook-view').innerText = `"${currentPipeline.hook}"`;
       document.getElementById('scenes-pipeline-view').innerHTML = currentPipeline.scenes.map((s, idx) => `
@@ -396,7 +383,7 @@ Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour, pas de \`\`
           <div class="flex justify-between items-center">
             <span class="text-pink-400 font-bold text-xs">Scène ${idx + 1} (${s.time})</span>
             <button onclick="copyPrompt(${idx})" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-pink-300 px-2 py-1 rounded border border-slate-700">
-              📋 Copier Prompt 8K
+              📋 Copier Prompt
             </button>
           </div>
           <div>
@@ -404,7 +391,7 @@ Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour, pas de \`\`
             <p class="text-xs text-slate-200">${s.voiceover}</p>
           </div>
           <div class="bg-black/50 p-2 rounded-lg border border-slate-800/80">
-            <span class="text-[9px] font-bold text-amber-400 uppercase block mb-0.5">Prompt Visuel (Cloud AI) :</span>
+            <span class="text-[9px] font-bold text-amber-400 uppercase block mb-0.5">Prompt Visuel :</span>
             <p class="text-[11px] font-mono text-emerald-300 select-all">${s.video_prompt}</p>
           </div>
         </div>
@@ -417,30 +404,26 @@ Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour, pas de \`\`
       document.getElementById('results-container').classList.remove('hidden');
       previewScene(0);
 
+      // Chargement automatique des 3 variantes pour chaque scène en arrière-plan (Zéro spam de clics)
       for (let i = 0; i < count; i++) {
-        if (!navigator.onLine) {
-          document.getElementById('status-bar').innerText = "📴 Hors-ligne : Mode local actif !";
-          break;
-        }
-        document.getElementById('status-bar').innerText = `⏳ Génération visuelle ${i + 1}/${count}...`;
-        let ok = await loadSingleSceneImage(i, 0);
-        if (!ok) {
-          await new Promise(r => setTimeout(r, 2000));
-          ok = await loadSingleSceneImage(i, 1);
-        }
-        if (i < count - 1) {
-          await new Promise(r => setTimeout(r, 2200));
+        if (!navigator.onLine) break;
+        document.getElementById('status-bar').innerText = `⏳ Génération multi-variantes scène ${i + 1}/${count}...`;
+        for (let v = 0; v < 3; v++) {
+          await loadSceneVariant(i, v);
+          await new Promise(r => setTimeout(r, 600));
         }
       }
 
       document.getElementById('img-loader-badge').classList.add('hidden');
-      document.getElementById('status-bar').innerText = "✅ Mini-Série prête et synchronisée avec votre scénario !";
+      document.getElementById('status-bar').innerText = "✅ Mini-Série prête ! 3 variantes par scène disponibles.";
     }
 
     async function previewScene(idx) {
       activeSceneIndex = idx;
-      const sceneData = currentPipeline.scenes[idx] || currentPipeline.scenes[0];
+      activeVariantIndex = 0;
+      updateVariantUI();
 
+      const sceneData = currentPipeline.scenes[idx] || currentPipeline.scenes[0];
       document.getElementById('scene-badge').innerText = `SCÈNE ${idx + 1}`;
       document.getElementById('subtitle-view').innerText = sceneData.voiceover;
 
@@ -457,36 +440,58 @@ Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour, pas de \`\`
         }
       });
 
-      const imgEl = document.getElementById('cinematic-screen-img');
-      const badge = document.getElementById('img-loader-badge');
+      renderActiveImage();
+    }
 
-      if (preloadedImages[idx] && preloadedImages[idx].complete && preloadedImages[idx].naturalWidth > 100) {
-        imgEl.src = preloadedImages[idx].src;
-        badge.classList.add('hidden');
-      } else {
-        imgEl.src = fallbackDataUrls[idx];
-        if (navigator.onLine) {
-          badge.classList.remove('hidden');
-          await loadSingleSceneImage(idx, Math.floor(Math.random() * 5));
-          badge.classList.add('hidden');
+    function switchVariant(vIdx) {
+      activeVariantIndex = vIdx;
+      updateVariantUI();
+      renderActiveImage();
+    }
+
+    function updateVariantUI() {
+      for (let i = 0; i < 3; i++) {
+        const btn = document.getElementById(`var-btn-${i}`);
+        if (btn) {
+          if (i === activeVariantIndex) {
+            btn.className = "px-2.5 py-1 rounded bg-pink-600 text-white font-bold text-[10px]";
+          } else {
+            btn.className = "px-2.5 py-1 rounded bg-slate-800 text-slate-300 font-bold text-[10px]";
+          }
         }
       }
     }
 
+    function renderActiveImage() {
+      const imgEl = document.getElementById('cinematic-screen-img');
+      const badge = document.getElementById('img-loader-badge');
+      const imgObj = sceneImages[activeSceneIndex]?[activeVariantIndex];
+
+      if (imgObj && imgObj.complete && imgObj.naturalWidth > 100) {
+        imgEl.src = imgObj.src;
+        badge.classList.add('hidden');
+      } else {
+        imgEl.src = fallbackDataUrls[activeSceneIndex][activeVariantIndex];
+        badge.classList.remove('hidden');
+        loadSceneVariant(activeSceneIndex, activeVariantIndex).then(() => {
+          badge.classList.add('hidden');
+        });
+      }
+    }
+
     async function retryCurrentSceneImage() {
-      if (!currentPipeline) return;
       const badge = document.getElementById('img-loader-badge');
       badge.classList.remove('hidden');
-      document.getElementById('status-bar').innerText = `🔄 Régénération de l'épisode ${activeSceneIndex + 1}...`;
-      await loadSingleSceneImage(activeSceneIndex, Math.floor(Math.random() * 20));
+      document.getElementById('status-bar').innerText = `🔄 Régénération variante ${activeVariantIndex + 1}...`;
+      await loadSceneVariant(activeSceneIndex, activeVariantIndex);
       badge.classList.add('hidden');
-      document.getElementById('status-bar').innerText = `✅ Épisode ${activeSceneIndex + 1} mis à jour !`;
+      document.getElementById('status-bar').innerText = `✅ Variante mise à jour !`;
     }
 
     async function startCinematicRecording() {
       if (!currentPipeline) return;
       if (!window.MediaRecorder) {
-        alert("Enregistrement non supporté sur ce navigateur.");
+        alert("Enregistrement non supporté.");
         return;
       }
 
@@ -494,13 +499,7 @@ Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour, pas de \`\`
       const statusEl = document.getElementById('render-progress');
       btn.disabled = true;
       btn.classList.add('opacity-50');
-      statusEl.innerText = "🔴 Rendu de la Mini-Série (.WEBM)...";
-
-      const fallbackImgObjs = await Promise.all(fallbackDataUrls.map(url => new Promise(res => {
-        const im = new Image();
-        im.onload = () => res(im);
-        im.src = url;
-      })));
+      statusEl.innerText = "🔴 Rendu vidéo (.WEBM)...";
 
       const canvas = document.createElement('canvas');
       canvas.width = 540;
@@ -522,9 +521,9 @@ Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour, pas de \`\`
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `shortflow_miniseries_${Date.now()}.webm`;
+        a.download = `shortflow_v30_${Date.now()}.webm`;
         a.click();
-        statusEl.innerText = "✅ Mini-Série téléchargée avec succès !";
+        statusEl.innerText = "✅ Vidéo téléchargée avec succès !";
         btn.disabled = false;
         btn.classList.remove('opacity-50');
       };
@@ -534,6 +533,7 @@ Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour, pas de \`\`
       const sceneMs = totalMs / sceneCount;
 
       activeSceneIndex = 0;
+      activeVariantIndex = 0;
       recorder.start();
 
       function speakScene(idx) {
@@ -554,9 +554,10 @@ Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour, pas de \`\`
       const totalFramesPerScene = (sceneMs / 1000) * 30;
 
       const renderInterval = setInterval(() => {
-        const img = (preloadedImages[currentStep] && preloadedImages[currentStep].complete && preloadedImages[currentStep].naturalWidth > 100)
-          ? preloadedImages[currentStep]
-          : fallbackImgObjs[currentStep];
+        // Utilise la variante active ou la variante 0 par défaut
+        const img = (sceneImages[currentStep]?[activeVariantIndex] && sceneImages[currentStep][activeVariantIndex].complete && sceneImages[currentStep][activeVariantIndex].naturalWidth > 100)
+          ? sceneImages[currentStep][activeVariantIndex]
+          : (sceneImages[currentStep]?.[0] && sceneImages[currentStep][0].complete ? sceneImages[currentStep][0] : null);
 
         ctx.fillStyle = "#090d16";
         ctx.fillRect(0, 0, 540, 960);
@@ -616,7 +617,7 @@ Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour, pas de \`\`
     function copyPrompt(idx) {
       if (!currentPipeline || !currentPipeline.scenes[idx]) return;
       navigator.clipboard.writeText(currentPipeline.scenes[idx].video_prompt).then(() => {
-        alert(`Prompt de la Scène ${idx + 1} copié !`);
+        alert(`Prompt Scène ${idx + 1} copié !`);
       });
     }
 
@@ -638,7 +639,7 @@ Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour, pas de \`\`
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentPipeline, null, 2));
       const dlAnchor = document.createElement('a');
       dlAnchor.setAttribute("href", dataStr);
-      dlAnchor.setAttribute("download", `shortflow_series_${Date.now()}.json`);
+      dlAnchor.setAttribute("download", `shortflow_v30_${Date.now()}.json`);
       document.body.appendChild(dlAnchor);
       dlAnchor.click();
       dlAnchor.remove();
@@ -648,7 +649,7 @@ Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour, pas de \`\`
       const list = document.getElementById('history-list');
       const hist = JSON.parse(localStorage.getItem('SHORTFLOW_SERIES') || '[]');
       if (hist.length === 0) {
-        list.innerHTML = `<div class="text-slate-500 text-center py-4">Aucun projet sauvegardé.</div>`;
+        list.innerHTML = `<div class="text-slate-500 text-center py-4">Aucun projet.</div>`;
         return;
       }
       list.innerHTML = hist.map((item, idx) => `
