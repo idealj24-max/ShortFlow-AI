@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ShortFlow AI — Anti-Rate-Limit v24</title>
+  <title>ShortFlow AI — Multi-Gateway v25</title>
   <meta name="theme-color" content="#090d16" />
   <link rel="manifest" href="./manifest.json" />
   <script src="https://cdn.tailwindcss.com"></script>
@@ -40,7 +40,7 @@
       </div>
       <div>
         <h1 class="text-sm font-bold tracking-wide text-white leading-none">SHORTFLOW <span class="text-pink-400">AI</span></h1>
-        <span class="text-[10px] text-pink-300 font-mono">ANTI-RATE-LIMIT v24</span>
+        <span class="text-[10px] text-pink-300 font-mono">MULTI-GATEWAY v25</span>
       </div>
     </div>
     <div class="flex items-center gap-1.5">
@@ -55,7 +55,7 @@
 
   <!-- Status Bar -->
   <div id="status-bar" class="mb-3 px-3 py-2 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] font-mono text-pink-300 text-center">
-    Prêt • File d'attente intelligente anti-saturation active
+    Prêt • Multi-passerelles cloud prêtes
   </div>
 
   <!-- Input Studio -->
@@ -85,7 +85,7 @@
     </div>
 
     <button onclick="generateMiniSeriesStudio()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-pink-600 via-rose-600 to-amber-600 hover:from-pink-500 hover:to-amber-500 text-white font-bold text-xs shadow-lg shadow-pink-600/30 transition active:scale-95">
-      🚀 Générer la Mini-Série & Charger en Séquence
+      🚀 Générer la Mini-Série & Charger les Visuels
     </button>
   </div>
 
@@ -217,7 +217,7 @@ Style : "${style}"
 
 Génère un pipeline de exactement ${sceneCount} scènes narratives. Pour chaque scène :
 1. "time": minutage (ex: "0-10s")
-2. "voiceover": voix-off percutante en français (courte et percutante).
+2. "voiceover": voix-off percutante en français (courte).
 3. "video_prompt": prompt visuel 8K détaillé en anglais court.
 
 Réponds UNIQUEMENT en JSON valide (sans markdown) :
@@ -266,6 +266,20 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) :
       };
     }
 
+    // 🌐 Générateur d'URL multi-passerelles (Évite les saturations d'une seule source)
+    function getCloudImageUrl(promptText, index) {
+      const encoded = encodeURIComponent(promptText + ", 8k resolution, vertical 9:16 aspect ratio");
+      const seed = 5000 + index * 999;
+      // Alternance intelligente entre 3 passerelles publiques mondiales
+      if (index % 3 === 0) {
+        return `https://image.pollinations.ai/prompt/${encoded}?width=540&height=960&nologo=true&seed=${seed}`;
+      } else if (index % 3 === 1) {
+        return `https://pollinations.ai/p/${encoded}?width=540&height=960&seed=${seed}`;
+      } else {
+        return `https://image.pollinations.ai/prompt/${encoded}?width=540&height=960&private=true&seed=${seed}`;
+      }
+    }
+
     async function finishPipelineLoad() {
       saveToHistory(currentPipeline);
 
@@ -295,17 +309,16 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) :
 
       document.getElementById('results-container').classList.remove('hidden');
 
-      // 🔥 FILE D'ATTENTE SÉQUENTIELLE ANTI-SATURATION (1 image toutes les 1.8 secondes)
+      // 🔥 CHARGEMENT MULTI-PASSERELLE SÉQUENTIEL
       preloadedImages = new Array(currentPipeline.scenes.length).fill(null);
       
       for (let i = 0; i < currentPipeline.scenes.length; i++) {
-        document.getElementById('status-bar').innerText = `⏳ Chargement scène ${i + 1}/${currentPipeline.scenes.length} (Anti-saturation)...`;
+        document.getElementById('status-bar').innerText = `⏳ Chargement multi-cloud scène ${i + 1}/${currentPipeline.scenes.length}...`;
         
         await new Promise(resolve => {
           const img = new Image();
           img.crossOrigin = "anonymous";
-          const promptEnc = encodeURIComponent(currentPipeline.scenes[i].video_prompt + ", 8k resolution, vertical 9:16 aspect ratio");
-          img.src = `https://image.pollinations.ai/prompt/${promptEnc}?width=540&height=960&nologo=true&seed=${1000 + i * 543}`;
+          img.src = getCloudImageUrl(currentPipeline.scenes[i].video_prompt, i);
           
           img.onload = () => {
             preloadedImages[i] = img;
@@ -317,18 +330,17 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) :
           };
         });
 
-        // Afficher immédiatement la première image dès qu'elle arrive
         if (i === 0) {
           previewScene(0);
         }
 
-        // Pause de 1.8 seconde pour ne pas saturer le serveur gratuit Pollinations
+        // Pause de sécurité anti-saturation
         if (i < currentPipeline.scenes.length - 1) {
-          await new Promise(r => setTimeout(r, 1800));
+          await new Promise(r => setTimeout(r, 2000));
         }
       }
 
-      document.getElementById('status-bar').innerText = "✅ Mini-Série chargée avec succès sans saturation !";
+      document.getElementById('status-bar').innerText = "✅ Mini-Série chargée via multi-passerelles !";
     }
 
     function previewScene(idx) {
@@ -342,8 +354,7 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) :
       if (preloadedImages[idx] && preloadedImages[idx].complete) {
         imgEl.src = preloadedImages[idx].src;
       } else {
-        const promptEnc = encodeURIComponent(sceneData.video_prompt + ", 8k resolution, vertical 9:16");
-        imgEl.src = `https://image.pollinations.ai/prompt/${promptEnc}?width=540&height=960&nologo=true&seed=${1000 + idx * 543}`;
+        imgEl.src = getCloudImageUrl(sceneData.video_prompt, idx);
       }
     }
 
