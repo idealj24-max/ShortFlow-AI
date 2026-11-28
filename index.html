@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ShortFlow AI — Master v28</title>
+  <title>ShortFlow AI — Smart Engine v29</title>
   <meta name="theme-color" content="#090d16" />
   <link rel="manifest" href="./manifest.json" />
   <script src="https://cdn.tailwindcss.com"></script>
@@ -28,7 +28,6 @@
     .ken-burns {
       animation: kenBurns 12s ease-in-out infinite alternate;
     }
-    /* Scrollbar invisible pour la timeline */
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
@@ -43,7 +42,7 @@
       </div>
       <div>
         <h1 class="text-sm font-bold tracking-wide text-white leading-none">SHORTFLOW <span class="text-pink-400">AI</span></h1>
-        <span class="text-[10px] text-pink-300 font-mono">MASTER v28</span>
+        <span class="text-[10px] text-pink-300 font-mono">SMART ENGINE v29</span>
       </div>
     </div>
     <div class="flex items-center gap-1.5">
@@ -58,14 +57,14 @@
 
   <!-- Status Bar -->
   <div id="status-bar" class="mb-3 px-3 py-2 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] font-mono text-pink-300 text-center">
-    Prêt • Studio IA Mobile Opérationnel
+    Prêt • Moteur de Scénario Intelligent Actif
   </div>
 
   <!-- Input Studio -->
   <div class="glass-panel rounded-2xl p-4 shadow-xl mb-3 space-y-3">
     <div>
-      <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">🎬 Sujet ou Scénario de Mini-Série / Vidéo</label>
-      <textarea id="topic-input" rows="3" placeholder="Ex: Un jeune basketteur prodige qui révolutionne le tournoi..." 
+      <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">🎬 Votre Scénario Détaillé ou Idée</label>
+      <textarea id="topic-input" rows="4" placeholder="Collez votre histoire ici (ex: Un basketteur prodige, un match tendu, un voyage dans le temps...)" 
         class="w-full bg-slate-900/90 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-pink-500 resize-none"></textarea>
     </div>
 
@@ -88,7 +87,7 @@
     </div>
 
     <button onclick="generateMiniSeriesStudio()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-pink-600 via-rose-600 to-amber-600 hover:from-pink-500 hover:to-amber-500 text-white font-bold text-xs shadow-lg shadow-pink-600/30 transition active:scale-95">
-      🚀 Générer la Mini-Série & Charger les Visuels
+      🚀 Analyser le Scénario & Générer les Visuels
     </button>
   </div>
 
@@ -116,7 +115,7 @@
         </div>
       </div>
 
-      <!-- Timeline Bar corrigée (Marges latérales et sans masquage) -->
+      <!-- Timeline Bar corrigée -->
       <div class="w-full px-2 mt-2.5">
         <div id="timeline-switcher" class="flex gap-1.5 overflow-x-auto no-scrollbar py-1 justify-start sm:justify-center"></div>
       </div>
@@ -247,12 +246,12 @@
     }
 
     async function generateMiniSeriesStudio() {
-      const topic = document.getElementById('topic-input').value.trim();
+      const rawTopic = document.getElementById('topic-input').value.trim();
       const sceneCount = parseInt(document.getElementById('duration-select').value);
       const style = document.getElementById('style-select').value;
 
-      if (!topic) {
-        alert("Entre ton sujet ou ton scénario !");
+      if (!rawTopic) {
+        alert("Entre ton scénario ou ton idée !");
         return;
       }
 
@@ -262,19 +261,29 @@
         return;
       }
 
-      document.getElementById('status-bar').innerText = `🧠 Génération du scénario narratif (${sceneCount} scènes)...`;
+      document.getElementById('status-bar').innerText = `🧠 Analyse et découpage de ton histoire (${sceneCount} scènes)...`;
 
-      const prompt = `Tu es un réalisateur de mini-séries virales.
-Sujet principal : "${topic}"
-Nombre exact de scènes à générer : ${sceneCount}
-Style artistique : "${style}"
+      // Prompt ultra-robuste qui intègre le texte utilisateur sans le tronquer
+      const prompt = `Tu es un réalisateur de mini-séries virales TikTok.
+Voici l'histoire / scénario détaillé fourni par l'auteur :
+"""
+${rawTopic}
+"""
 
-Génère un pipeline scénaristique complet. Chaque scène doit faire progresser l'histoire de manière unique et logique (pas de répétition).
-Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour) :
+Découpe cette histoire exacte en exactement ${sceneCount} scènes séquentielles et cohérentes. Pour chaque scène, crée :
+1. "time": minutage (ex: "0-8s")
+2. "voiceover": une voix-off narrative en français (max 25 mots) qui raconte fidèlement cette partie de l'histoire.
+3. "video_prompt": un prompt visuel 8K très détaillé en anglais décrivant précisément l'action, les personnages, le décor et l'ambiance de cette scène spécifique extraite du scénario.
+
+Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour, pas de \`\`\`json) sous la forme exacte :
 {
-  "hook": "Accroche choc pour démarrer la mini-série",
+  "hook": "Une accroche choc basée sur l'histoire",
   "scenes": [
-    ${Array.from({length: sceneCount}, (_, i) => `{"time": "${i*8}-${(i+1)*8}s", "voiceover": "Voix-off narrative unique et percutante pour l'épisode ${i+1}", "video_prompt": "Cinematic 8k visual prompt detailing specific action in scene ${i+1} about ${topic}"}`).join(',\n    ')}
+    {
+      "time": "0-8s",
+      "voiceover": "...",
+      "video_prompt": "..."
+    }
   ]
 }`;
 
@@ -290,46 +299,40 @@ Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour) :
 
         const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
         const cleanJson = rawText.replace(/```json|```/g, '').trim();
-        currentPipeline = { topic, sceneCount, style, date: new Date().toLocaleDateString(), ...JSON.parse(cleanJson) };
+        const parsed = JSON.parse(cleanJson);
+
+        currentPipeline = { topic: rawTopic, sceneCount, style, date: new Date().toLocaleDateString(), ...parsed };
         await finishPipelineLoad();
       } catch (e) {
-        console.warn("Quota atteint -> Mode Secours :", e);
-        document.getElementById('status-bar').innerText = "⚡ Mode Secours Scénarisé Actif !";
-        currentPipeline = generateFallbackMiniSeries(topic, sceneCount, style);
+        console.warn("Erreur API / JSON -> Mode Découpage Intelligent :", e);
+        document.getElementById('status-bar').innerText = "⚡ Mode Découpage Intelligent Actif !";
+        currentPipeline = generateSmartFallback(rawTopic, sceneCount, style);
         await finishPipelineLoad();
       }
     }
 
-    function generateFallbackMiniSeries(topic, sceneCount, style) {
+    function generateSmartFallback(topic, sceneCount, style) {
       const scenes = [];
-      const narrativeArcs = [
-        "Le point de départ et la tension initiale",
-        "L'obstacle inattendu se dresse",
-        "Le moment de doute et de pression maximale",
-        "La révélation du secret ou de la stratégie",
-        "L'action s'accélère brutalement",
-        "Le face-à-face décisif",
-        "Le climax et le retournement de situation",
-        "La conclusion triomphante et la morale"
-      ];
-
+      const sentences = topic.split('.').map(s => s.trim()).filter(s => s.length > 5);
+      
       for (let i = 0; i < sceneCount; i++) {
+        const partText = sentences[i % sentences.length] || topic.substring(0, 50);
         scenes.push({
           time: `${i*8}-${(i+1)*8}s`,
-          voiceover: `Épisode ${i + 1} : ${narrativeArcs[i % narrativeArcs.length]} autour de ${topic.substring(0, 30)}...`,
-          video_prompt: `Cinematic 8k shot, scene ${i + 1}, ${topic}, ${style}, dramatic lighting, highly detailed`
+          voiceover: `Épisode ${i + 1} : ${partText}`,
+          video_prompt: `Cinematic 8k shot, scene ${i + 1}, ${partText}, ${style}, dramatic lighting, highly detailed`
         });
       }
       return {
         topic, sceneCount, style, date: new Date().toLocaleDateString(),
-        hook: `La saga : ${topic.substring(0, 45)}...`,
+        hook: `La saga : ${topic.substring(0, 50)}...`,
         scenes
       };
     }
 
     function getDirectImageUrl(promptText, index, attempt = 0) {
-      const shortPrompt = promptText.slice(0, 150);
-      const encoded = encodeURIComponent(shortPrompt + ", vertical 9:16 aspect ratio, cinematic 8k");
+      const shortPrompt = promptText.slice(0, 180);
+      const encoded = encodeURIComponent(shortPrompt + ", vertical 9:16 aspect ratio, cinematic 8k, photorealistic");
       const seed = Math.floor(Math.random() * 90000) + index * 1337 + attempt;
       const models = ['flux', 'turbo', 'flux-realism'];
       const model = models[(index + attempt) % models.length];
@@ -407,7 +410,6 @@ Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour) :
         </div>
       `).join('');
 
-      // Timeline enrichie avec marges pour que S1 et S8 ne soient jamais coupés
       document.getElementById('timeline-switcher').innerHTML = currentPipeline.scenes.map((_, idx) => `
         <button id="pill-s-${idx}" onclick="previewScene(${idx})" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-[11px] font-bold shrink-0 transition active:scale-95">S${idx + 1}</button>
       `).join('');
@@ -420,7 +422,7 @@ Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour) :
           document.getElementById('status-bar').innerText = "📴 Hors-ligne : Mode local actif !";
           break;
         }
-        document.getElementById('status-bar').innerText = `⏳ Chargement visuel ${i + 1}/${count}...`;
+        document.getElementById('status-bar').innerText = `⏳ Génération visuelle ${i + 1}/${count}...`;
         let ok = await loadSingleSceneImage(i, 0);
         if (!ok) {
           await new Promise(r => setTimeout(r, 2000));
@@ -432,7 +434,7 @@ Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour) :
       }
 
       document.getElementById('img-loader-badge').classList.add('hidden');
-      document.getElementById('status-bar').innerText = "✅ Mini-Série prête ! Tous les épisodes sont synchronisés.";
+      document.getElementById('status-bar').innerText = "✅ Mini-Série prête et synchronisée avec votre scénario !";
     }
 
     async function previewScene(idx) {
