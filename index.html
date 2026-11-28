@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ShortFlow AI — Zero-Lag Hybrid v27</title>
+  <title>ShortFlow AI — Master v28</title>
   <meta name="theme-color" content="#090d16" />
   <link rel="manifest" href="./manifest.json" />
   <script src="https://cdn.tailwindcss.com"></script>
@@ -28,6 +28,9 @@
     .ken-burns {
       animation: kenBurns 12s ease-in-out infinite alternate;
     }
+    /* Scrollbar invisible pour la timeline */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
 <body class="p-3 pb-16 max-w-lg mx-auto flex flex-col min-h-screen">
@@ -40,7 +43,7 @@
       </div>
       <div>
         <h1 class="text-sm font-bold tracking-wide text-white leading-none">SHORTFLOW <span class="text-pink-400">AI</span></h1>
-        <span class="text-[10px] text-pink-300 font-mono">HYBRID ZERO-BLACK v27</span>
+        <span class="text-[10px] text-pink-300 font-mono">MASTER v28</span>
       </div>
     </div>
     <div class="flex items-center gap-1.5">
@@ -55,14 +58,14 @@
 
   <!-- Status Bar -->
   <div id="status-bar" class="mb-3 px-3 py-2 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] font-mono text-pink-300 text-center">
-    Prêt • Moteur Hybride Cloud + Secours Local Actif
+    Prêt • Studio IA Mobile Opérationnel
   </div>
 
   <!-- Input Studio -->
   <div class="glass-panel rounded-2xl p-4 shadow-xl mb-3 space-y-3">
     <div>
       <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block mb-1.5">🎬 Sujet ou Scénario de Mini-Série / Vidéo</label>
-      <textarea id="topic-input" rows="3" placeholder="Ex: Un jeune homme crée le film dans lequel il est..." 
+      <textarea id="topic-input" rows="3" placeholder="Ex: Un jeune basketteur prodige qui révolutionne le tournoi..." 
         class="w-full bg-slate-900/90 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-pink-500 resize-none"></textarea>
     </div>
 
@@ -103,20 +106,20 @@
       <div class="relative w-full max-w-[220px] aspect-[9/16] bg-slate-950 rounded-xl overflow-hidden border border-pink-500/40 shadow-2xl flex items-center justify-center">
         <img id="cinematic-screen-img" src="" alt="" class="absolute inset-0 w-full h-full object-cover ken-burns transition-opacity duration-500" crossorigin="anonymous" />
         
-        <!-- Badge état image -->
         <div id="img-loader-badge" class="hidden absolute top-2 right-2 px-2 py-0.5 rounded-full bg-black/70 border border-pink-500/40 text-[9px] font-mono text-pink-300 z-20">
           ⏳ Cloud...
         </div>
 
-        <!-- Overlay Subtitles & Scene Badge -->
         <div class="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/95 via-black/70 to-transparent flex flex-col justify-end pointer-events-none z-10">
           <div id="scene-badge" class="self-start px-2 py-0.5 rounded bg-pink-600/90 text-white font-bold text-[9px] mb-1">SCÈNE 1</div>
           <p id="subtitle-view" class="text-xs font-bold text-white leading-snug drop-shadow"></p>
         </div>
       </div>
 
-      <!-- Dynamic Scene Switcher / Timeline Bar -->
-      <div id="timeline-switcher" class="flex gap-1.5 mt-2.5 w-full justify-center overflow-x-auto py-1"></div>
+      <!-- Timeline Bar corrigée (Marges latérales et sans masquage) -->
+      <div class="w-full px-2 mt-2.5">
+        <div id="timeline-switcher" class="flex gap-1.5 overflow-x-auto no-scrollbar py-1 justify-start sm:justify-center"></div>
+      </div>
 
       <!-- Reload single scene button -->
       <button onclick="retryCurrentSceneImage()" class="mt-1.5 text-[10px] text-pink-300 hover:text-white underline font-mono">
@@ -203,8 +206,7 @@
       }
     }
 
-    // 🎨 Génère une affiche cinématique locale (DataURL) pour qu'aucune scène ne soit jamais noire
-    function createLocalPosterDataUrl(sceneIndex, titleText) {
+    function createLocalPosterDataUrl(sceneIndex) {
       const c = document.createElement('canvas');
       c.width = 540;
       c.height = 960;
@@ -224,7 +226,6 @@
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, 540, 960);
 
-      // Halos lumineux cinématiques
       ctx.fillStyle = 'rgba(255, 255, 255, 0.06)';
       ctx.beginPath();
       ctx.arc(270, 340, 180, 0, Math.PI * 2);
@@ -235,8 +236,8 @@
       ctx.strokeRect(32, 32, 476, 896);
 
       ctx.fillStyle = 'rgba(255,255,255,0.85)';
-      ctx.font = 'bold 24px sans-serif';
-      ctx.fillText(`SHORTFLOW STUDIO • ÉPISODE ${sceneIndex + 1}`, 54, 110);
+      ctx.font = 'bold 22px sans-serif';
+      ctx.fillText(`SHORTFLOW STUDIO • S${sceneIndex + 1}`, 54, 110);
 
       ctx.fillStyle = 'rgba(255,255,255,0.25)';
       ctx.font = 'bold 120px sans-serif';
@@ -261,23 +262,19 @@
         return;
       }
 
-      document.getElementById('status-bar').innerText = `🧠 Génération du scénario (${sceneCount} scènes)...`;
+      document.getElementById('status-bar').innerText = `🧠 Génération du scénario narratif (${sceneCount} scènes)...`;
 
       const prompt = `Tu es un réalisateur de mini-séries virales.
-Sujet : "${topic}"
-Nombre de scènes : ${sceneCount}
-Style : "${style}"
+Sujet principal : "${topic}"
+Nombre exact de scènes à générer : ${sceneCount}
+Style artistique : "${style}"
 
-Génère un pipeline de exactement ${sceneCount} scènes narratives. Pour chaque scène :
-1. "time": minutage (ex: "0-8s")
-2. "voiceover": voix-off percutante en français.
-3. "video_prompt": prompt visuel 8K détaillé en anglais court (max 15 mots).
-
-Réponds UNIQUEMENT en JSON valide (sans markdown) :
+Génère un pipeline scénaristique complet. Chaque scène doit faire progresser l'histoire de manière unique et logique (pas de répétition).
+Réponds UNIQUEMENT en JSON valide (sans aucun bloc markdown autour) :
 {
-  "hook": "Accroche choc",
+  "hook": "Accroche choc pour démarrer la mini-série",
   "scenes": [
-    ${Array.from({length: sceneCount}, (_, i) => `{"time": "${i*8}-${(i+1)*8}s", "voiceover": "...", "video_prompt": "..."}`).join(',\n    ')}
+    ${Array.from({length: sceneCount}, (_, i) => `{"time": "${i*8}-${(i+1)*8}s", "voiceover": "Voix-off narrative unique et percutante pour l'épisode ${i+1}", "video_prompt": "Cinematic 8k visual prompt detailing specific action in scene ${i+1} about ${topic}"}`).join(',\n    ')}
   ]
 }`;
 
@@ -297,7 +294,7 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) :
         await finishPipelineLoad();
       } catch (e) {
         console.warn("Quota atteint -> Mode Secours :", e);
-        document.getElementById('status-bar').innerText = "⚡ Mode Secours Local Actif !";
+        document.getElementById('status-bar').innerText = "⚡ Mode Secours Scénarisé Actif !";
         currentPipeline = generateFallbackMiniSeries(topic, sceneCount, style);
         await finishPipelineLoad();
       }
@@ -305,25 +302,35 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) :
 
     function generateFallbackMiniSeries(topic, sceneCount, style) {
       const scenes = [];
+      const narrativeArcs = [
+        "Le point de départ et la tension initiale",
+        "L'obstacle inattendu se dresse",
+        "Le moment de doute et de pression maximale",
+        "La révélation du secret ou de la stratégie",
+        "L'action s'accélère brutalement",
+        "Le face-à-face décisif",
+        "Le climax et le retournement de situation",
+        "La conclusion triomphante et la morale"
+      ];
+
       for (let i = 0; i < sceneCount; i++) {
         scenes.push({
           time: `${i*8}-${(i+1)*8}s`,
-          voiceover: `Épisode ${i+1} : ${topic.substring(0, 45)}...`,
-          video_prompt: `Cinematic 8k shot scene ${i+1} of ${topic.substring(0, 60)}, dramatic lighting`
+          voiceover: `Épisode ${i + 1} : ${narrativeArcs[i % narrativeArcs.length]} autour de ${topic.substring(0, 30)}...`,
+          video_prompt: `Cinematic 8k shot, scene ${i + 1}, ${topic}, ${style}, dramatic lighting, highly detailed`
         });
       }
       return {
         topic, sceneCount, style, date: new Date().toLocaleDateString(),
-        hook: `La saga : ${topic.substring(0, 40)}...`,
+        hook: `La saga : ${topic.substring(0, 45)}...`,
         scenes
       };
     }
 
-    // 🌐 URLs directes d'images avec rotation de modèles (flux, turbo)
     function getDirectImageUrl(promptText, index, attempt = 0) {
-      const shortPrompt = promptText.slice(0, 140);
-      const encoded = encodeURIComponent(shortPrompt + ", vertical 9:16, cinematic 8k");
-      const seed = Math.floor(Math.random() * 90000) + index * 1000 + attempt;
+      const shortPrompt = promptText.slice(0, 150);
+      const encoded = encodeURIComponent(shortPrompt + ", vertical 9:16 aspect ratio, cinematic 8k");
+      const seed = Math.floor(Math.random() * 90000) + index * 1337 + attempt;
       const models = ['flux', 'turbo', 'flux-realism'];
       const model = models[(index + attempt) % models.length];
       return `https://image.pollinations.ai/prompt/${encoded}?width=540&height=960&model=${model}&nologo=true&seed=${seed}`;
@@ -339,11 +346,10 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) :
         const timeout = setTimeout(() => {
           img.src = "";
           resolve(false);
-        }, 12000); // Timeout 12s max par tentative
+        }, 12000);
 
         img.onload = () => {
           clearTimeout(timeout);
-          // Vérifier que l'image est valide
           if (img.naturalWidth > 100) {
             preloadedImages[index] = img;
             updateTimelinePill(index, true);
@@ -368,9 +374,9 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) :
       const pill = document.getElementById(`pill-s-${idx}`);
       if (!pill) return;
       if (isReady) {
-        pill.classList.remove('border-slate-700');
-        pill.classList.add('border-emerald-500/70');
-        pill.innerText = `S${idx + 1} ✓`;
+        pill.classList.remove('border-slate-700', 'bg-slate-800');
+        pill.classList.add('border-emerald-500/80', 'bg-emerald-950/60', 'text-emerald-300');
+        pill.innerHTML = `S${idx + 1} ✓`;
       }
     }
 
@@ -379,7 +385,7 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) :
 
       const count = currentPipeline.scenes.length;
       preloadedImages = new Array(count).fill(null);
-      fallbackDataUrls = currentPipeline.scenes.map((s, idx) => createLocalPosterDataUrl(idx, s.voiceover));
+      fallbackDataUrls = currentPipeline.scenes.map((_, idx) => createLocalPosterDataUrl(idx));
 
       document.getElementById('hook-view').innerText = `"${currentPipeline.hook}"`;
       document.getElementById('scenes-pipeline-view').innerHTML = currentPipeline.scenes.map((s, idx) => `
@@ -401,32 +407,32 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) :
         </div>
       `).join('');
 
+      // Timeline enrichie avec marges pour que S1 et S8 ne soient jamais coupés
       document.getElementById('timeline-switcher').innerHTML = currentPipeline.scenes.map((_, idx) => `
-        <button id="pill-s-${idx}" onclick="previewScene(${idx})" class="px-2.5 py-1 rounded bg-slate-800 border border-slate-700 hover:bg-pink-600 text-[10px] font-bold shrink-0">S${idx + 1}</button>
+        <button id="pill-s-${idx}" onclick="previewScene(${idx})" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-[11px] font-bold shrink-0 transition active:scale-95">S${idx + 1}</button>
       `).join('');
 
       document.getElementById('results-container').classList.remove('hidden');
       previewScene(0);
 
-      // Chargement séquentiel avec pause anti-rate-limit
       for (let i = 0; i < count; i++) {
         if (!navigator.onLine) {
-          document.getElementById('status-bar').innerText = "📴 Hors-ligne : Affiches locales actives (0 écran noir) !";
+          document.getElementById('status-bar').innerText = "📴 Hors-ligne : Mode local actif !";
           break;
         }
-        document.getElementById('status-bar').innerText = `⏳ Téléchargement visuel ${i + 1}/${count}...`;
+        document.getElementById('status-bar').innerText = `⏳ Chargement visuel ${i + 1}/${count}...`;
         let ok = await loadSingleSceneImage(i, 0);
         if (!ok) {
-          await new Promise(r => setTimeout(r, 2500));
+          await new Promise(r => setTimeout(r, 2000));
           ok = await loadSingleSceneImage(i, 1);
         }
         if (i < count - 1) {
-          await new Promise(r => setTimeout(r, 2500));
+          await new Promise(r => setTimeout(r, 2200));
         }
       }
 
       document.getElementById('img-loader-badge').classList.add('hidden');
-      document.getElementById('status-bar').innerText = "✅ Mini-Série prête ! Cliquez sur S1..S8 pour prévisualiser.";
+      document.getElementById('status-bar').innerText = "✅ Mini-Série prête ! Tous les épisodes sont synchronisés.";
     }
 
     async function previewScene(idx) {
@@ -436,12 +442,16 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) :
       document.getElementById('scene-badge').innerText = `SCÈNE ${idx + 1}`;
       document.getElementById('subtitle-view').innerText = sceneData.voiceover;
 
-      // Mettre en surbrillance le bouton actif
       currentPipeline.scenes.forEach((_, i) => {
         const btn = document.getElementById(`pill-s-${i}`);
         if (btn) {
-          btn.classList.toggle('bg-pink-600', i === idx);
-          btn.classList.toggle('bg-slate-800', i !== idx);
+          if (i === idx) {
+            btn.classList.add('bg-pink-600', 'border-pink-400', 'text-white', 'shadow-lg', 'shadow-pink-600/40');
+            btn.classList.remove('bg-slate-800', 'border-slate-700');
+          } else {
+            btn.classList.remove('bg-pink-600', 'border-pink-400', 'text-white', 'shadow-lg', 'shadow-pink-600/40');
+            btn.classList.add('bg-slate-800', 'border-slate-700');
+          }
         }
       });
 
@@ -452,7 +462,6 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) :
         imgEl.src = preloadedImages[idx].src;
         badge.classList.add('hidden');
       } else {
-        // Affiche immédiatement le poster local (jamais d'écran noir) puis tente de charger l'image cloud en direct !
         imgEl.src = fallbackDataUrls[idx];
         if (navigator.onLine) {
           badge.classList.remove('hidden');
@@ -466,10 +475,10 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) :
       if (!currentPipeline) return;
       const badge = document.getElementById('img-loader-badge');
       badge.classList.remove('hidden');
-      document.getElementById('status-bar').innerText = `🔄 Régénération de la scène ${activeSceneIndex + 1}...`;
+      document.getElementById('status-bar').innerText = `🔄 Régénération de l'épisode ${activeSceneIndex + 1}...`;
       await loadSingleSceneImage(activeSceneIndex, Math.floor(Math.random() * 20));
       badge.classList.add('hidden');
-      document.getElementById('status-bar').innerText = `✅ Scène ${activeSceneIndex + 1} mise à jour !`;
+      document.getElementById('status-bar').innerText = `✅ Épisode ${activeSceneIndex + 1} mis à jour !`;
     }
 
     async function startCinematicRecording() {
@@ -483,9 +492,8 @@ Réponds UNIQUEMENT en JSON valide (sans markdown) :
       const statusEl = document.getElementById('render-progress');
       btn.disabled = true;
       btn.classList.add('opacity-50');
-      statusEl.innerText = "🔴 Enregistrement de la Mini-Série (.WEBM)...";
+      statusEl.innerText = "🔴 Rendu de la Mini-Série (.WEBM)...";
 
-      // Préparer les images de secours en objets Image pour le canvas
       const fallbackImgObjs = await Promise.all(fallbackDataUrls.map(url => new Promise(res => {
         const im = new Image();
         im.onload = () => res(im);
